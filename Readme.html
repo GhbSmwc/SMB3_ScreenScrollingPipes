@@ -1,0 +1,339 @@
+<html>
+	<head>
+		<style>
+			html {
+			background-color: #000207;
+			color: white;
+			font-family: sans-serif;
+			}
+			
+			table, th, td {
+			border: 1px solid white;
+			border-collapse: collapse;
+			}
+		</style>
+	</head>
+<body>
+
+<center><h1>Screen Scrolling Pipes</h1></center>
+<center><h2>By GreenHammerBro.</h2></center>
+<hr>
+This block pack contains custom block pipes that when the player enters them, instead of
+screen-fading to the next level, scrolls the screen following the pipe as the player
+travels through to the other end.<br><br>
+
+The purpose of this release was be FuSoYa's pipes are incompatible with the custom block
+insertion tool; <i>Gopher Popcorn Stew</i> (GPS). Along with some unwanted bugs (unless you
+want to use them in a kaizo hack) and other crap that wasn't fixed since its code is horrible:
+
+<ul>
+<li>The player will teleport to the last pipe exited if the player hits the bottom of a horizontal
+pipe cap, translucent block, or on/off block (on the latest version). If the player haven't enter
+the pipes at all, will be teleported to the top-left corner of the level.</li><br>
+
+<li>If the player's pipe movement travel ends with going left, then vertical (going up or down), and then exit,
+the player's X position will be slightly to the left from the center of the pipe.</li><br>
+
+<li>If the player is carrying a sprite, and drops the sprite as he exits an upwards facing pipe cap, the sprite
+will be clipped into the cap part of the pipe.</li><br>
+
+<li>Prior to the release of this package, old screen scrolling pipes (FuSoYa isn't the only one, MikeyK made his)
+require an exit tile (air or water) in front of their caps, thus, making the placements of blocks around it more
+inconvenient (requires an extra space of tiles)).</li><br>
+
+</ul>
+
+
+
+<h2>Features not seen before:</h2>
+<ul>
+<li>Exit tiles (air tiles or water tiles placed in front of pipe caps) are no longer
+necessary, since this package relies on uberasm tool and a timer RAM, you can put any tiles
+(obviously you shouldn't put solid tiles there) without worry.</li><br>
+
+<li>Turn pipe corners for small pipes. FuSoYa did feature small pipes that can only be entered by
+small Mario, but have forgotten the turn pipe corners, thus straight pipes with gaps for turns
+are needed on FuSoYa's end.</li><br>
+
+<li>As of version 3.2.2, turn pipe corners now have a smoother change of direction instead of
+snapping the player's coordinates when approaching them. It wait tills Mario's position is at or
+past the point he needs to change direction (it will center the player correctly).</li><br>
+
+<li>Customizable speed. Because why not?</li>
+
+</ul>
+
+<h2>Insertion</h2>
+<h3>What you need:</h3>
+<ul>
+<li>Uberasm Tool (Not the patch)</li>
+<li>Gopher Popcorn Stew (GPS)</li>
+<li>Lunar Magic's map16 page 4 not used, unless if you know how to make it use a different
+page.</li>
+<li>No More Sprite Tile Limits patch.</li>
+<li>	No shooting fireballs/cape spin when carrying something (to prevent auto-capespin when
+carrying a sprite when exiting pipes)</li>
+</ul><br>
+
+<h2>Instructions to apply to your game.</h2>
+
+<ol>
+<li>Lunar Magic</li><br>
+<ol>
+<li>Simply copy the graphic files and paste them in their respective folder. The file naming should
+be obvious.</li><br>
+
+<li>Open the level file <tt>demonstration.mwl</tt>. (MenuBar &gt; File &gt; Open Level from
+file...)</li><br>
+
+<li>Open your map16 editor, and import <tt>tilemap.map16</tt> (Question block with a red left
+arrow on it; <img src="Readme_files/LM_ImportMap16FromFile.png">). After the blocks are imported, hit save.*</li>
+
+</ol>
+
+<li>ASM</li>
+<ol>
+<li>Define note</li>
+<ol>
+<li>Make necessary changes to <tt>SSPDef/Defines.asm</tt>. Of course, if you already inserted the ASM
+codes and wish to edit and re-insert, make sure you have the copies of it up to date with correct information.</li>
+
+</ol>
+<li>Uberasm Tool</li>
+<ol>
+<li>Copy the folder (the folder itself) <tt>SSPDef</tt> and paste it in the same directory as uberasm tool.exe
+is in, not in any of the subfolder of uberasm tool.</li><br>
+
+<li>In the folder <tt>UberasmTool</tt>, the sub directory folders should be obvious of where should you put the ASM files
+in. In the case if you previously have code for gamemode 14, open one of them up and combine them (because you cannot have two
+files used for the same gamemode number.)</li><br>
+
+<li>On <tt>list.txt</tt>, under gamemode, just put this:
+
+<table><tr><td><pre>14 GM14.asm</pre></td></tr></table></li><br>
+
+<li>Now insert the code by running uberasm tool.</li>
+</ol>
+
+<li>GPS</li>
+<ol>
+<li>Copy the <i>folder</i> of <tt>SSP_Tiles</tt>, and paste that in GPS's <tt>blocks</tt> folder. After doing that, then
+paste another copy of <tt>SSPDef</tt> <i>inside of</i> <tt>SSP_Tiles</tt>. Also paste the asm file(s) in <tt>BlockRoutines</tt>
+in GPS's routines folder.</li><br>
+
+<li>Copy the text from <tt>pipe_tiles_list.txt</tt> and paste it in GPS's list file. Now run GPS to insert the blocks.*</li><br>
+</ol>
+
+<li>Fix patch</li>
+<ol>
+<li>Not much to say, simply install <tt>Fixes.asm</tt> via asar. This patch fixes various bugs relating with the pipes.</li>
+</ol>
+
+</ol>
+
+<li>Level usage</li>
+
+<ol>
+Click <a name="UseBlocksInLevel" href="Readme_files/BlocksUsageInLevel.html">here</a> for how to use in levels.<br>
+</ol>
+
+</ol>
+
+*If you need to move your pipes to a different map16 page, simply change <tt>$PPNN</tt> (or <tt>$PNN</tt>) where PP is the page number to move to.
+Make sure they line up properly (the first block that was origonally placed on the top-left corner should remain on the top corner
+on the new page you're moving to).
+
+<h2>FAQ</h2>
+<ul>
+
+<li>How do I set the freeram and settings?
+<ul><li>Look in <tt>SSPDef/Defines.asm</tt>. If you make changes to it, you MUST update the other copies of it in GPS and uberasm
+tool so they use updated information.</li></ul></li><br>
+
+<li>When Mario enters a pipe, Mario passes through them as if they turned into air tiles!
+<ul><li>You've forgot to insert the uberasm tool code <tt>GM14.asm</tt>, which is needed as blocks have certain limitations.</li></ul><br>
+</li>
+
+<li>I've found a bug! Will you fix it?
+<ul><li>Yes, but only if I'm active on smw central. However, in the case that I'm inactive, you are free to re-upload my works, just make sure you
+give credit.</li></ul></li><br>
+
+<li>How do I modify the speeds, and other customizations?
+<ul><li>Open <tt>SSPDef/Defines.asm</tt>, there should be things like what RAM you want to use, if you wanted the pipes to not freeze time, etc.
+Just make sure you read the descriptions, espically when you are changing the pipe cap speeds (how mario exit the pipes rely on a timer of when
+the player will be out of &ldquo;pipe mode&rdquo;)</li></ul></li>
+</ul>
+
+<h2>Notes</h2>
+<ul>
+
+<li>If you carry any <b>custom</b> sprites through these pipes, they will not go behind the layer;
+ appearing superimpose of the pipe as mario is being behind the layer. Unless you can
+ make it change the yxppccct using this code to be used in a custom sprite's code:
+ 
+ <table><tr><td><pre>
+ 	SSPPriority:
+		LDA $14C8,x      ;\If sprite not carried, go in front
+		CMP #$0B         ;|
+		BNE .InFront     ;/
+		LDA !FR_PipeDir  ;\or if mario is not in a pipe, go in front
+		BEQ .InFront     ;/
+	.Behind
+		LDA $15F6,x
+		AND.b #%11001111
+		BRA .Skip
+	.Infront
+		LDA $15F6,x
+		ORA.b #%00xx0001 ;>Replace the Xs with a binary number that is the sprite's original priority.
+
+	;00 = Appear behind everything except Layer 3 tiles with priority setting 0
+	;01 = Appear behind everything except Layer 3 tiles (unless they have priority setting
+	;     1 and the "force above everything" bit is set)
+	;10 = Appear in front of Layer 3 tiles (unless they have priority setting 1 and the
+	;     "force above everything" bit is set) and Layer 1 and 2 tiles with priority setting 0;
+	;     appear behind Layer 1 and 2 tiles with priority setting 0 (this is SMW's normal setting
+	;     for most sprites)
+	;11 = Appear in front of everything, except Layer 3 tiles with priority setting 1 if the
+	;     "force above everything" bit is set</pre></td></tr></table></li><br>
+
+<li>If you enter a pipe, while yoshi exist, yoshi will also turn invisible (with some 8x8
+ pieces still visible), I couldn't fix that.</li><br>
+
+<li>The routine file is also SA-1 hybrid, no need to worry about yoshi issues about it. However, you
+must use RAM address in banks $40/$41 should you need to use 3-byte addressing ($4XXXXX)</li><br>
+
+<li>If Mario gets on a p-balloon, Mario will keep facing the same direction prior
+ grabbing it even when moving the opposite direction (so if he grabs it facing left,
+ he'll keep facing left, evidence is that the screen orientates in the same direction
+ regardless of which left or right direction Mario is going), until the balloon wears
+ off. If you try entering horizontal pipe caps that way, Mario won't enter the pipes if
+ he's facing away from the cap (so he doesn't enter backwards), so if you are using this,
+ you should download the &ldquo;p-balloon fix&rdquo; by Alcaro and/or &ldquo;P-balloon timer fix&rdquo; by
+ GreenHammerBro, that will fix the error and always allow Mario to enter. Do note that
+ being under the effect of the balloon counts as &ldquo;carrying something&rdquo;.</li><br>
+
+<li><s>Don't make it possible for the player to to be inside these pipes while in layer
+ 3 tides, because since the tides still runs while freeze flag is still set ($7E:009D,
+ except when taking damage, its the player animation trigger ($7E:0071)), it will push
+ mario while in the pipe and causes glitches like coming out of the pipe out of nowhere
+ or even &ldquo;escape&rdquo; the pipe and leaving the player's still in &ldquo;pipe physics mode&rdquo;,
+ softlocking the game.</s> EDIT: This is fixed. You can now use the pipes in the tide freely.</li><br>
+
+<li>You need No More Sprite Tile Limits in order to prevent Mario, Yoshi, and other sprite
+ tiles losing their tile when entering pipes.</li><br>
+ 
+<li>I had to store #$0B into $7E0071 so that when setting $7E:009D to freeze time works
+properly; most sprites don't freeze (excluding ones that doesn't check $9D (the freeze flag),
+like birds/puff of smoke on yoshi's house). Address $00CDE8 is responsible for this problem,
+this runs every frame when $7E0071 = #$00. I'll keep the store #$0B to $7E0071 in case if
+uberasm could not disable the controls properly just in case. It's also needed to prevent
+player controls during pipe movement.</li><br>
+
+<li>For some reasons, SSP_Tiles $40D-$411, $413, $16, $417, $41C, $41E, $41F, $423, $425-$428,
+$42B-$42F, $436, $437, $43B-$43E, $440, $44B-$44F, $45E, $45F, $46F, $47E, $47F, and
+$48E uses the wrong discriptions of another block when viewed on LM, even though the
+discriptions in the asm blocks are correct, it might be a glitch with LM viewing or
+GPS's discription, I can't really fix that, so if this bothers you, simply disable it
+in the definition file, that way, it will only show up its name correctly without any
+errors. Hopefully this gets fixed, if it was, please PM me or update the file (by
+editing the files (like the if statement containing the print commands) in this package
+and removing this notice). In the future, they may be fixed due to the bugs happening in the tool itself.</li><br>
+
+
+<li>While most sprites don't interact with the player in any way when the player is traveling through pipes,
+be aware that some sprites still do interact with the player:</li><br>
+
+<ul>
+
+<li>All smw's solid sprites (mainly platforms) that sets the player character's position when standing on them
+are hijacked to prevent misaligned entering horizontal pipes. But not some <b>custom</b> sprites (depending how
+$9D was handled if it should still interact with the player). To fix that, simply look for a code that writes
+(STA) to an address $94-$97 (first two bytes is x pos, last two are Y), and add this to skip over setting the
+player's coordinates, and also writing $1471:
+
+<table><tr><td><pre>incsrc "../SSPDef/Defines.asm"
+;^This at the top, and must be up to date (as in match) with all of them used by blocks, patch and uberasm tool.
+; You may have to fiddle around with the [../] (pearent directory) in case for future tools. Then make sure you
+; copy and paste the folder containing the definitions where the sprite tool's exe is at.
+
+	LDA !Freeram_PipeDir
+	AND.b #%00001111		;>Check bits 0-3 to see if the player is currently in a pipe
+	BNE .DontSetPos			;>If nonzero, mario is in a pipe.
+
+	;*code that uses, lets say sprite position ($D8, $E4, $14D4, and $14E0), displaces the
+	;number from it, and writes to $94-$97, and writing to $1471*
+
+	.DontSetPos			;>Must skip ALL position-related code</pre></td></tr></table>
+
+<ul><li>Also, in case other codes that sets the player's X and Y speed ($7A-$7B, $7D $13DA, and
+$13DC), make sure you don't write them during pipe movement. Otherwise it will override
+and misalign Mario from the pipe.</li></ul></ul><br>
+
+<li>While inside the pipe:<br>
+
+<ul>
+<li>The player is behind the layer (<tt>$7E13F9</tt> is <tt>#$02</tt>).</li><br>
+
+<li>RAM address <tt>$7E0071</tt> is set to <tt>#$0B</tt> when freezing is enabled (have <tt>!Setting_SSP_FreezeTime</tt> set to 1)
+(due to the fact that if you set $9D to a non-zero value without setting $7E0071 to <tt>#$0B</tt> on an uberasm code, the freezing
+gets nullified and some stuff will ignore the freeze effect thanks to address <tt>$00CDE8</tt> clearing the freeze flag every frame).</li><br>
+
+Thus, if a sprite doesn't check those or coded in a way that interacts with the player <i>reguardless</i> of his state (including
+doing things during $9D or $71 being set), it can mess up his pipe travel and causes glitches. Things like wind generator, or wind generated
+by a sprite can push mario out of a pipe path and cause a softlock as he misses an exit or a change-direction-corner. To avoid this
+issue, a simple code mentioned earlier will solve this.</li></ul></li><br>
+
+<li>When traveling downwards and hits a corner that changes the player's direction to horizontal (left or right), the blocks below the turn corner
+may be interacted. Be careful not to put instant kill, teleport, or any other such blocks there, unless you add a check to not interfere
+with the player traveling:
+<table><tr><td><pre>	LDA !Freeram_SSP_PipeDir		;\If inside a pipe, return.
+	AND.b #%00001111			;|
+	BNE InsidePipe				;/>Don't do anything as the player travel through pipes
+</pre></td></tr></table></li><br>
+
+<li>If you're not using custom sprites, RAM address $7FAB10 ($400040 SA-1) aren't initialized, thus
+can cause issues like yoshi keeping his facing direction from when you enter after exiting a
+horizontal pipe.</li><br>
+
+<li>As if the time writing (9/3/2018), codes like <tt>DistanceFromTurnCornerCheck</tt> and some other routines are <b>not</b> moved to GPS's
+routines folder because it is using a version of Asar before 1.60, thus using labels can leak out with no convenient way around it.</li><br>
+
+<li>When traveling through horizontal small pipes, Mario will interact with the &ldquo;bottom&rdquo; offset of any blocks placed above the horizontal
+pipe. It is possible to prevent that by positing Mario lower, but he will interact with  the &ldquo;above&rdquo; offset of blocks below the pipe.
+Because of how small Mario's object collision points are <b>exactly</b> 16 pixels (full block, 15 pixels in between exclusively) tall, there is no
+Y position that interacts neither, as Mario is too tall to avoid triggering any blocks placed above and below the horizontal small pipe:
+<table>
+<tr><td><center><img src="Readme_files/SSP_SmallHorizPipeTopInter.gif"></center><br>
+If Mario is 1 pixel up (<tt>Player_Y_Position = Block_Y_Position - 1</tt>) from the block he is directly inside of.</td>
+
+<td><center><img src="Readme_files/SSP_SmallHorizPipeBottomInter.gif"></center><br>
+If Mario's Y position is exactly the same Y position as the block.</td></tr>
+
+<tr><td colspan="2"><center>Small Mario's Collision  points:</center><br>
+<img src="Readme_files/MarioCollisionPoints.png"></td></tr>
+<tr><td colspan="2">Just to let you know, I've enabled debug mode (the define <tt>!Setting_SSP_PipeDebug</tt>) to make Mario visible when traveling through pipes.</td></tr>
+</table><br>
+However, this can be mitigated by editing small Mario's collision points location via <a href="https://www.smwcentral.net/?p=section&a=details&id=15234">interaction editor</a>,
+by moving either one of small Mario's collision points (top and bottom) closer to Mario's middle by at least 1 pixel. If you haven't edit any of the vertical centering
+caused by horizontal small pipe caps, small turn corners (and the special turn corner), you can simply just move the head interaction down by 1 pixel.
+</li><br><br>
+
+<li><s>If Mario stands on a key sprite (sprite number <tt>$80</tt>), and enters a horizontal pipe cap the same time he picks the key up, he will carry the key as normal (albeit
+his pose is acting like he isn't carrying anything), but upon exiting the pipe, Mario may (depends on the timing of picking up the key and entering) forcibly drop the key
+(even if the player holds the dash button) due to the carrying sprites through pipe (<tt>!Freeram_SSP_CarrySpr</tt>) flag not being set prior entering.<br><br>
+
+It may be possible that this happens in a sequence within a frame:
+<ol>
+<li>The game first handles the player entering the pipe (sets his pipe status; <tt>!Freeram_SSP_PipeDir</tt>) with the pickup flags (RAM address
+<tt>$7E1470</tt> and <tt>$7E148F</tt>) being zero (thinks that the player isn't carrying anything)<br><br></li>
+
+<li>Then later, the game handles the key being picked up, it registers that the player is picking up the key since the controller being read (checks if you are holding dash)
+is before the controller gets disabled by the code handling pipe traveling from Uberasm tool.</s> EDIT: This bug is fixed as of version 3.2.8.</li><br>
+
+</ol>
+
+Now note that if RAM address <tt>$7E1419</tt> (this is the RAM that handles when the player enters an exit enabled pipe, it also affects yoshi pose, even when not mounted)
+is a nonzero value, will force the player to hold the sprite, regardless the dash button is held down, disabled (clears the controller bit every frame) or not pressed at all.
+Once the player exits the pipe, the frame the player exits the pipe completely will have <tt>$7E1419</tt> be cleared but his controllers still disabled until a frame later, causing
+the player to let go the sprite.</li>
+</ul>

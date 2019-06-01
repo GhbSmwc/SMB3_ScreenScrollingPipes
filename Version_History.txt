@@ -1,0 +1,300 @@
+Should be 12 items in the main folder directory.
+
+Fix list:
+-none found.
+
+version history (oldest to newest, note: a "." represents a sub-version, not a fraction
+(9.8, 9.9, 9.10)):
+
+1.5
+	-now you can carry sprites through them! thanks to PHB, PHK, and PLB
+	 commands (which is commonly used on sprites).
+1.6
+	-FIX A PROBLEM THAT IF MARIO DOESN'T HOLD DASH, KEEPS HOLDING DOWN, EXITS THE PIPE'S
+	 TOP CAP RIGHT INSIDE THE CARRYABLE SPRITE, WILL CAUSE MARIO TO RE-ENTER THE PIPE AND
+	 CRASH THE GAME.
+	-also fix the random "automatic kick" when mario exits a pipe with a carryable sprite
+	 in front of it (not applies to "kick without the dash button" sprites like shells).
+	-fix the "autodrop item" when mario exits the pipe even when holding dash; cause by
+	 exiting and entering the top pipe cap immediately and carry the sprite when comming
+	 out.
+1.7
+	-remove a pointless option of disabling yoshi from entering a normal sized pipe, the
+	 branch that check that if mario is on or not can be circumvented by placing yoshi in
+	 front of the cap, then enter the pipe on foot, would cause mario to enter the pipe and
+	 get on yoshi.
+	-fix the glitch that when mario exits a horizontal pipe on yoshi won't update mario's
+	 facing direction, thus making it possible to exit a horizontal pipe backwards.
+	-fix the "face at the screen for a few frames when exiting" on horizontal pipe caps
+	 when the player enters a horizontal pipe cap while turning around on yoshi, by not
+	 allowing entering horizontal caps until mario and yoshi faces all the way to the side.
+	-found a mini-pipe problem that the check "if mario is riding yoshi, then return" can be
+	 circumvented by ovelapping with yoshi and entering the mini pipe while on foot, now
+	 provides an anti-yoshi barrier, making it possable to prevent mini-pipe glitches.
+1.8
+	-fix a problem with the p-balloon that if mario is inflated and enters the pipe, after
+	 comming out is still in balloon mode (should work like how smw's pipe reset the balloon
+	 in another level).
+1.9
+	-fix the instruction and added numbered order rather than "- list" and fix the problem
+	 that if you insert the blocks, then the map16, the map16 tile behavor may be in effect
+	 instead of GPS's behavor, may cause behavor problems (LM's map16 editor and GPS both
+	 effect the "act as" setting of the blocks).
+	-added another Q&A about the vwfdialogues.
+2.0
+	-fix a problem that if you use long addresses (like around $7F:FFFC),
+	 left_horizontal_pipe_cap_B.asm and right_horizontal_pipe_cap_B.asm throws an error that
+	 a return branch is "out of range".
+	-forgot to add "disable entering pipes if carrying something" for the minipipes if you
+	 change the setting about carrying something.
+2.1
+	-fix a minor bug reguarding the consecutive stomps ($7E:1697) doesn't reset if player
+	 only enters down-facing pipes and not touch any ledges or platforms.
+	-improved the word wrappings on this readme, adding consistency at the end of each line.
+2.2
+	-Learned on how to make a timer hit 0 and run only once, by using BranchIfZero,
+	 Decrement by 1, and then BranchIfZero.
+	-Improve the discription of having additional codes past the pipe code of uberasm,
+	 (having other codes between the pipe code and the table.
+	-Fix the definition file extension being ".asm" instead of ".txt".
+	-Fix the cape spinning bug, if you do a cape spin and then enter a pipe, mario still
+	 spin upon exiting.
+	-Remove an unused label "skiphorizpose:" in uberasm code.
+2.3
+	-Fix a glitch that if cape mario runs, does a big jump, then enter a pipe (while
+	 $7E:149F's value is running), and after comming out of the pipe and immediately being
+	 in midair (like jumping right away) while still holding dash, can make mario return to
+	 his "cape phase". This is because $7E:149F doesn't zero if the cape phase ram has been
+	 zero'ed.
+
+	 -However, this also happens on the origional smw's exit-enabled pipes too, if you want
+	  to fix that (to add consistency between screen-scrolling pipes and exit-enabled pipes),
+	  simply add this line of code in "gamemode_init_14:" in "gamemode_init_code.asm"
+
+	  STZ $149F
+
+	  and you are done.
+	-Added an SA-1 sprite slot notice in this readme.
+	-Fix a typo that sa-1 uses 22 slots, not 20 slots.
+2.4:
+3/24/2015
+	-Fix a HDMA glitch that occurs when storing #$0B into ram address $7E:0071 (the player
+	 animation trigger); NO WONDER WHY THE MESSAGE BOX STOPS FUNCTIONING FOR THE FIRST HIT
+	 AFTER EXITING THE PIPE, the black box (behind the text) gets altered.
+	-Remove the VWF dialogue fix since its obsoleted by fixing the HDMA by NOPing out
+	 address $00C5CE.
+3/25/2015
+	-Fix a version typo on top of this readme.
+	-Added lock animation notes explaining why storing #$0B into $7E:0071 is important.
+3/26/2015
+	-fix a typo about what is the first opcode that resets $9D; its $00D15C, not $00D156.
+5/17/2015
+	-remove unnecessary yoshi center codes for horizontal small pipe caps.
+	-Added a notice of what block have glitched discription showing discription of another
+	 block.
+	-Added sa1 slot number in a define in the definition file.
+6/04/2015
+	-Fix the mwl file using the wrong graphic slot (the graphic file says slot #$80, but
+	 in the mwl, the "Super GFX Bypass" BG3 wasn't #$80).
+7/06/2015
+	-Edited the branch labels so they all use +/- symbols so you don't have to worry about
+	 re-defined labels.
+	-Fixed the readme saying about the sa-1 slots, since I updated the definition file.
+	-Warn the user that the old version of uberasm has the gamemode and gamemode init
+	 swapped.
+9/27/2015
+	-Fix the patch "Fixes.asm" that the message box issue is present.
+9/28/2015
+	-Improved the entering and exiting animations, now they behave almost like ram address
+	 $7E0088, as well as the values being stored into it. The directions freeram has two
+	 seperate speeds for each direction, first one for the "stem" part of the pipe, while
+	 the second one is the speed for exiting and exiting animations. You are only allowed
+	 to modify the stem speed, not entering and exiting caps. Or else mario exits the pipe
+	 completely too early or too late due to a speed and timer desync.
+	-Killed a bug involving mario getting on yoshi while entering a horizontal pipe cap by
+	 mario standing ovelapping yoshi's saddle. You no longer need the yoshi barrier anymore
+	 (I have deleted it because there is a circumvention bug, by kicking the baby yoshi
+	 straight up on the left side of the barrier close as pssible and grabbing it while
+	 inside of it being to the right of center as possible).
+10/4/2015
+	-Figure out why mario drops sprite upon entering pipes, You have to set a value to
+	 $7E1419 even if the player isn't riding yoshi. In the origional smw, this value is also
+	 set even if not riding yoshi because this effects carrying the sprites also.
+10/24/2015
+	-Discovered whats resetting $7E009D every frame when $7E0071 = #$00, in SNES address
+	 $00CDE8, used by the L/R scrolling routine to keep things in motion.
+11/02/2015
+	-After hearing about the event of the screen scrolling doors being remove, I notice that
+	 Fixes.asm is supposed to also remove the STA.W $1B88 at address $00C5D3.
+3/26/2016
+	-Fix a mistake that I made that I forgot to remove the yoshi barrier on the list since
+	 the block is now deleted.
+	-There is an incompatibility issue with my center scroll patch: if you are traveling
+	 vertically and hits a corner, the centering routine will warp mario to that position
+	 that is too far away. This causes layer graphical glitches since the screen was jolted.
+	-fixed a mistake on right_horizontal_pipe_cap_small.asm the way mario exits a pipe, its
+	 using the right half to exit the pipe when it should use the left half.
+	-Fix a severe bug on bottom_vertical_pipe_cap_R_exit.asm that it doesn't use the yoshi
+	 positioning correctly.
+	-Fix the bottom pipe caps using $167A as a "check if mario is on yoshi". They are now
+	 using the correct ram address: $187A.
+3/27/2016
+	-Fix the layer 2 issues:
+	 -apparently, the air flag of $72 doesn't work properly with
+	  blocks. So I have to use $77, save it in a ram before clearing it so that the blocks
+	  don't always assume the blocked status is #$00.
+	 -(not a fix but a workaround) Found a bug and made an image showing not to place blocks
+	  in such a way that the small horizontal pipe caps would warp the player 16 pixels down
+	  into the floor and getting stuck.
+	 -Added sa-1 support for uberasm code and fix patch. (but not blocks since the new GPS
+	  isn't released yet).
+	-Removed the yoshi barrier tile on the 16x16 data.
+3/28/2016
+	-Removed because DiscoTheBat rejected it:
+	 -Horizontal pipes not working
+	 -Sublabels for the fix patch looks better than all using main labels.
+
+	-Changed the level testing in demonstration.mwl
+3/29/2016
+	-Fix the branching issues with the blocks if you are using long ram addresses.
+	-Fix left_horizontal_pipe_cap_B_exit.asm for not having a yoshi center code.
+5/4/2016
+	-Due to a request sent by Vitor Vilela, for some reason, !Base2's SA-1 detection fails
+	 to work. So I simply re-added on the uberasm code.
+
+6/22/2016
+	-Rejected by JackTheSpades for the following reasons:
+	--All non-block asm codes are not sa-1 compatable: the "fixes" patch is missing
+	  "+!Base2" after RAM $xxxx.
+	--You can organize your data:
+	---I did not realized that you can have a subfolder in GPS's blocks folder AND use a
+	   file
+	   path in the block list (syntax: xxx:yyy Foldername/Block.asm).
+	---Also realized that you can use: incsrc "filename.asm" in uberasm so you can have
+	   codes in a seperate file.
+1/16/2017 3.0
+	-User named "Level ASMer" (ID:19432) has updated the blocks to SA-1 hybrid, give a shout
+	 to him.
+	-Updated the uberasm code:
+	--Cleaner sublabels, now has nested sublabels.
+	--Adopted to uberasm tool.
+	-Moved the codes from uberasm patch to uberasm tool.
+	-Updated the patches to use the modern SA-1 detector.
+1/18/2017 3.1
+	-Fixed a bug with yoshi having a possibility of maintaining facing direction with exiting
+	 horizontal pipe.
+4/8/2017 3.1.2
+	-Fix an error on this readme that I forget to change the "what you need" that it requires
+	 uberasm tool, not patch.
+
+4/28/2017
+	-Added more discription on why you need the NMSTL patch, not only mario and yoshi are
+	 affected.
+4/29/2017 3.2
+	-Fix a bug that STILL messes up sprites, due to that you actually must write #$02 instead
+	 of #$01 on $13F9.
+	-Now allows entering horizontal pipes on sprite platforms (by adding a check if mario is
+	 in a pipe to not set Mario's position.
+5/3/2017 3.2.1
+	-Forgot to also fix the carrot lift sprite.
+7/21/2018 3.2.2
+	-Fixed a glitch involving the bowser defeated scene causing a softlock.
+	-Fix an oversight that I forgot to check the direction for pipe caps on horizontal pipe
+	 caps for the player to be in "exiting mode" (which can causes the player to pass through
+	 the other end of the pipe without exit should the timer be non-zero).
+	-Added more defines including the ability to disable freezing and changing the speed more
+	 easily (including the pipe cap speeds).
+	-Improved an uberasm code that the user on smwcentral named "RPG Hacker".
+	-Fix a glitch that happens if the player enters an upwards facing pipe cap (press down to
+	 enter), and immediately turns left while the entering timer is still running, causes
+	 Mario's pipe state to be #$00, causing death or softlock.
+	-Fix a potential bug that when setting to higher speeds, smallblockhitbox check can break,
+	 causing things like the player passing through turn pipes without turning.
+7/24/2018 3.2.3 - label improvement for uberasm, bugfix and newer features
+	-Added the ability to pause the game during pipe traveling.
+	-Fix a small error that the readme forgot to mentioned that the user needed to place an asm
+	 file meant to to be used in GPS's routines folder.
+	-Fixed a glitch that during events the game freezes (such as baby yoshi performing a growing
+	 to adult yoshi before the message box appears) that the pipe timers still runs during that
+	 freeze, rendering it possible for the player to "exit pipe" prematurely by waiting the
+	 timer out during that freeze when the user sets the pipes to not freeze time.
+	-Fix a bug that happens that if the player triggers a message box and enters pipe, the
+	 locking controls still applies and can cause a softlock if you have freezing disabled.
+	-The pipe code is now moved to uberasm tool's library due to easier labeling and making
+	 gamemode 14 less potentially cluttered if the user needs to add more code.
+	-Labels inside the uberasm code (now moved from GM14 to library under the name
+	 "ScreenScrollingPipes.asm") are reworked and better organized.
+	-Fixed a potential bug that may use the wrong bank (rare cases) due to forgetting to use
+	 [PHB : PHK ... Code ... PLB RTL].
+	-Yoshi posing code was improved similar to what RPG hacker asked me to do (there was two
+	 that need to be improved).
+	-Horizontal pipe caps, when exiting, no longer uses BCC/BCS to compare block X position
+	 +/-4 with the player's X position, rather BMI/BPL.
+	-Fixed the readme for some reason have two "."s before the file type name.
+	-Fixed a glitch where small Mario traveling through small pipes could interact with turn
+	 corners and pipe caps placed 1 tile (touching) above the horizontal pipe Mario is currently
+	 traveling.
+	-Fixed an oversight with all horizontal pipe caps not having a vertical centering code when
+	 the player exits them.
+	-Updated the readme and added new info about placing the pipes in the level.
+9/8/2018 3.2.3 - Added a notice
+	-Added a notice about small Mario's block hitbox (object collision points) that he'll
+	 interact with blocks above a horizontal small pipe.
+10/2/2018 3.2.4 - bugfix (branch out of bounds)
+	-Fixed an error that happened with some blocks not being inserted should
+	 "!Setting_SSP_CarryAllowed" be set to 0.
+10/5/2018 3.2.5 - branch out of bounds again - using long freeram address
+	-Fix an error that prevents insertions in both the uberasm tool and the blocks if the
+	 user were to use long addressing (3-byte addressing; $xxxxxx).
+	-Added info about an easier way to find the proper timer value when entering/exiting pipes
+	 using time difference of how long the player will fully exit the pipe.
+10/6/2018 3.2.6 - bugfix with horizontal pipe caps
+	-Fix an oversight that when the player stands on a key sprites and enters a horizontal pipe
+	 cap, the player will teleport downwards and die if positioned near the subscreen boundary
+	 due to accidentally having the code STILL sets the player's Y position when it shouldn't.
+	-Fix a bug that big Mario can enter horizontal pipe caps when the player is 1 block lower
+	 than the cap and have no block underneath the cap (the player enters by simply having his
+	 head touch the cap).
+10/28/2018 3.2.7 - Auto fireball and cape spin when exiting a pipe carring a sprite
+	-Fixed a glitch that the player will perform a cape spin or toss a fireball upon
+	 exiting a pipe when carrying a sprite.
+10/31/2018 3.2.8 - Accepted but bug reports and more.
+	-Give thanks to MarioFanGamer [https://www.smwcentral.net/?p=profile&id=22951] for reporting
+	 a glitch with the fireballs and cape that they still happen due to a bad code with resetting
+	 all buttons except the dash button.
+	-Added an option to disable yoshi from entering pipes.
+	-Fixed a glitch that if the player is standing on a key, and enters the pipe the same frame
+	 he picks it up, he'll act as if he isn't carrying no sprite (pose not carrying image) and
+	 forcibly drops the carried sprite upon exiting.
+	-Option to disable yoshi added.
+	-Disabling carrying sprites now disables unnecessary code that deals with carrying sprites,
+	 and also disables !Freeram_SSP_CarrySpr from being used.
+	-You can now use these pipes in layer 3 tides.
+11/3/2018 3.2.9 - Oversight on disabling $16
+	-Now enabled pausing while inside pipes if you disabled freezing. I've messed that up by
+	 enabling select instead.
+11/7/2018 3.2.10 - Oversight on direction checks on pipe caps.
+	-Fixed a small bug that if two pipe caps directly touching each other (no middle part or air
+	 in between), when traveling through them have non-fluent movement. This is due to some pipe caps
+	 not checking BOTH the stem and cap speeds directions prior exiting.
+11/17/2018 3.2.11 - few bytes saved
+	-Figured it out on how to save a few bytes on table sizes when the first bytes are not used,
+	 by using "Label-1,<X or Y>". This applies to [UberasmTool\library/ScreenScrollingPipes.asm].
+11/18/2018 3.2.12 - readme visual change.
+	-Hasuke have asked if he can change the readme so it doesn't have this boring white background
+	 with black text on the visual.
+	-Fixed the readme on a code on how to prevent custom sprites from interacting with the player
+	 while in a pipe.
+11/29/2018 3.2.13 - SA-1 hybrid defines.
+	-Although the defines are single-byte address (which will work on both normal and SA-1; $xx),
+	 the defines themselves using freeram now are split to keep consistency with my other patches,
+	 as well in case if you are porting your hack to a sa-1 version.
+12/12/2018 3.2.14 - [REMOVAL] SA-1 major issues with fixes.asm
+	-Due to fixes.asm was a copy-paste of an outdated code, I forgot to test the SA-1 issue with sprites
+	 and 16-bit addressing $0100+.
+	-Due to calling the defines files before calling "!sa1" it causes errors with the defines file.
+	-Fixed a nasty bug with "Sprite_Springboard_ImageFix" in fixes.asm that I treated $1602 like a
+	 non-sprite table 16-bit address that needs a "|!addr" when handling sa-1. Causing the image
+	 of the sprite to be off from the actual hitbox of the sprite.
+	-Realized that GPS now adopts SA-1 defines in "defines.asm"; the routine file "FaceYoshi.asm" now
+	 adopts to it.
