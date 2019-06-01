@@ -22,14 +22,14 @@ This block pack contains custom block pipes that when the player enters them, in
 screen-fading to the next level, scrolls the screen following the pipe as the player
 travels through to the other end.<br><br>
 
-The purpose of this release was be FuSoYa's pipes are incompatible with the custom block
+The primary purpose of this release was be FuSoYa's pipes are incompatible with the custom block
 insertion tool; <i>Gopher Popcorn Stew</i> (GPS). Along with some unwanted bugs (unless you
 want to use them in a kaizo hack) and other crap that wasn't fixed since its code is horrible:
 
 <ul>
-<li>The player will teleport to the last pipe exited if the player hits the bottom of a horizontal
-pipe cap, translucent block, or on/off block (on the latest version). If the player haven't enter
-the pipes at all, will be teleported to the top-left corner of the level.</li><br>
+<li>The player will be teleported to the last pipe exited if the player hits the bottom of any horizontal
+pipe caps (including small ones), translucent block, or on/off block (on the latest version). If
+the player haven't enter the pipes at all, will be teleported to the top-left corner of the level.</li><br>
 
 <li>If the player's pipe movement travel ends with going left, then vertical (going up or down), and then exit,
 the player's X position will be slightly to the left from the center of the pipe.</li><br>
@@ -41,6 +41,29 @@ will be clipped into the cap part of the pipe.</li><br>
 require an exit tile (air or water) in front of their caps, thus, making the placements of blocks around it more
 inconvenient (requires an extra space of tiles)).</li><br>
 
+<li>If you try to enter the top of a small vertical pipe cap and slip off the right edge, Mario can &ldquo;escape&rdquo;
+the exit tile placed on top of it, causing mario to be in his pipe state without entering the pipe:<br>
+<img src="Readme_files/FuSoYaPipe_TopVertMiniPipeCapBug.gif"><br>
+This is due to the exit tile's hitbox not reaching rightwards far enough.</li><br>
+
+<li>The range that is allowed to enter a small vertical pipe cap is not what you expect. Mario's relative X position
+(<kbd>MarioRelativeXPos = MarioXPos - PipeCapXPos</kbd>) must be values ranging from <kbd>-1</kbd> to <kbd>+6</kbd>
+(both numbers inclusive) to be able to enter, therefore, it would look like this:<br>
+<img src="Readme_files/FuSoYaPipe_SmallVerticalPipeXPosAllowed.png"><br>
+Here is how inconsistent to enter them:<br>
+<img src="Readme_files/FuSoYaPipe_SmallVerticalPipeXPosTolorance.gif"></li><br>
+
+<li>Mario will interact with any blocks placed directly below the horizontal pipes (so a muncher can kill the player
+inside the pipe).</li><br>
+
+<li>Leftwards facing pipe caps (including small pipes) have the block being passable (&ldquo;suck&rdquo; mario in) and setting
+the player's entering pipe state are being separate and don't always do both together for 1 frame, leading to minor oddities like this:<br>
+<img src="Readme_files/FuSoYaPipe_HorizPipeEjectedFromEnteringRightwards.gif"><br>
+By tapping right for 1 frame, it tries to suck Mario in, but doesn't set Mario's pipe state until further embedded into the pipe cap, therefore
+Mario gets ejected out as if he is clipping into a solid block.</li><br>
+
+<li>When exiting a small pipe at the top, Mario gets pushed to the left by 1 unit (pixel), this is due to mario switching back to &ldquo;out-of-pipe&rdquo;
+state before he fully emerges from the pipe, so he slightly clips into the block.</li>
 </ul>
 
 
@@ -71,8 +94,8 @@ past the point he needs to change direction (it will center the player correctly
 <li>Lunar Magic's map16 page 4 not used, unless if you know how to make it use a different
 page.</li>
 <li>No More Sprite Tile Limits patch.</li>
-<li>	No shooting fireballs/cape spin when carrying something (to prevent auto-capespin when
-carrying a sprite when exiting pipes)</li>
+<li><s>No shooting fireballs/cape spin when carrying something (to prevent auto-capespin when
+carrying a sprite when exiting pipes)</s> EDIT: this is fixed.</li>
 </ul><br>
 
 <h2>Instructions to apply to your game.</h2>
