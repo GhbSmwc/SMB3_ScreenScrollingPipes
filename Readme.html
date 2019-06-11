@@ -11,6 +11,12 @@
 			border: 1px solid white;
 			border-collapse: collapse;
 			}
+			
+			u.DottedUnderline {
+			border-bottom: 1px dashed #999;
+			text-decoration: none; 
+			}
+			
 		</style>
 	</head>
 <body>
@@ -22,8 +28,10 @@ This block pack contains custom block pipes that when the player enters them, in
 screen-fading to the next level, scrolls the screen following the pipe as the player
 travels through to the other end.<br><br>
 
-The primary purpose of this release was be FuSoYa's pipes are incompatible with the custom block
-insertion tool; <i>Gopher Popcorn Stew</i> (GPS). Along with some unwanted bugs (unless you
+The primary purpose of this release was because FuSoYa's pipes are incompatible with the custom block
+insertion tool; <i>Gopher Popcorn Stew</i> (GPS) (until <a href="https://www.smwcentral.net/?p=section&a=details&id=19984">this
+patch</a> was released on 05/30/2019 but <u class="DottedUnderline" title="No other bugs was fixed besides making it compatible with GPS.">was merely
+a port</u> for GPS). Along with some unwanted bugs (unless you
 want to use them in a kaizo hack) and other crap that wasn't fixed since its code is horrible:
 
 <ul>
@@ -355,8 +363,8 @@ is before the controller gets disabled by the code handling pipe traveling from 
 
 </ol>
 
-Now note that if RAM address <tt>$7E1419</tt> (this is the RAM that handles when the player enters an exit enabled pipe, it also affects yoshi pose, even when not mounted)
-is a nonzero value, will force the player to hold the sprite, regardless the dash button is held down, disabled (clears the controller bit every frame) or not pressed at all.
-Once the player exits the pipe, the frame the player exits the pipe completely will have <tt>$7E1419</tt> be cleared but his controllers still disabled until a frame later, causing
-the player to let go the sprite.</li>
+Now note that if RAM address <tt>$7E1419</tt> (this is the RAM that handles when the player enters an exit enabled pipe, it also affects yoshi pose, even when not mounted,
+this even happens in the original game with the exit-enabled pipes) is a nonzero value, will force the player to hold the sprite, regardless the dash button is held down,
+disabled (clears the controller bit every frame) or not pressed at all. Once the player exits the pipe, the frame the player exits the pipe completely will have <tt>$7E1419</tt>
+be cleared but his controllers still disabled until a frame later, causing the player to let go the sprite.</li>
 </ul>
