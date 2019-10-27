@@ -32,7 +32,7 @@ The primary purpose of this release was because FuSoYa's pipes are incompatible 
 insertion tool; <i>Gopher Popcorn Stew</i> (GPS) (until <a href="https://www.smwcentral.net/?p=section&a=details&id=19984">this
 patch</a> was released on 05/30/2019 but <u class="DottedUnderline" title="No other bugs was fixed besides making it compatible with GPS.">was merely
 a port</u> for GPS). Along with some unwanted bugs (unless you
-want to use them in a kaizo hack) and other crap that wasn't fixed since its code is horrible:
+want to use them in a kaizo hack) and other issues that wasn't fixed since its code is horrible:
 
 <ul>
 <li>The player will be teleported to the last pipe exited if the player hits the bottom of any horizontal
@@ -43,7 +43,9 @@ the player haven't enter the pipes at all, will be teleported to the top-left co
 the player's X position will be slightly to the left from the center of the pipe.</li><br>
 
 <li>If the player is carrying a sprite, and drops the sprite as he exits an upwards facing pipe cap, the sprite
-will be clipped into the cap part of the pipe.</li><br>
+will be clipped into the cap part of the pipe:<br>
+<img src="Readme_files/FuSoYaPipe_SpriteClipTopCapBug.gif">
+</li><br>
 
 <li>Prior to the release of this package, old screen scrolling pipes (FuSoYa isn't the only one, MikeyK made his)
 require an exit tile (air or water) in front of their caps, thus, making the placements of blocks around it more
@@ -62,7 +64,8 @@ Here is how inconsistent to enter them:<br>
 <img src="Readme_files/FuSoYaPipe_SmallVerticalPipeXPosTolorance.gif"></li><br>
 
 <li>Mario will interact with any blocks placed directly below the horizontal pipes (so a muncher can kill the player
-inside the pipe).</li><br>
+inside the pipe). Note that in this package, for small horizontal pipes, the player will interact with blocks placed
+above the pipe, <a href="#SmallMarioCannotInteractAboveAndBelowHorizPipes">see here</a> to fix that.</li><br>
 
 <li>Leftwards facing pipe caps (including small pipes) have the block being passable (&ldquo;suck&rdquo; mario in) and setting
 the player's entering pipe state are being separate and don't always do both together for 1 frame, leading to minor oddities like this:<br>
@@ -78,8 +81,8 @@ state before he fully emerges from the pipe, so he slightly clips into the block
 
 <h2>Features not seen before:</h2>
 <ul>
-<li>Exit tiles (air tiles or water tiles placed in front of pipe caps) are no longer
-necessary, since this package relies on uberasm tool and a timer RAM, you can put any tiles
+<li>This package do not use exit tiles placed in front of pipe caps (air tiles or water tiles placed in front of pipe caps),
+instead it relies on a freeram frame counter to determine if the player is fully out of the pipes; Therefore you can put any tiles
 (obviously you shouldn't put solid tiles there) without worry.</li><br>
 
 <li>Turn pipe corners for small pipes. FuSoYa did feature small pipes that can only be entered by
@@ -296,9 +299,10 @@ player's coordinates, and also writing $1471:
 
 	.DontSetPos			;>Must skip ALL position-related code</pre></td></tr></table>
 
-<ul><li>Also, in case other codes that sets the player's X and Y speed ($7A-$7B, $7D $13DA, and
-$13DC), make sure you don't write them during pipe movement. Otherwise it will override
-and misalign Mario from the pipe.</li></ul></ul><br>
+<ul><li>Also, in case other codes that sets the player's X and Y speed or positions ($7A-$7B, $7D $13DA, $13DC
+$94-$95, and $96-$97), make sure you don't write them during pipe movement. Otherwise it will override
+and misalign Mario from the pipe. An example of this can happen is patches like wind and gravity generators
+may cause this to happen.</li></ul></ul><br>
 
 <li>While inside the pipe:<br>
 
@@ -322,6 +326,12 @@ with the player traveling:
 	BNE InsidePipe				;/>Don't do anything as the player travel through pipes
 </pre></td></tr></table></li><br>
 
+<li>To add to the note above, be careful with setting the travel speeds to make the player travel very fast, he may phase through
+the interaction fields of the turn corners and pipe caps (he'll pass through without triggering them). This is because SMW handles
+speed movement as &ldquo;individual steps of movement&rdquo; on each frame that every point in a movement in 1 frame handles collision,
+but not in between these points, thus the faster the player moves, the more wider-apart these interactable positions are, he is
+essentially teleporting each frame.</li><br>
+
 <li>If you're not using custom sprites, RAM address $7FAB10 ($400040 SA-1) aren't initialized, thus
 can cause issues like yoshi keeping his facing direction from when you enter after exiting a
 horizontal pipe.</li><br>
@@ -329,13 +339,13 @@ horizontal pipe.</li><br>
 <li>As if the time writing (9/3/2018), codes like <tt>DistanceFromTurnCornerCheck</tt> and some other routines are <b>not</b> moved to GPS's
 routines folder because it is using a version of Asar before 1.60, thus using labels can leak out with no convenient way around it.</li><br>
 
-<li>When traveling through horizontal small pipes, Mario will interact with the &ldquo;bottom&rdquo; offset of any blocks placed above the horizontal
+<li><a name="SmallMarioCannotInteractAboveAndBelowHorizPipes">When traveling through horizontal small pipes, Mario will interact with the &ldquo;bottom&rdquo; offset of any blocks placed above the horizontal
 pipe. It is possible to prevent that by positing Mario lower, but he will interact with  the &ldquo;above&rdquo; offset of blocks below the pipe.
 Because of how small Mario's object collision points are <b>exactly</b> 16 pixels (full block, 15 pixels in between exclusively) tall, there is no
 Y position that interacts neither, as Mario is too tall to avoid triggering any blocks placed above and below the horizontal small pipe:
 <table>
 <tr><td><center><img src="Readme_files/SSP_SmallHorizPipeTopInter.gif"></center><br>
-If Mario is 1 pixel up (<tt>Player_Y_Position = Block_Y_Position - 1</tt>) from the block he is directly inside of.</td>
+If Mario is 1 pixel up (default Y position, <tt>Player_Y_Position = Block_Y_Position - 1</tt>) from the block he is directly inside of.</td>
 
 <td><center><img src="Readme_files/SSP_SmallHorizPipeBottomInter.gif"></center><br>
 If Mario's Y position is exactly the same Y position as the block.</td></tr>
@@ -346,7 +356,9 @@ If Mario's Y position is exactly the same Y position as the block.</td></tr>
 </table><br>
 However, this can be mitigated by editing small Mario's collision points location via <a href="https://www.smwcentral.net/?p=section&a=details&id=15234">interaction editor</a>,
 by moving either one of small Mario's collision points (top and bottom) closer to Mario's middle by at least 1 pixel. If you haven't edit any of the vertical centering
-caused by horizontal small pipe caps, small turn corners (and the special turn corner), you can simply just move the head interaction down by 1 pixel.
+caused by horizontal small pipe caps, small turn corners (and the special turn corner), you can simply just move the head interaction down by 1 pixel. I wouldn't recommend 
+moving the foot part of the collision points upwards and have the player's Y position moved downward (+1 from default Y position) else the player will be slightly be lower
+into the ground.
 </li><br><br>
 
 <li><s>If Mario stands on a key sprite (sprite number <tt>$80</tt>), and enters a horizontal pipe cap the same time he picks the key up, he will carry the key as normal (albeit
