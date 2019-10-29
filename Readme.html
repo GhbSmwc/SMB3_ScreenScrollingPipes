@@ -93,7 +93,7 @@ are needed on FuSoYa's end.</li><br>
 snapping the player's coordinates when approaching them. It wait tills Mario's position is at or
 past the point he needs to change direction (it will center the player correctly).</li><br>
 
-<li>Customizable speed. Because why not?</li>
+<li>Customizable speed. Because why not? (be careful not to set to speeds that are too fast though).</li>
 
 </ul>
 
@@ -195,7 +195,8 @@ give credit.</li></ul></li><br>
 <li>How do I modify the speeds, and other customizations?
 <ul><li>Open <tt>SSPDef/Defines.asm</tt>, there should be things like what RAM you want to use, if you wanted the pipes to not freeze time, etc.
 Just make sure you read the descriptions, espically when you are changing the pipe cap speeds (how mario exit the pipes rely on a timer of when
-the player will be out of &ldquo;pipe mode&rdquo;)</li></ul></li>
+the player will be out of &ldquo;pipe mode&rdquo;). Make sure you read <a href="#SpeedClipping">this</a> because fast speeds can cause the player to phase through turn
+corners and exit caps without interacting them, causing the player to continue in his pipe state and direction when he shouldn't.</li></ul></li>
 </ul>
 
 <h2>Notes</h2>
@@ -326,11 +327,13 @@ with the player traveling:
 	BNE InsidePipe				;/>Don't do anything as the player travel through pipes
 </pre></td></tr></table></li><br>
 
-<li>To add to the note above, be careful with setting the travel speeds to make the player travel very fast, he may phase through
+<li><a name="SpeedClipping">To add to the note above, be careful with setting the travel speeds to make the player travel very fast, he may phase through
 the interaction fields of the turn corners and pipe caps (he'll pass through without triggering them). This is because SMW handles
-speed movement as &ldquo;individual steps of movement&rdquo; on each frame that every point in a movement in 1 frame handles collision,
-but not in between these points, thus the faster the player moves, the more wider-apart these interactable positions are, he is
-essentially teleporting each frame.</li><br>
+movement as movement broken up into &ldquo;individual steps of position&rdquo; each frame (movement isn't continuous). Each &ldquo;frame position&rdquo;
+movement handles collision, but not in between these points, thus the faster the player moves, the more wider-apart these interactable positions are, and the more
+likely he'll phase through them should the next position the player moves ends up on the other side of the interaction field:<br>
+<img src="Readme_files/CollisionPositionInteractions.png"><br>
+The player is essentially teleporting from point to point.</li><br>
 
 <li>If you're not using custom sprites, RAM address $7FAB10 ($400040 SA-1) aren't initialized, thus
 can cause issues like yoshi keeping his facing direction from when you enter after exiting a
