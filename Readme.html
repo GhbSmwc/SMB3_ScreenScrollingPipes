@@ -333,7 +333,10 @@ movement as movement broken up into &ldquo;individual step of positions&rdquo; e
 movement handles collision, but not in between these points, thus the faster the player moves, the more wider-apart these interactable positions are, and the more
 likely he'll phase through them should the next position the player moves ends up on the other side of the interaction field:<br>
 <img src="Readme_files/CollisionPositionInteractions.png"><br>
-The player is essentially teleporting from point to point.</li><br>
+The player is essentially teleporting from point to point, here is what it looks like (augmented):<br>
+<img src="Readme_files/MovementFramesGif.gif"><br>
+Mario actually moves up to 8 pixels per frame, and the blocks runs a position check (if the player is centered enough within a certain range to alter his pipe
+state and snap him centered in a short distance) and &ldquo;pseudo collision points&rdquo;.</li><br>
 <li>Turn corners utilize a &ldquo;pseudo collision points&rdquo; to prevent bugs when two turn corners, especially small ones, are touching each other, which
 causes the player to be able to interact with both at the same time, causing a potential softlock. It also finds out what block coordinates the player's bottom 16x16
 is mostly on (what row or what column of blocks) so he does not interact with other turn corners if they are adjicent to Mario's &ldquo;lane&rdquo;. They are located here:<br>
