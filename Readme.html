@@ -329,11 +329,20 @@ with the player traveling:
 
 <li><a name="SpeedClipping">To add to the note above, be careful with setting the travel speeds to make the player travel very fast, he may phase through
 the interaction fields of the turn corners and pipe caps (he'll pass through without triggering them). This is because SMW handles
-movement as movement broken up into &ldquo;individual steps of position&rdquo; each frame (movement isn't continuous). Each &ldquo;frame position&rdquo;
+movement as movement broken up into &ldquo;individual step of positions&rdquo; each frame (movement isn't continuous). Each position
 movement handles collision, but not in between these points, thus the faster the player moves, the more wider-apart these interactable positions are, and the more
 likely he'll phase through them should the next position the player moves ends up on the other side of the interaction field:<br>
 <img src="Readme_files/CollisionPositionInteractions.png"><br>
 The player is essentially teleporting from point to point.</li><br>
+<li>Turn corners utilize a &ldquo;pseudo collision points&rdquo; to prevent bugs when two turn corners, especially small ones, are touching each other, which
+causes the player to be able to interact with both at the same time, causing a potential softlock. It also finds out what block coordinates the player's bottom 16x16
+is mostly on (what row or what column of blocks) so he does not interact with other turn corners if they are adjicent to Mario's &ldquo;lane&rdquo;. They are located here:<br>
+<img src="Readme_files/SMW_PseudoCollisionPoints.png"><br>
+How this works is that it takes Mario's coordinates, displace it to find the bottom 16x16 tile's center, divide the coordinates by 16 (and round down) to obtain
+the location in units of 16x16 blocks, and compares with <kbd>BlockPositionTouched = (floor(RAM_98_9A / 16) * 16)</kbd> (accomplished via <kbd>AND.w #%1111111111110000</kbd>).
+The reason for displacement of <kbd>$0006</kbd> and <kbd>$000A</kbd> is because when the player is halfway between two blocks horizontally, his
+center X-displacement (<kbd>X + $0008</kbd>) would point to the block to the right of the player, but not to the left, resulting to only interact with the right half of the player
+in such cases such as the special turn corners that is 32x32 (2x2 full block) when the player MUST interact with <b>both</b> the left and right half.</li>
 
 <li>If you're not using custom sprites, RAM address $7FAB10 ($400040 SA-1) aren't initialized, thus
 can cause issues like yoshi keeping his facing direction from when you enter after exiting a
