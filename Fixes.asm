@@ -5,7 +5,7 @@
 ;  intrusive, and (2) uberasm's hijacks are located AFTER the routine that makes mario react
 ;  to the controls (some controls like jumping won't get disabled).
 ;-Entering yoshi automatically if you enter left, right, or up facing pipes while
-; overlapping its saddle hitbox.
+; overlapping its saddle hitbox of yoshi.
 ;-Since $72 is bad to use in interactive layer 2 levels (it assumes mario is falling
 ; during a block routine EVEN if you are on ground), so the only way for horizontal pipes
 ; to detect if mario is on the ground is to use $77 (the blocked status). Too bad $00EAA9
@@ -23,7 +23,7 @@
 ;	LDA !Freeram_SSP_PipeDir
 ;	AND.b #%00001111
 ;	;^After the above, A will be nonzero should the player be inside the pipe. Use BEQ/BNE
-;	; here.
+;	; after this.
 
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
