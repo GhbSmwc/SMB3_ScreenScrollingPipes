@@ -3,7 +3,7 @@
 ;from left to up or down to right, for small pipes.
 ;Behaves $130
 
-incsrc "SSPDef/Defines.asm"
+incsrc "../../SSPDef/Defines.asm"
 
 db $42
 JMP MarioBelow : JMP MarioAbove : JMP MarioSide : JMP Return : JMP Return : JMP Return

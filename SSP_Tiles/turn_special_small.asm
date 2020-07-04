@@ -2,7 +2,7 @@
 ;A small pipe turn corner that changes the direction the player is going
 ;based on the "prepare corner direction blocks".
 
-incsrc "SSPDef/Defines.asm"
+incsrc "../../SSPDef/Defines.asm"
 
 db $42
 JMP MarioBelow : JMP MarioAbove : JMP MarioSide

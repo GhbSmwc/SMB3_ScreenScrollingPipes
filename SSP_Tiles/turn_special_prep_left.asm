@@ -2,7 +2,7 @@
 ;This itself does not changes the player direction, but merely changes
 ;the planned direction when Mario hits a turn special.
 
-incsrc "SSPDef/Defines.asm"
+incsrc "../../SSPDef/Defines.asm"
 
 db $42 ; or db $37
 JMP MarioBelow : JMP MarioAbove : JMP MarioSide
