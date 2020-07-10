@@ -134,6 +134,24 @@
 4F0:0130	SSP_Tiles/caps/enterable/no_items/left_horizontal_pipe_cap_small.asm
 4F1:0130	SSP_Tiles/caps/enterable/no_items/right_horizontal_pipe_cap_small.asm
 
+4DB:0130	SSP_Tiles/caps/enterable/no_items/top_vertical_pipe_cap_small.asm
+4EB:0130	SSP_Tiles/caps/enterable/no_items/bottom_vertical_pipe_cap_small.asm
+
+4DC:0130	SSP_Tiles/caps/enterable/no_items/top_vertical_pipe_cap_L.asm
+4DD:0130	SSP_Tiles/caps/enterable/no_items/top_vertical_pipe_cap_R.asm
+
+4EC:0130	SSP_Tiles/caps/enterable/no_items/bottom_vertical_pipe_cap_L.asm
+4ED:0130	SSP_Tiles/caps/enterable/no_items/bottom_vertical_pipe_cap_R.asm
+
+4DE:0130	SSP_Tiles/pass_if_in_pipe.asm
+4EE:0130	SSP_Tiles/caps/enterable/no_items/left_horizontal_pipe_cap_B.asm
+
+4DF:0130	SSP_Tiles/pass_if_in_pipe.asm
+4EF:0130	SSP_Tiles/caps/enterable/no_items/right_horizontal_pipe_cap_B.asm
+
+4FC:0130	SSP_Tiles/caps/enterable/no_items/left_horizontal_pipe_cap_small.asm
+4FD:0130	SSP_Tiles/caps/enterable/no_items/right_horizontal_pipe_cap_small.asm
+
 402:0130	SSP_Tiles/pass_if_in_pipe.asm
 403:0130	SSP_Tiles/pass_if_in_pipe.asm
 404:0130	SSP_Tiles/pass_if_in_pipe.asm
