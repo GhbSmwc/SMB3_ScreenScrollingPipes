@@ -1,6 +1,5 @@
 ;~@sa1
-;this is the right cap of a horizontal 2-way pipe that is
-;only enterable as small mario (yoshi always not allowed).
+;this is the right bottom-half cap of a horizontal 2-way pipe.
 ;behaves $130
 
 incsrc "../../../../../SSPDef/Defines.asm"
@@ -12,7 +11,8 @@ JMP return : JMP TopCorner : JMP BodyInside : JMP HeadInside
 
 
 MarioSide:
-	LDA !Freeram_SSP_PipeDir	;\If mario isn't in a pipe, the run the enter routine
+BodyInside:
+	LDA !Freeram_SSP_PipeDir	;\if not in pipe, then enter
 	AND.b #%00001111		;|
 	BEQ enter			;/
 	CMP #$02			;\if going right
@@ -21,31 +21,48 @@ MarioSide:
 	BEQ exit			;/
 	BRA within_pipe			;>Other directions, allow player to pass through without exiting.
 enter:
-	LDA $187A|!addr		;>no yoshi.
-	ORA $19			;>no powerup
-;	ORA $1471|!addr		;>so vertical centering code works
-	ORA $76			;>must face left
-	BEQ .SmallNoYoshi
-	RTL			;>otherwise return
-.SmallNoYoshi
-if !Setting_SSP_CarryAllowed == 0
-	LDA $1470|!addr		;\no carrying item
-	ORA $148F|!addr		;|
-	BNE Return0		;/
-endif
+	if !Setting_SSP_CarryAllowed == 0
+		LDA $1470|!addr		;\no carrying item
+		ORA $148F|!addr		;|
+		BNE return		;/
+	endif
+
+	LDA $187A|!addr		;\do not enter pipe/SFX when turning
+	CMP #$02		;|around on yoshi.
+	BEQ return		;/
+;	LDA $1471|!addr		;>so vertical centering code works
+;	BNE return
+	LDA !Freeram_BlockedStatBkp		;\If you are not on ground, return
+	AND.b #%00000100		;|
+	BEQ return			;/
 	LDA $15			;\must press left
 	AND #$02		;|
-	BEQ Return0		;/
+	BEQ return		;/
+	LDA $76			;\must face left
+	BNE return		;/
+	if !Setting_SSP_YoshiAllowed == 0
+		LDA $187A|!addr
+		BEQ +
+		if !Setting_SSP_YoshiProhibitSFXNum != 0
+			LDA $16						;\Use 1-frame controller to prevent sound replaying each frame.
+			AND #$02					;|(you have to let go the button and tap to trigger this though)
+			BEQ return					;/
+			LDA.b #!Setting_SSP_YoshiProhibitSFXNum
+			STA !Setting_SSP_YoshiProhibitSFXPort|!addr
+		endif
+		RTL
+		+
+	endif
 	if !Setting_SSP_CarryAllowed != 0
 		LDA $1470|!addr			;\if mario not carrying anything
 		ORA $148F|!addr			;|then skip
-		BEQ not_carry			;/
+		BEQ .not_carry			;/
 		LDA #$01			;\set flag
 		STA !Freeram_SSP_CarrySpr	;/
 	endif
-not_carry:
-	LDA.b #!SSP_PipeTimer_Enter_Leftwards	;\Set timer
-	STA !Freeram_SSP_PipeTmr		;/
+.not_carry
+	LDA.b #!SSP_PipeTimer_Enter_Leftwards
+	STA !Freeram_SSP_PipeTmr
 	LDA #$04		;\pipe sound
 	STA $1DF9|!addr		;/
 	STZ $7B			;\Prevent centering, and then displaced by xy speeds.
@@ -57,17 +74,18 @@ not_carry:
 	LDA #$01		;\set flag to "entering"
 	STA !Freeram_SSP_EntrExtFlg	;/
 	JSR center_vert
+within_pipe:
 	JSR passable
+return:
 	RTL
 TopCorner:
 MarioAbove:
-HeadInside:
-BodyInside:
 MarioBelow:
-within_pipe:
-	JSR passable
-	Return0:
-	RTL
+HeadInside:
+	LDA !Freeram_SSP_PipeDir	;\for other offsets if mario, not in pipe
+	AND.b #%00001111		;|
+	BEQ return			;/
+	BRA within_pipe
 exit:
 	REP #$20
 	LDA $9A			;\If mario is touching only the
@@ -80,7 +98,7 @@ exit:
 	LDA !Freeram_SSP_EntrExtFlg	;\do nothing if already exiting pipe
 	CMP #$02			;|
 	BEQ within_pipe			;/
-	LDA #$02		;\set exiting flag
+	LDA #$02			;\set exiting flag
 	STA !Freeram_SSP_EntrExtFlg	;/
 	LDA !Freeram_SSP_PipeDir	;\Set his direction (Will only force the low nibble (bits 0-3) to have the value 6)
 	AND.b #%11110000		;|
@@ -99,22 +117,21 @@ exit:
 	STA $1DF9|!addr		;/
 	STZ $7B			;\Prevent centering, and then displaced by xy speeds.
 	STZ $7D			;/
-	LDA #$01		;\don't exit backwards.
+	LDA #$01		;\mario faces right
 	STA $76			;/
-return:
+	%FaceYoshi()
+return1:
 	RTL
 passable:
-	LDA !Freeram_SSP_PipeDir	;\not in pipe = solid
-	AND.b #%00001111		;|
-	BEQ solid_out			;/
 	LDY #$00		;\mario passes through the block
 	LDA #$25		;|
 	STA $1693|!addr		;/
-solid_out:
 	RTS
 center_vert:
-;	LDA $187A|!addr
-;	BNE yoshi_center
+	if !Setting_SSP_YoshiAllowed != 0
+		LDA $187A|!addr
+		BNE yoshi_center
+	endif
 	REP #$20
 	LDA $98
 	AND #$FFF0
@@ -122,14 +139,16 @@ center_vert:
 	STA $96
 	SEP #$20
 	RTS
-;yoshi_center:
-;	REP #$20
-;	LDA $98
-;	AND #$FFF0
-;	SEC : SBC #$0021
-;	STA $96
-;	SEP #$20
-;	RTS
+	if !Setting_SSP_YoshiAllowed != 0
+		yoshi_center:
+		REP #$20
+		LDA $98
+		AND #$FFF0
+		SEC : SBC #$0021
+		STA $96
+		SEP #$20
+		RTS
+	endif
 if !Setting_SSP_Description != 0
-print "Right cap piece of horizontal pipe for small mario that can be entered midair."
+print "Bottom-right cap piece of horizontal 2-way pipe."
 endif

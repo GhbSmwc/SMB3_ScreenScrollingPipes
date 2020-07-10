@@ -28,6 +28,11 @@ enter:
 	BEQ .SmallNoYoshi
 	RTL			;>otherwise return
 .SmallNoYoshi
+	LDA !Freeram_BlockedStatBkp		;\If you are not on ground, return
+	AND.b #%00000100		;|
+	BNE +
+	RTL			;/
+	+
 if !Setting_SSP_CarryAllowed == 0
 	LDA $1470|!addr		;\no carrying item
 	ORA $148F|!addr		;|
@@ -131,5 +136,5 @@ center_vert:
 ;	SEP #$20
 ;	RTS
 if !Setting_SSP_Description != 0
-print "Right cap piece of horizontal pipe for small mario that can be entered midair."
+print "Right cap piece of horizontal pipe for small mario."
 endif

@@ -147,5 +147,5 @@ center_vert:
 		RTS
 	endif
 if !Setting_SSP_Description != 0
-print "Bottom-right cap piece of horizontal 2-way pipe."
+print "Bottom-right cap piece of horizontal 2-way pipe that can be entered midair."
 endif

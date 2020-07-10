@@ -31,6 +31,9 @@ enter:
 	BEQ return		;/
 ;	LDA $1471|!addr		;>so vertical centering code works
 ;	BNE return
+	LDA !Freeram_BlockedStatBkp	;\If you are not on ground, return
+	AND.b #%00000100		;|
+	BEQ return			;/
 	LDA $15				;\must press right
 	AND #$01			;|
 	BEQ return			;/
@@ -147,5 +150,5 @@ center_vert:
 	endif
 
 if !Setting_SSP_Description != 0
-print "Bottom-left cap piece of horizontal 2-way pipe that can be entered midair."
+print "Bottom-left cap piece of horizontal 2-way pipe."
 endif
