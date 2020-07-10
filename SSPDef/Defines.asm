@@ -3,6 +3,10 @@
 
 ;If you're using notepad++, the tab size is 8 in case if you don't like the text vertical misalignment.
 
+;Places to put this define file to:
+;-In GPS's main directory (same where the exe is in, not in the sub-folder/subdirectory)
+;-In uberasm tool's main directory, same style as above.
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;SA1 detector:
 ;Place this at the very top of gamemode_code.asm.
@@ -34,6 +38,11 @@
 ;freeram addresses, you can use long address also.--------------------------
 ;Do note that these freerams above are not automatically converted to SA-1 addressing. Remember to use banks $40/41 if you
 ;use 3-byte addressing ($xxxxxx).
+
+;Also be careful if you are using untouched RAM, as the game does not even reset them on level load, therefore the player
+;will maintain his pipe state even after he dies and enters the level. You'll have to initialize them by resetting all these
+;RAM address.
+
  if !sa1 == 0
   !Freeram_SSP_PipeDir		= $7E0060
  else
@@ -92,17 +101,18 @@
 
 ;Settings
  !Setting_SSP_PipeDebug		= 0
-  ;^This will make mario visible and in front of objects when enabled, set to 1 if you encounter issues like Mario ignoring turn corners.
+  ;^This will make mario visible and in front of objects when enabled, set to 1 if you encounter issues and need to know where is Mario.
  
- !Setting_SSP_CarryAllowed	= 1
-  ;^0 = can't carry sprites through pipes, 1 = enable carrying.
+ ;Forbid things to be carried into pipes (only applies to pipe caps in the "setting0" folder):
+  !Setting_SSP_CarryAllowed	= 1
+   ;^0 = can't carry sprites through pipes, 1 = enable carrying.
  
- !Setting_SSP_YoshiAllowed	= 1
-  ;^0 = yoshi cannot enter, 1 = can. NOTE: Small pipes always prohibits Yoshi regardless of this setting. Another note that unlike FuSoYa
-  ; that makes the "spat" SFX, this plays SFX ONLY if you are tapping the 1-frame controller to prevent repeatedly playing the SFX and overwriting
-  ; the channel and replacing SFX.
+  !Setting_SSP_YoshiAllowed	= 1
+   ;^0 = yoshi cannot enter, 1 = can. NOTE: Small pipes always prohibits Yoshi regardless of this setting. Another note that unlike FuSoYa
+   ; that makes the "spat" SFX, this plays SFX ONLY if you are tapping the 1-frame controller to prevent repeatedly playing the SFX and overwriting
+   ; the channel and replacing SFX.
   
-  ;SFX stuff for yoshi prohibited from entering pipes (only for normal-sized pipes):
+  ;SFX stuff for yoshi prohibited from entering pipes (only for normal-sized pipes, since you cannot enter small pipes on yoshi even as small Mario):
    !Setting_SSP_YoshiProhibitSFXNum	= $20
     ;^Set this to $00 for no sound (no worry, it won't cancel the SFX port of any current SFX.)
    !Setting_SSP_YoshiProhibitSFXPort	= $1DF9
@@ -141,9 +151,9 @@
 ;Hint: by using the scale by factor (Speed*X leads to Timer/X), it makes it much easier to work with this.
 ;
 ;Easiest to know is to test them, if the player exits the pipe further ahead of the cap past it, the timer is too long
-;and needs to be a lower value, if the player exits the pipe while inside the cap (embedded inside the solid pipe),
-;the timer is too short and needs to be a higher value. For downwards facing pipes, shorter timers also enable entering
-;back in them just after exiting it by holding up.
+;and needs to be a lower value, if the player exits the pipe while inside the cap (embedded inside the solid pipe, which
+;may kill the player), the timer is too short and needs to be a higher value. For downwards facing pipes, shorter timers
+;also enable entering back in them just after exiting it by holding up (you don't need to jump).
 
 ;Alternative way, have the timer be $FF. Then use a debugger and check out the RAM address "!Freeram_SSP_PipeTmr" is
 ;using, from the time the timer is $FF about to decrement to the time the value is at a certain number when the player's
