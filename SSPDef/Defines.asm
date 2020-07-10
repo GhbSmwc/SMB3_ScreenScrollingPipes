@@ -88,7 +88,7 @@
  endif
   ;^[BytesUsed = !Setting_SSP_CarryAllowed] used for if mario enters a
   ; pipe while holding a sprite. Will store a #$01 if you did carry a sprite though pipe.
-  ; Not used should carrying sprites through pipes is disabled, otherwise
+  ; Not used should your entire hack doesn't allow entering SSP with a sprite, otherwise
   ; 1 byte taken.
   
  if !sa1 == 0
@@ -99,24 +99,16 @@
   ;^[1 byte] A backup of $77 to determine if mario is on
   ; the ground.
 
-;Settings
+;Settings. NOTE: There are other defines settings in [SSP_Tiles\caps\enterable\setting*\cap_defines.asm] (* means any number) so that you can multiple
+;blocks with different variations (such as having some pipe caps that allow carrying sprites or allowing yoshi).
  !Setting_SSP_PipeDebug		= 0
   ;^This will make mario visible and in front of objects when enabled, set to 1 if you encounter issues and need to know where is Mario.
- 
- ;Forbid things to be carried into pipes (only applies to pipe caps in the "setting0" folder):
-  !Setting_SSP_CarryAllowed	= 1
-   ;^0 = can't carry sprites through pipes, 1 = enable carrying.
- 
-  !Setting_SSP_YoshiAllowed	= 1
-   ;^0 = yoshi cannot enter, 1 = can. NOTE: Small pipes always prohibits Yoshi regardless of this setting. Another note that unlike FuSoYa
-   ; that makes the "spat" SFX, this plays SFX ONLY if you are tapping the 1-frame controller to prevent repeatedly playing the SFX and overwriting
-   ; the channel and replacing SFX.
   
-  ;SFX stuff for yoshi prohibited from entering pipes (only for normal-sized pipes, since you cannot enter small pipes on yoshi even as small Mario):
-   !Setting_SSP_YoshiProhibitSFXNum	= $20
-    ;^Set this to $00 for no sound (no worry, it won't cancel the SFX port of any current SFX.)
-   !Setting_SSP_YoshiProhibitSFXPort	= $1DF9
-    ;^The sound effect played when you tried to enter pipes on yoshi when yoshi is prohibited.
+ ;SFX stuff for yoshi prohibited from entering pipes (only for normal-sized pipes, since you cannot enter small pipes on yoshi even as small Mario):
+  !Setting_SSP_YoshiProhibitSFXNum	= $20
+   ;^Set this to $00 for no sound (no worry, it won't cancel the SFX port of any current SFX.)
+  !Setting_SSP_YoshiProhibitSFXPort	= $1DF9
+   ;^The sound effect played when you tried to enter pipes on yoshi when yoshi is prohibited.
  
  !Setting_SSP_Description	= 0
   ;^0 = off, 1 = on. Due to a bug in GPS with blocks with the wrong description, I added an option just in case if GPS has that fixed in the future.

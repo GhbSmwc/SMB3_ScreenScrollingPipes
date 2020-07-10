@@ -3,7 +3,7 @@
 ;be used as a small pipe and normal-sized pipe cap.
 ;behaves $130
 
-incsrc "../../SSPDef/Defines.asm"
+incsrc "../../../../SSPDef/Defines.asm"
 
 db $42
 JMP MarioBelow : JMP MarioAbove : JMP MarioSide : JMP return : JMP return : JMP return

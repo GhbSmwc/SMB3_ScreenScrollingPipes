@@ -93,8 +93,8 @@
 43F:0130	SSP_Tiles/caps/exit_only/right_horizontal_pipe_cap_B_exit.asm
 45F:0130	SSP_Tiles/caps/exit_only/right_horizontal_pipe_cap_B_exit.asm
 
-46E:0130	SSP_Tiles/top_vertical_pipe_cap_small_exit.asm
-48F:0130	SSP_Tiles/bottom_vertical_pipe_cap_small_exit.asm
+46E:0130	SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_small_exit.asm
+48F:0130	SSP_Tiles/caps/exit_only/bottom_vertical_pipe_cap_small_exit.asm
 
 402:0130	SSP_Tiles/pass_if_in_pipe.asm
 403:0130	SSP_Tiles/pass_if_in_pipe.asm
