@@ -96,11 +96,10 @@
  else
   !Freeram_BlockedStatBkp	= $79
  endif
-  ;^[1 byte] A backup of $77 to determine if mario is on
-  ; the ground.
+  ;^[1 byte] A backup of $77 to determine if mario is on the ground.
 
-;Settings. NOTE: There are other defines settings in [SSP_Tiles\caps\enterable\setting*\cap_defines.asm] (* means any number) so that you can multiple
-;blocks with different variations (such as having some pipe caps that allow carrying sprites or allowing yoshi).
+;Settings. NOTE: There are other defines settings in [SSP_Tiles\caps\enterable\*\cap_defines.asm] (* means any valid filename, including "default")
+;so that you can multiple blocks with different variations (such as having some pipe caps that allow carrying sprites or allowing yoshi).
  !Setting_SSP_PipeDebug		= 0
   ;^This will make mario visible and in front of objects when enabled, set to 1 if you encounter issues and need to know where is Mario.
   
