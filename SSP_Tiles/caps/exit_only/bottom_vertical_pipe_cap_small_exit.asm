@@ -1,7 +1,7 @@
 ;~@sa1
 ;This is the bottom cap of a vertical 1-way pipe that
 ;is exit only for small mario.
-;behaves $130
+;behaves $25 or $130
 
 incsrc "../../../../SSPDef/Defines.asm"
 

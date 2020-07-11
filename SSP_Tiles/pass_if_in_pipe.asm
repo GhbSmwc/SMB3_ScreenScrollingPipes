@@ -2,7 +2,7 @@
 ;This block will be solid if mario isn't in a pipe, if he is, will let him go
 ;through this block (mainly use as parts of a pipe that never changes his
 ;direction).
-;behaves $130
+;Behaves $25 or $130
 
 incsrc "../../SSPDef/Defines.asm"
 

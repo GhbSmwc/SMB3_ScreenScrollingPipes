@@ -1,7 +1,7 @@
 ;~@sa1
 ;This is the corner piece of the pipe that changes mario's
 ;direction from left to up or down to right.
-;Behaves $130
+;Behaves $25 or $130
 
 incsrc "../../SSPDef/Defines.asm"
 

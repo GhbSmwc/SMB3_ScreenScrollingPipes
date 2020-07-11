@@ -1,6 +1,6 @@
-;Act as $130
 ;This itself does not changes the player direction, but merely changes
 ;the planned direction when Mario hits a turn special.
+;Behaves $25 or $130
 
 incsrc "../../SSPDef/Defines.asm"
 

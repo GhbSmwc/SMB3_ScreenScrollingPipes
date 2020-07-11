@@ -1,7 +1,7 @@
 ;~@sa1
 ;This is the top right-half cap of a vertical
 ;1-way pipe (exit only).
-;behaves $130
+;behaves $25 or $130
 
 incsrc "../../../../SSPDef/Defines.asm"
 

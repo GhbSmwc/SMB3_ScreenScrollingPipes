@@ -1,6 +1,6 @@
-;Behaves $130
 ;A small pipe turn corner that changes the direction the player is going
 ;based on the "prepare corner direction blocks".
+;Behaves $25 or $130
 
 incsrc "../../SSPDef/Defines.asm"
 

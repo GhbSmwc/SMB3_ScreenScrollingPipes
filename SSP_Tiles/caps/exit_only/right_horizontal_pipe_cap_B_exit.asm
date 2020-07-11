@@ -1,7 +1,7 @@
 ;~@sa1
 ;this is the right bottom-half cap of a horizontal 1-way pipe, can
 ;be used as a small pipe and normal-sized pipe cap.
-;behaves $130
+;behaves $25 or $130
 
 incsrc "../../../../SSPDef/Defines.asm"
 
