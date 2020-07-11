@@ -1,3 +1,5 @@
 -Prevent stunned sprites from being able to "unstun" themselves when the player is carrying them through pipes.
 -Have "passable" pipe tiles that act as decorations in the background (not as layer 2, placed in the backdrop of layer 1) that are used for
  pipe traveling. This also should completely disable carried sprite from interacting with other sprites outside the pipe.
+-Because most hacks uses SSP to separate sections of the level (like a subroom), I am planning to add a loading trigger for SSP that will
+ erase sprites and spawn them at a given location (such as the room the player is going to).
