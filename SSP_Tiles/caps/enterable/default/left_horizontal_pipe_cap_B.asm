@@ -21,6 +21,12 @@ BodyInside:
 	BEQ exit			;/
 	BRA within_pipe			;>Other directions, allow player to pass through without exiting.
 enter:
+	REP #$20		;\Prevent triggering the block from the right side (if you press right away from block)
+	LDA $9A			;|
+	AND #$FFF0		;|
+	CMP $94			;|
+	SEP #$20		;|
+	BMI return		;/
 	if !Setting_SSP_CarryAllowed == 0
 		LDA $1470|!addr		;\no carrying item
 		ORA $148F|!addr		;|

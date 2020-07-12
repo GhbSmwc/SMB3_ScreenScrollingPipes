@@ -21,11 +21,18 @@ MarioSide:
 	BEQ exit			;/
 	BRA within_pipe			;>Other directions, allow player to pass through without exiting.
 enter:
+	REP #$20		;\Prevent triggering the block from the left side (if you press left away from block)
+	LDA $9A			;|
+	AND #$FFF0		;|
+	CMP $94			;|
+	SEP #$20		;|
+	BPL +			;/
 	LDA $187A|!addr		;>no yoshi.
 	ORA $19			;>no powerup
 ;	ORA $1471|!addr		;>so vertical centering code works
 	ORA $76			;>must face left
 	BEQ .SmallNoYoshi
+	+
 	RTL			;>otherwise return
 .SmallNoYoshi
 if !Setting_SSP_CarryAllowed == 0
@@ -131,5 +138,5 @@ center_vert:
 ;	SEP #$20
 ;	RTS
 if !Setting_SSP_Description != 0
-print "Right cap piece of horizontal pipe for small mario that can be entered midair."
+print "Right cap piece of horizontal pipe for small mario."
 endif

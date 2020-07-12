@@ -21,10 +21,17 @@ MarioSide:
 	BEQ exit			;/
 	BRA within_pipe			;>Other directions, allow player to pass through without exiting.
 enter:
+	REP #$20		;\Prevent triggering the block from the right side (if you press right away from block)
+	LDA $9A			;|
+	AND #$FFF0		;|
+	CMP $94			;|
+	SEP #$20		;|
+	BMI +			;/
 	LDA $187A|!addr		;>no yoshi.
 	ORA $19			;>no powerup
 ;	ORA $1471|!addr		;>so vertical centering code works
 	BEQ .SmallNoYoshi
+	+
 	RTL			;>otherwise return
 .SmallNoYoshi
 	LDA !Freeram_BlockedStatBkp		;\If you are not on ground, return

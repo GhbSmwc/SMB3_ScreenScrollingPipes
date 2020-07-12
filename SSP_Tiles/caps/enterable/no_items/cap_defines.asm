@@ -1,5 +1,5 @@
 ;Forbid things to be carried into pipes (only applies to pipe caps in the "setting0" folder):
- !Setting_SSP_CarryAllowed	= 0
+ !Setting_SSP_CarryAllowed	= 1
   ;^0 = can't carry sprites through pipes, 1 = enable carrying.
 
  !Setting_SSP_YoshiAllowed	= 1
