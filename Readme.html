@@ -207,30 +207,30 @@ corners and exit caps without interacting them, causing the player to continue i
  make it change the yxppccct using this code to be used in a custom sprite's code:
  
  <table><tr><td><pre>
- 	SSPPriority:
-		LDA $14C8,x      ;\If sprite not carried, go in front
-		CMP #$0B         ;|
-		BNE .InFront     ;/
-		LDA !FR_PipeDir  ;\or if mario is not in a pipe, go in front
-		BEQ .InFront     ;/
+SSPPriority:
+	LDA $14C8,x	;\If sprite not carried, go in front
+	CMP #$0B		;|
+	BNE .InFront		;/
+	LDA !FR_PipeDir		;\or if mario is not in a pipe, go in front
+	BEQ .InFront		;/
 	.Behind
-		LDA $15F6,x
+		LDA !15F6,x
 		AND.b #%11001111
 		BRA .Skip
 	.Infront
-		LDA $15F6,x
-		ORA.b #%00xx0001 ;>Replace the Xs with a binary number that is the sprite's original priority.
-
-	;00 = Appear behind everything except Layer 3 tiles with priority setting 0
-	;01 = Appear behind everything except Layer 3 tiles (unless they have priority setting
-	;     1 and the "force above everything" bit is set)
-	;10 = Appear in front of Layer 3 tiles (unless they have priority setting 1 and the
-	;     "force above everything" bit is set) and Layer 1 and 2 tiles with priority setting 0;
-	;     appear behind Layer 1 and 2 tiles with priority setting 0 (this is SMW's normal setting
-	;     for most sprites)
-	;11 = Appear in front of everything, except Layer 3 tiles with priority setting 1 if the
-	;     "force above everything" bit is set</pre></td></tr></table></li><br>
-
+		LDA !15F6,x
+		ORA.b #%00xx0001 ;&gt;Replace the Xs with a binary number that is the sprite's original priority:
+			;00 = Appear behind everything except Layer 3 tiles with priority setting 0
+			;01 = Appear behind everything except Layer 3 tiles (unless they have priority setting
+			;     1 and the "force above everything" bit is set)
+			;10 = Appear in front of Layer 3 tiles (unless they have priority setting 1 and the
+			;     "force above everything" bit is set) and Layer 1 and 2 tiles with priority setting 0;
+			;     appear behind Layer 1 and 2 tiles with priority setting 0 (this is SMW's normal setting
+			;     for most sprites)
+			;11 = Appear in front of everything, except Layer 3 tiles with priority setting 1 if the
+			;     "force above everything" bit is set
+	.Skip
+		STA !15F6,x</pre></td></tr></table></li><br>
 <li>If you enter a pipe, while yoshi exist, yoshi will also turn invisible (with some 8x8
  pieces still visible), I couldn't fix that.</li><br>
 
@@ -291,7 +291,7 @@ player's coordinates, and also writing $1471:
 ; You may have to fiddle around with the [../] (pearent directory) in case for future tools. Then make sure you
 ; copy and paste the folder containing the definitions where the sprite tool's exe is at.
 
-	LDA !Freeram_PipeDir
+	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111		;>Check bits 0-3 to see if the player is currently in a pipe
 	BNE .DontSetPos			;>If nonzero, mario is in a pipe.
 
@@ -335,7 +335,7 @@ likely he'll phase through them should the next position the player moves ends u
 <img src="Readme_files/CollisionPositionInteractions.png"><br>
 The player is essentially teleporting from point to point, here is what it looks like (augmented):<br>
 <img src="Readme_files/MovementFramesGif.gif"><br>
-Mario actually moves up to 8 pixels per frame, and the blocks runs a position check (if the player is centered enough within a certain range to alter his pipe
+Mario actually moves up to <u class="DottedUnderline" title="RAM address $7B and $7D contains a signed value measuring the displacement, in units of 1/16th of a pixel, so a value of #$80 is 8 pixels (#$7F may displace 8 pixels due to accumulation of fractional coordinates).">8 pixels per frame</u>, and the blocks runs a position check (if the player is centered enough within a certain range to alter his pipe
 state and snap him centered in a short distance) and &ldquo;pseudo collision points&rdquo;, therefore, the area range to trigger Mario to change direction or state
 is not a full 16x16 pixels block.</li><br>
 <li>Turn corners, and &ldquo;prep-turns&rdquo; utilize a &ldquo;pseudo collision points&rdquo; to prevent bugs when two turn corners, especially small ones, are touching each other, which
@@ -390,6 +390,53 @@ It may be possible that this happens in a sequence within a frame:
 is before the controller gets disabled by the code handling pipe traveling from Uberasm tool.</s> EDIT: This bug is fixed as of version 3.2.8.</li><br>
 
 </ol>
+
+<li>If you want blocks to be passable while the player is in his pipe state (such as a pipe that goes into a solid object for scenery), I provided you this code:
+<table><tr><td><pre>
+
+incsrc "../SSPDef/Defines.asm"
+;^I assume you would have this placed in the main directory of the blocks folder and not in any subfolders.
+; If in subfolders, then prepend "../" to the path (example: ../../SSPDef/Defines.asm)
+
+db $42 ; or db $37
+JMP MarioBelow : JMP MarioAbove : JMP MarioSide
+JMP SpriteV : JMP SpriteH : JMP MarioCape : JMP MarioFireball
+JMP TopCorner : JMP BodyInside : JMP HeadInside
+; JMP WallFeet : JMP WallBody ; when using db $37
+
+MarioBelow:			;\ALL mario-related offsets MUST run a check if he is in a pipe state,
+MarioAbove:			;|or bugs may occur.
+MarioSide:			;|
+TopCorner:			;|
+BodyInside:			;|
+HeadInside:			;/
+;WallFeet:			
+;WallBody:			
+	PipeCheck:
+		LDA !Freeram_SSP_PipeDir
+		AND.b #%00001111
+		BEQ .NotPipeMode
+		
+		.PipeMode
+			LDY #$00	;\Make block passable when in pipe
+			LDA #$25	;|
+			STA $1693	;/
+		.PipeDone
+			RTL		;&gt;and don't do anything else.
+		.NotPipeMode
+	NotRelatedPipeCodeHere:
+	
+SpriteV:
+SpriteH:
+
+MarioCape:
+MarioFireball:			;&gt;If you disable freezing (locking $9D), having this run the pipe check causes pipes to also be passable to fireballs when Mario is in pipe.
+RTL
+
+print "<description>"
+</pre></td></tr></table>
+
+</li><br>
 
 Now note that if RAM address <tt>$7E1419</tt> (this is the RAM that handles when the player enters an exit enabled pipe, it also affects yoshi pose, even when not mounted,
 this even happens in the original game with the exit-enabled pipes) is a nonzero value, will force the player to hold the sprite, regardless the dash button is held down,
