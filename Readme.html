@@ -28,11 +28,8 @@ This block pack contains custom block pipes that when the player enters them, in
 screen-fading to the next level, scrolls the screen following the pipe as the player
 travels through to the other end.<br><br>
 
-The primary purpose of this release was because FuSoYa's pipes are incompatible with the custom block
-insertion tool; <i>Gopher Popcorn Stew</i> (GPS) (until <a href="https://www.smwcentral.net/?p=section&a=details&id=19984">this
-patch</a> was released on 05/30/2019 but <u class="DottedUnderline" title="No other bugs was fixed besides making it compatible with GPS.">was merely
-a port</u> for GPS). Along with some unwanted bugs (unless you
-want to use them in a kaizo hack) and other issues that wasn't fixed since its code is horrible:
+The primary purpose of this release was because FuSoYa's SMB3 screen scrolling pipes are incompatible with the custom block
+insertion tool; <i>Gopher Popcorn Stew</i> (GPS). <a href="https://www.smwcentral.net/?p=section&a=details&id=19984">it was updated to work with GPS</a> on 05/30/2019 but other glitches remain:
 
 <ul>
 <li>The player will be teleported to the last pipe exited if the player hits the bottom of any horizontal
@@ -82,12 +79,12 @@ state before he fully emerges from the pipe, so he slightly clips into the block
 <h2>Features not seen before:</h2>
 <ul>
 <li>This package do not use exit tiles placed in front of pipe caps (air tiles or water tiles placed in front of pipe caps),
-instead it relies on a freeram frame counter to determine if the player is fully out of the pipes; Therefore you can put any tiles
+instead it relies on a RAM frame timer to determine if the player is fully out of the pipes; Therefore you can put any tiles
 (obviously you shouldn't put solid tiles there) without worry.</li><br>
 
 <li>Turn pipe corners for small pipes. FuSoYa did feature small pipes that can only be entered by
 small Mario, but have forgotten the turn pipe corners, thus straight pipes with gaps for turns
-are needed on FuSoYa's end.</li><br>
+are needed on FuSoYa's SSPs.</li><br>
 
 <li>As of version 3.2.2, turn pipe corners now have a smoother change of direction instead of
 snapping the player's coordinates when approaching them. It wait tills Mario's position is at or
@@ -100,11 +97,12 @@ past the point he needs to change direction (it will center the player correctly
 <h2>Insertion</h2>
 <h3>What you need:</h3>
 <ul>
-<li>Uberasm Tool (Not the patch)</li>
-<li>Gopher Popcorn Stew (GPS)</li>
+<li><a href="https://www.smwcentral.net/?p=section&a=details&id=19982">Uberasm Tool</a> (Not the patch version)</li>
+<li><a href="https://www.smwcentral.net/?p=section&a=details&id=19047">Gopher Popcorn Stew (GPS)</a></li>
 <li>Lunar Magic's map16 page 4 not used, unless if you know how to make it use a different
 page.</li>
-<li>No More Sprite Tile Limits patch.</li>
+<li><a href="https://www.smwcentral.net/?p=section&a=details&id=18741">No More Sprite Tile Limits patch</a>.
+Certain sprites on screen randomly disappear when in pipes. Ignore this if you have SA-1 installed.</li>
 <li><s>No shooting fireballs/cape spin when carrying something (to prevent auto-capespin when
 carrying a sprite when exiting pipes)</s> EDIT: this is fixed.</li>
 </ul><br>
@@ -173,9 +171,29 @@ Click <a name="UseBlocksInLevel" href="Readme_files/BlocksUsageInLevel.html">her
 
 </ol>
 
-*If you need to move your pipes to a different map16 page, simply change <tt>$PPNN</tt> (or <tt>$PNN</tt>) where PP is the page number to move to.
-Make sure they line up properly (the first block that was origonally placed on the top-left corner should remain on the top corner
-on the new page you're moving to).
+*If you need to move your pipes to a different map16 page, simply change <tt>$PPNN</tt> where PP is the page number to move to.
+Make sure they line up properly (the first block that was originally placed on the top-left corner should remain on the top corner
+on the new page you're moving to). A faster way to do this is to use <a href="https://notepad-plus-plus.org/downloads/">notepad plus plus</a>'s regular expression to replace (CTRL+H) the page numbers:
+<table><tr><td><pre>Note: include ALL that is underlined!
+
+1) replace the numbers at the left edge of the document:
+	Find what: <u>^[0-9A-F][0-9A-F](?'NonPageNumber'[0-9A-F][0-9A-F]:)</u>
+	Replace with: <u><font color="red">05</font>$+{NonPageNumber}</u>
+	Search mode: Regular expression
+
+2) same as before but for rectangle of blocks:
+	Find what: <u>^R[0-9A-F][0-9A-F](?'NonPageNumber'[0-9A-F][0-9A-F]:)</u>
+	Replace with: <u>R<font color="red">05</font>$+{NonPageNumber}</u>
+	Search mode: Regular expression
+
+3) replace the numbers for all multi-blocks assigning:
+	Find what: <u>-[0-9A-F][0-9A-F](?'NonPageNumber'[0-9A-F][0-9A-F])</u>
+	Replace with: <u>-<font color="red">05</font>$+{NonPageNumber}</u>
+	Search mode: Regular expression
+</pre></td></tr></table><br>
+The red <font color="red">05</font> is the page number to move to. Make sure ALL the block digits are <b>4 digits long</b> which means have leading zeroes should less digits exist (<kbd>400</kbd> &rightarrow; <kbd>0400</kbd>)
+so that the regex will only replace block IDs and not the behavors.
+
 
 <h2>FAQ</h2>
 <ul>
@@ -243,8 +261,8 @@ must use RAM address in banks $40/$41 should you need to use 3-byte addressing (
  regardless of which left or right direction Mario is going), until the balloon wears
  off. If you try entering horizontal pipe caps that way, Mario won't enter the pipes if
  he's facing away from the cap (so he doesn't enter backwards), so if you are using this,
- you should download the &ldquo;p-balloon fix&rdquo; by Alcaro and/or &ldquo;P-balloon timer fix&rdquo; by
- GreenHammerBro, that will fix the error and always allow Mario to enter. Do note that
+ you should download the &ldquo;<a href="https://www.smwcentral.net/?p=section&a=details&id=16550">P-balloon timer fix</a>&rdquo; by
+ me, that will fix the error and always allow Mario to enter. Do note that
  being under the effect of the balloon counts as &ldquo;carrying something&rdquo;.</li><br>
 
 <li><s>Don't make it possible for the player to to be inside these pipes while in layer
@@ -253,9 +271,6 @@ must use RAM address in banks $40/$41 should you need to use 3-byte addressing (
  mario while in the pipe and causes glitches like coming out of the pipe out of nowhere
  or even &ldquo;escape&rdquo; the pipe and leaving the player's still in &ldquo;pipe physics mode&rdquo;,
  softlocking the game.</s> EDIT: This is fixed. You can now use the pipes in the tide freely.</li><br>
-
-<li>You need No More Sprite Tile Limits in order to prevent Mario, Yoshi, and other sprite
- tiles losing their tile when entering pipes.</li><br>
  
 <li>I had to store #$0B into $7E0071 so that when setting $7E:009D to freeze time works
 properly; most sprites don't freeze (excluding ones that doesn't check $9D (the freeze flag),
