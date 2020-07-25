@@ -302,5 +302,9 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	-Settings to forbid items and yoshi can now be on separate blocks, meaning you can have two pipes
 	 that allows and disallow things traveled with the player. This also includes horizontal pipe caps
 	 enabling to be entered in midair.
-	-Now features “background” pipes that are passable that the player can pipe travel through them.
+	-Now features “background” (not layer-2, I meant layer 1 decoration) pipes that are passable that
+	 the player can pipe travel through them.
 	-Fixed a bug that turn block bridges can block the player's horizontal movement
+	-Fixed an issue with the turn block bridge (sprite $59)'s bug that cause the player to not rise up
+	 with the sprite when expanding vertically due to a faulty restore code (also it merely zeroes the
+	 Y position without aligning him to the platform vertically).

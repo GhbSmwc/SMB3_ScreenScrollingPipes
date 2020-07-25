@@ -297,7 +297,7 @@ Sprite_TurnBlockHV_pos:         ;>JML from $01B882
 	LDA $0D
 	CLC
 	ADC #$1F
-	JML $01B8B1 ;>Skip all codes that sets the player XY position.
+	JML $01B887 ;>Continue onwards
 ;---------------------------------------------------------------------------------
 Sprite_TurnBlockHV_SideSolidFix:     ;>JML from $01B8D5
 	LDA !Freeram_SSP_PipeDir
@@ -309,7 +309,7 @@ Sprite_TurnBlockHV_SideSolidFix:     ;>JML from $01B8D5
 	.Restore
 	LDA $0E
 	CLC
-	ADC #$10
+	ADC.b #$10
 	JML $01B8DA
 	
 ;---------------------------------------------------------------------------------
