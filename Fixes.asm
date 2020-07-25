@@ -240,12 +240,18 @@ SpriteSub_CarryInteractWithOtherSpr: ;>JML from $01A417
 
 	.CODE_01A421
 		..CheckIfSpriteCarredInSSP
-			LDA !14C8,y			;>Y = current sprite index being processed. X = The secondary sprite (a lower index than Y)
-			CMP.b #$0B			;\If not carried...
-			BNE ...OutOfPipe		;/
-			LDA !Freeram_SSP_PipeDir	;\and/or player is outside of pipe, then enable interaction
-			AND.b #%00001111		;|with other sprites.
-			BEQ ...OutOfPipe		;/
+			LDA !14C8,x			;\Sprite A gets assigned to X and sprite B gets assigned to Y. Then test if the 2 touches each other.
+			CMP.b #$0B			;|>If either or both sprite A and B are carried, then check if player in pipe.
+			BEQ ...Carried			;|
+			LDA !14C8,y			;|
+			CMP.b #$0B			;|
+			BEQ ...Carried			;/
+			...NotCarried
+				BRA ...OutOfPipe
+			...Carried
+				LDA !Freeram_SSP_PipeDir	;\and/or player is outside of pipe, then enable interaction
+				AND.b #%00001111		;|with other sprites.
+				BEQ ...OutOfPipe		;/
 			
 			...InPipe
 				JML $01A4B0		;>Ignore interaction should carried sprite is in pipe.
