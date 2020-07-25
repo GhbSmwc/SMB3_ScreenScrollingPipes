@@ -21,7 +21,8 @@
 ;--Solid sprites and platform sprites setting the player's coordinate (mainly the Y position)
 ;  which can cause the player not to be centered with horizontal pipes.
 ;--Side-solid sprites like the turn block bridge can block the player's horizontal pipe traveling.
-;
+;--Carried sprites will interact with other sprites even when carryed by player through pipes when
+;  freeze flag is set.
 ;
 ;To tell if the player is in the pipe, use this code:
 ;	LDA !Freeram_SSP_PipeDir
@@ -120,6 +121,9 @@ org $01ED44				;\fix getting on yoshi automatically when entering
 org $00EAA9				;\This is why blocks always assume $77, $13E1 and $13EE
 	autoclean JSL BlockedFix	;/are stored as zero (this runs every frame).
 	nop #1
+
+org $01A417
+	autoclean JML SpriteSub_CarryInteractWithOtherSpr
 
 org $01E650
 	autoclean JML Sprite_Springboard_CancelLaunch	;>So after exiting pipe, doesn't continue bouncing the player up
@@ -227,6 +231,26 @@ BlockedFix: ;>JSL from $00EAA9
 	;then use the original ($77 and/or $13E1). Do not write a value on
 	;this freeram, it will do nothing, write on those default ram address.
 	RTL
+;---------------------------------------------------------------------------------
+SpriteSub_CarryInteractWithOtherSpr: ;>JML from $01A417
+	LDA.w !14C8,x		;>Sprite status
+	CMP.b #$08		;\If sprite is "alive"
+	BCS .CODE_01A421	;/Go to where the loop starts on and handle sprite <-> sprite interaction
+	JML $01A4B0		;>Otherwise go to next sprite to check.
+
+	.CODE_01A421
+		..CheckIfSpriteCarredInSSP
+			LDA !14C8,y			;>Y = current sprite index being processed. X = The secondary sprite (a lower index than Y)
+			CMP.b #$0B			;\If not carried...
+			BNE ...OutOfPipe		;/
+			LDA !Freeram_SSP_PipeDir	;\and/or player is outside of pipe, then enable interaction
+			AND.b #%00001111		;|with other sprites.
+			BEQ ...OutOfPipe		;/
+			
+			...InPipe
+				JML $01A4B0		;>Ignore interaction should carried sprite is in pipe.
+			...OutOfPipe
+				JML $01A421
 ;---------------------------------------------------------------------------------
 Sprite_Springboard_CancelLaunch:         ;>JML from $01E650
 	LDA !Freeram_SSP_PipeDir
