@@ -298,3 +298,9 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	 of the sprite to be off from the actual hitbox of the sprite.
 	-Realized that GPS now adopts SA-1 defines in "defines.asm"; the routine file "FaceYoshi.asm" now
 	 adopts to it.
+07/25/2020 4.0.0
+	-Settings to forbid items and yoshi can now be on separate blocks, meaning you can have two pipes
+	 that allows and disallow things traveled with the player. This also includes horizontal pipe caps
+	 enabling to be entered in midair.
+	-Now features “background” pipes that are passable that the player can pipe travel through them.
+	-Fixed a bug that turn block bridges can block the player's horizontal movement

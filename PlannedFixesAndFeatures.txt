@@ -3,4 +3,4 @@
  pipe traveling. This also should completely disable carried sprite from interacting with other sprites outside the pipe.
 -Because most hacks uses SSP to separate sections of the level (like a subroom), I am planning to add a loading trigger for SSP that will
  erase sprites and spawn them at a given location (such as the room the player is going to).
--Fix the turn block bridge that can block pipe movements.
+-[done!] Fix the turn block bridge that can block pipe movements.

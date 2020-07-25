@@ -17,6 +17,10 @@
 ;--Do note that this only applies to smw sprites, in all custom sprites that sets the player's
 ;  x and y position ($94-$97), add a check before it to skip that code so it doesn't disalign
 ;  the player character when entering the pipe.
+;-Various sprite related issues:
+;--Solid sprites and platform sprites setting the player's coordinate (mainly the Y position)
+;  which can cause the player not to be centered with horizontal pipes.
+;--Side-solid sprites like the turn block bridge can block the player's horizontal pipe traveling.
 ;
 ;
 ;To tell if the player is in the pipe, use this code:
@@ -133,6 +137,9 @@ org $01AAD8
 org $01B882
 	autoclean JML Sprite_TurnBlockHV_pos		;>Same as above (turnblock bridge, vertical and horizontal)
 	;^Happens by entering the pipe while expanding vertically.
+	
+org $01B8D5
+	autoclean JML Sprite_TurnBlockHV_SideSolidFix		;>Fix a bug that if mario moves horizontally into a turn block bridge, would block him.
 
 org $02CDD5
 	autoclean JML Sprite_Peabounceer_FirstFrameBounce
@@ -176,7 +183,7 @@ org $00DA6C
 	autoclean JML Layer3TideDisablePush
 freecode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-FixHDMA:
+FixHDMA: ;>JSL from $00C5CE
 	LDA $0D9B|!addr
 	CMP #$C1
 	BNE .NormalLevel
@@ -190,7 +197,7 @@ FixHDMA:
 	.NormalLevel
 	RTL
 ;---------------------------------------------------------------------------------
-GetOnYoshiExcept:
+GetOnYoshiExcept: ;>JML from $01ED44
 	LDA $7D				;\Restore speed check in order to get on yoshi.
 	BMI .NoYoshi			;/
 	LDA !Freeram_SSP_PipeDir	;\if in pipe mode, don't get on yoshi while entering.
@@ -202,7 +209,7 @@ GetOnYoshiExcept:
 	JML $01ED70		;>Don't get on yoshi.
 
 ;---------------------------------------------------------------------------------
-BlockedFix:
+BlockedFix: ;>JSL from $00EAA9
 ;	LDA $13E1|!addr		;\In case you also wanted blocks to detect slope, remove
 ;	STA $xxxxxx		;/the semicolons (";") before it and add a freeram in place of xxxxxx
 	STZ $13E1|!addr		;>Restore code (clears slope type)
@@ -221,7 +228,7 @@ BlockedFix:
 	;this freeram, it will do nothing, write on those default ram address.
 	RTL
 ;---------------------------------------------------------------------------------
-Sprite_Springboard_CancelLaunch:         ;>$01E650
+Sprite_Springboard_CancelLaunch:         ;>JML from $01E650
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .NotInPipe
@@ -239,7 +246,7 @@ Sprite_Springboard_CancelLaunch:         ;>$01E650
 	.Addr_01E6B0
 	JML $01E6B0
 ;---------------------------------------------------------------------------------
-Sprite_springboard_Pos:         ;>$01E666
+Sprite_springboard_Pos:         ;>JML from $01E666
 
 	LDA.w $01E611,Y			;\restore code.
 	STA !1602,x			;/
@@ -254,7 +261,7 @@ Sprite_springboard_Pos:         ;>$01E666
 	.DontSetPos
 	JML $01E683
 ;---------------------------------------------------------------------------------
-Sprite_Springboard_ImageFix:     ;>$01E6F0
+Sprite_Springboard_ImageFix:     ;>JSL from $01E6F0
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
@@ -267,7 +274,7 @@ Sprite_Springboard_ImageFix:     ;>$01E6F0
 	LDA.w $01E6FD,Y
 	RTL
 ;---------------------------------------------------------------------------------
-Sprite_Key_pos:                 ;>$01AAD8
+Sprite_Key_pos:                 ;>JML from $01AAD8
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
@@ -279,7 +286,7 @@ Sprite_Key_pos:                 ;>$01AAD8
 	LDY $187A|!addr
 	JML $01AADD
 ;---------------------------------------------------------------------------------
-Sprite_TurnBlockHV_pos:         ;>$01B882
+Sprite_TurnBlockHV_pos:         ;>JML from $01B882
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
@@ -290,9 +297,23 @@ Sprite_TurnBlockHV_pos:         ;>$01B882
 	LDA $0D
 	CLC
 	ADC #$1F
-	JML $01B887
+	JML $01B8B1 ;>Skip all codes that sets the player XY position.
 ;---------------------------------------------------------------------------------
-Sprite_Peabounceer_FirstFrameBounce:           ;>$02CDD5
+Sprite_TurnBlockHV_SideSolidFix:     ;>JML from $01B8D5
+	LDA !Freeram_SSP_PipeDir
+	AND.b #%00001111
+	BEQ .Restore
+	
+	JML $01B8FE
+	
+	.Restore
+	LDA $0E
+	CLC
+	ADC #$10
+	JML $01B8DA
+	
+;---------------------------------------------------------------------------------
+Sprite_Peabounceer_FirstFrameBounce:           ;>JML from $02CDD5
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
@@ -310,7 +331,7 @@ Sprite_Peabounceer_FirstFrameBounce:           ;>$02CDD5
 	..CODE_02CDF1
 	JML $02CDF1
 ;---------------------------------------------------------------------------------
-Sprite_Peabouncer_pos:          ;>$02CFA5
+Sprite_Peabouncer_pos:          ;>JML from $02CFA5
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
@@ -323,7 +344,7 @@ Sprite_Peabouncer_pos:          ;>$02CFA5
 	LDX $187A|!addr
 	JML $02CFAB
 ;---------------------------------------------------------------------------------
-Sprite_InvisibleBlock_pos:         ;>$01B47F
+Sprite_InvisibleBlock_pos:         ;>JML from $01B47F
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
@@ -335,7 +356,7 @@ Sprite_InvisibleBlock_pos:         ;>$01B47F
 	LDY $187A|!addr
 	JML $01B484
 ;---------------------------------------------------------------------------------
-Sprite_ChainedPlatform_pos:        ;>$01CA3C
+Sprite_ChainedPlatform_pos:        ;>JML from $01CA3C
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
@@ -347,7 +368,7 @@ Sprite_ChainedPlatform_pos:        ;>$01CA3C
 	LDY $187A|!addr
 	JML $01CA41
 ;---------------------------------------------------------------------------------
-Sprite_SkullRaft_pos:              ;>$02EE77
+Sprite_SkullRaft_pos:              ;>JML from $02EE77
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
@@ -359,7 +380,7 @@ Sprite_SkullRaft_pos:              ;>$02EE77
 	LDY $187A|!addr
 	JML $02EE7C
 ;---------------------------------------------------------------------------------
-Sprite_Megamole_pos:               ;>$0387F6
+Sprite_Megamole_pos:               ;>JML from $0387F6
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
@@ -371,7 +392,7 @@ Sprite_Megamole_pos:               ;>$0387F6
 	LDY $187A|!addr
 	JML $0387FB
 ;---------------------------------------------------------------------------------
-Sprite_CarrotLft_Pos:              ;>$038CA7
+Sprite_CarrotLft_Pos:              ;>JML from $038CA7
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
@@ -383,7 +404,7 @@ Sprite_CarrotLft_Pos:              ;>$038CA7
 	CMP #$01
 	JML $038CAC
 ;---------------------------------------------------------------------------------
-Layer3TideDisablePush:             ;>$00DA6C
+Layer3TideDisablePush:             ;>JML from $00DA6C
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
