@@ -4,3 +4,4 @@
 -Because most hacks uses SSP to separate sections of the level (like a subroom), I am planning to add a loading trigger for SSP that will
  erase sprites and spawn them at a given location (such as the room the player is going to).
 -[done!] Fix the turn block bridge that can block pipe movements.
+-Make carried sprites into pipes also turn invisible with the player.
