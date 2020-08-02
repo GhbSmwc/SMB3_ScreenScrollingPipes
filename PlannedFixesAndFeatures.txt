@@ -5,10 +5,21 @@
  erase sprites and spawn them at a given location (such as the room the player is going to).
 -[done!] Fix the turn block bridge that can block pipe movements.
 -Make carried sprites into pipes also turn invisible with the player.
+ Breakpoints to look out for:
+ - 019CF3 (SubSprGfx0Entry0)
+ - 019CF5 (SubSprGfx0Entry1)
+ - 019F09 (SubSprGfx2Entry0)
+ - 019F0D (SubSprGfx2Entry1)
+ Sprite list is located at $0185CC (SpriteMainPtr)
 --So far:
 ---Turns invisible:
 ----Koopa shells (all 4 colors)
 ----Buzzy beetles
----Not turning invisible:
 ----Key
 ----Mechakoopa
+---Not turning invisible:
+----Goomba
+----Bob-omb
+----Baby yoshi
+----Springboard
+----Both p-switches
