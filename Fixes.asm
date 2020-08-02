@@ -197,6 +197,13 @@ incsrc "SSPDef/Defines.asm"
 		nop #2
 	org $01A162
 		autoclean JSL MakeMechaKoopaInvisible	;>Mechakoopa
+	org $01A14D
+		autoclean JML MakeGoombaInvisible
+		nop #2
+	;org $01A187
+	;	autoclean JML MakeMostCarryableSpritesInvisible
+	;this handles pretty much most of the carryable sprite, sadly, this also have non-graphic-related stuff (such as physics),
+	;so potential bugs could happen if I modify to skip this entire subroutine when invisible with the player.
 freecode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 FixHDMA: ;>JSL from $00C5CE
@@ -504,6 +511,19 @@ MakeMechaKoopaInvisible:           ;>JSL from $01A162
 	.Visible
 		JSL $03B307
 		RTL
+;---------------------------------------------------------------------------------
+MakeGoombaInvisible:    ;>JML from $01A14D
+	JSL CheckIfSpriteIsInsideSSPWhenInvisible
+	BCS .Invisible
+	
+	.Visible
+		LDA #$80
+		JML $019F09
+	.Invisible
+		JML $019F5A
+;---------------------------------------------------------------------------------
+MakeMostCarryableSpritesInvisible:              ;>JML from $01A187
+	.CheckFirst
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Subroutines.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

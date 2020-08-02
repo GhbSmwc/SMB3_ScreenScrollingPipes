@@ -11,14 +11,15 @@
  - 019F09 (SubSprGfx2Entry0)
  - 019F0D (SubSprGfx2Entry1)
  Sprite list is located at $0185CC (SpriteMainPtr)
+ Actually, should look for “Stun<sprite_name>” around 01A12F (labeled “StunGoomba”).
 --So far:
 ---Turns invisible:
 ----Koopa shells (all 4 colors)
 ----Buzzy beetles
 ----Key
 ----Mechakoopa
----Not turning invisible:
 ----Goomba
+---Not turning invisible:
 ----Bob-omb
 ----Baby yoshi
 ----Springboard
