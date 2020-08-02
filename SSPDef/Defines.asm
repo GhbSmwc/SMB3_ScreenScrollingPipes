@@ -78,7 +78,7 @@
   ;^[1 byte] use to determine if mario's entering or
   ; exiting, stored values are:
   ; #$00 = outside the pipe
-  ; #$01 = entering
+  ; #$01 = entering (including during the entire pipe trip between pipe caps).
   ; #$02 = exiting
   
  if !sa1 == 0
@@ -105,7 +105,7 @@
   
  ;SFX stuff for yoshi prohibited from entering pipes (only for normal-sized pipes, since you cannot enter small pipes on yoshi even as small Mario):
   !Setting_SSP_YoshiProhibitSFXNum	= $20
-   ;^Set this to $00 for no sound (no worry, it won't cancel the SFX port of any current SFX.)
+   ;^Set this to $00 for no sound (no worry, it won't cancel the SFX port of any current SFX on all frames when the button is held down).
   !Setting_SSP_YoshiProhibitSFXPort	= $1DF9
    ;^The sound effect played when you tried to enter pipes on yoshi when yoshi is prohibited.
  
@@ -116,11 +116,10 @@
   ;^0 = FuSoYa's pipe to not freeze stuff, 1 = freeze stuff.
   
  !Setting_SSP_FuSoYaSpd		= 1
-  ;^0 = SMW styled speed (fast stem speed by default), 1 = fast FuSoYa speed.
+  ;^0 = SMW styled speed (pipe caps recreated from SMW's exit-enabled pipes, but with fast stem speed by default), 1 = FuSoYa's SSP speed.
  
 ;Pipe travel speeds:
 ;Use only values $01-$7F (negative speeds already calculated).
-;
  if !Setting_SSP_FuSoYaSpd == 0		;>Don't change this if statement.
   ;SMW styled speed
   !SSP_HorizontalSpd		= $40 ;\Stem speed (changing this does not affect the timing of the entering/exiting)
@@ -135,63 +134,65 @@
   !SSP_VerticalSpdPipeCap	= $40 ;/
  endif
 
-;Pipe exiting (and entering) timers (needed in case if you changed the cap speeds and have to fiddle to make
-;sure the player exit the pipes properly, as well as the player hitbox to not exit while overlapping the pipes.)
-;Numbers here are how long (in frames) before the player returns to normal when hitting pipe caps.
-;The faster you set the pipe cap speed, the lower the values here should be.
-;Hint: by using the scale by factor (Speed*X leads to Timer/X), it makes it much easier to work with this.
-;
-;Easiest to know is to test them, if the player exits the pipe further ahead of the cap past it, the timer is too long
-;and needs to be a lower value, if the player exits the pipe while inside the cap (embedded inside the solid pipe, which
-;may kill the player), the timer is too short and needs to be a higher value. For downwards facing pipes, shorter timers
-;also enable entering back in them just after exiting it by holding up (you don't need to jump).
-
-;Alternative way, have the timer be $FF. Then use a debugger and check out the RAM address "!Freeram_SSP_PipeTmr" is
-;using, from the time the timer is $FF about to decrement to the time the value is at a certain number when the player's
-;body (including yoshi when riding it) is at the position he should be freely be able to move, the difference is the
-;correct amount of frames for the player to exit the pipe properly:
-;
-; CorrectTimerValue = $FF - <Timer value when the player is completely out of the pipe>
-;
-; Example:
-;
-; Right when mario exits the pipe leftwards, his time value was $C5, so [$FF - C5 = $3A]. That $3A is the correct time
-; amount.
-
- if !Setting_SSP_FuSoYaSpd == 0
-  ;Regular pipe timing
-  !SSP_PipeTimer_Enter_Leftwards			= $3A
-  !SSP_PipeTimer_Enter_Rightwards			= $3C
-  !SSP_PipeTimer_Enter_Upwards_OffYoshi			= $1D
-  !SSP_PipeTimer_Enter_Upwards_OnYoshi			= $27
-  !SSP_PipeTimer_Enter_Downwards_OffYoshi		= $20
-  !SSP_PipeTimer_Enter_Downwards_OnYoshi		= $30
-  !SSP_PipeTimer_Enter_Downwards_SmallPipe		= $1D
-  
-  !SSP_PipeTimer_Exit_Leftwards				= $1B
-  !SSP_PipeTimer_Exit_Rightwards			= $1B
-  !SSP_PipeTimer_Exit_Upwards_OffYoshi			= $1D
-  !SSP_PipeTimer_Exit_Upwards_OnYoshi			= $27
-  !SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario	= $0E
-  !SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario	= $1B
-  !SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario	= $18
-  !SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario	= $25
- else
-  ;FuSoYa enter and exit timers.
-  !SSP_PipeTimer_Enter_Leftwards			= $0A
-  !SSP_PipeTimer_Enter_Rightwards			= $0A
-  !SSP_PipeTimer_Enter_Upwards_OffYoshi			= $0A
-  !SSP_PipeTimer_Enter_Upwards_OnYoshi			= $0A
-  !SSP_PipeTimer_Enter_Downwards_OffYoshi		= $0A
-  !SSP_PipeTimer_Enter_Downwards_OnYoshi		= $0A
-  !SSP_PipeTimer_Enter_Downwards_SmallPipe		= $0A
-
-  !SSP_PipeTimer_Exit_Leftwards				= $04
-  !SSP_PipeTimer_Exit_Rightwards			= $04
-  !SSP_PipeTimer_Exit_Upwards_OffYoshi			= $09
-  !SSP_PipeTimer_Exit_Upwards_OnYoshi			= $0A
-  !SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario	= $06
-  !SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario	= $08
-  !SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario	= $07
-  !SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario	= $08
- endif
+ ;Pipe exiting (and entering) timers (needed in case if you changed the cap speeds and have to fiddle to make
+ ;sure the player exit the pipes properly, as well as the player hitbox to not exit while overlapping the pipes.)
+ ;Numbers here are how long (in frames) before the player returns to normal when hitting pipe caps.
+ ;The faster you set the pipe cap speed, the lower the values here should be.
+ ;Hint: by using the scale by factor (Speed*X leads to Timer/X), it makes it much easier to work with this.
+ ;
+ ;Easiest to know is to test them, if the player exits the pipe further ahead of the cap past it, the timer is too long
+ ;and needs to be a lower value, if the player exits the pipe while inside the cap (embedded inside the solid pipe, which
+ ;may kill the player), the timer is too short and needs to be a higher value. For downwards facing pipes, shorter timers
+ ;also enable entering back in them just after exiting it by holding up (you don't need to jump).
+ 
+ ;Alternative way, have the timer be $FF. Then use a debugger and check out the RAM address "!Freeram_SSP_PipeTmr" is
+ ;using, from the time the timer is $FF about to decrement to the time the value is at a certain number when the player's
+ ;body (including yoshi when riding it) is at the position he should be freely be able to move, the difference is the
+ ;correct amount of frames for the player to exit the pipe properly:
+ ;
+ ; CorrectTimerValue = $FF - <Timer value when the player is completely out of the pipe>
+ ;
+ ; Example:
+ ;
+ ; Right when mario exits the pipe leftwards, his time value was $C5, so [$FF - C5 = $3A]. That $3A is the correct time
+ ; amount.
+ ;
+ ;Again, only use speeds $01-$7F, the negative speeds are automatically calculated when inserted.
+ 
+  if !Setting_SSP_FuSoYaSpd == 0
+   ;Regular pipe timing
+   !SSP_PipeTimer_Enter_Leftwards			= $3A
+   !SSP_PipeTimer_Enter_Rightwards			= $3C
+   !SSP_PipeTimer_Enter_Upwards_OffYoshi		= $1D
+   !SSP_PipeTimer_Enter_Upwards_OnYoshi			= $27
+   !SSP_PipeTimer_Enter_Downwards_OffYoshi		= $20
+   !SSP_PipeTimer_Enter_Downwards_OnYoshi		= $30
+   !SSP_PipeTimer_Enter_Downwards_SmallPipe		= $1D
+   
+   !SSP_PipeTimer_Exit_Leftwards			= $1B
+   !SSP_PipeTimer_Exit_Rightwards			= $1B
+   !SSP_PipeTimer_Exit_Upwards_OffYoshi			= $1D
+   !SSP_PipeTimer_Exit_Upwards_OnYoshi			= $27
+   !SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario	= $0E
+   !SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario	= $1B
+   !SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario	= $18
+   !SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario	= $25
+  else
+   ;FuSoYa enter and exit timers.
+   !SSP_PipeTimer_Enter_Leftwards			= $0A
+   !SSP_PipeTimer_Enter_Rightwards			= $0A
+   !SSP_PipeTimer_Enter_Upwards_OffYoshi		= $0A
+   !SSP_PipeTimer_Enter_Upwards_OnYoshi			= $0A
+   !SSP_PipeTimer_Enter_Downwards_OffYoshi		= $0A
+   !SSP_PipeTimer_Enter_Downwards_OnYoshi		= $0A
+   !SSP_PipeTimer_Enter_Downwards_SmallPipe		= $0A
+ 
+   !SSP_PipeTimer_Exit_Leftwards			= $04
+   !SSP_PipeTimer_Exit_Rightwards			= $04
+   !SSP_PipeTimer_Exit_Upwards_OffYoshi			= $09
+   !SSP_PipeTimer_Exit_Upwards_OnYoshi			= $0A
+   !SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario	= $06
+   !SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario	= $08
+   !SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario	= $07
+   !SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario	= $08
+  endif

@@ -5,3 +5,10 @@
  erase sprites and spawn them at a given location (such as the room the player is going to).
 -[done!] Fix the turn block bridge that can block pipe movements.
 -Make carried sprites into pipes also turn invisible with the player.
+--So far:
+---Turns invisible:
+----Koopa shells (all 4 colors)
+----Buzzy beetles
+---Not turning invisible:
+----Key
+----Mechakoopa

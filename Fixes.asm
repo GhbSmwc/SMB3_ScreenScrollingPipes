@@ -17,12 +17,16 @@
 ;--Do note that this only applies to smw sprites, in all custom sprites that sets the player's
 ;  x and y position ($94-$97), add a check before it to skip that code so it doesn't disalign
 ;  the player character when entering the pipe.
-;-Various sprite related issues:
+;-Various sprite related issues. Note: This will ONLY apply to SMW sprites! Meaning custom sprites,
+; especially if they use their own code (or their shared subroutines) and not SMW's vanilla subroutines,
+; may not follow this change. So you have to edit those manually.
 ;--Solid sprites and platform sprites setting the player's coordinate (mainly the Y position)
 ;  which can cause the player not to be centered with horizontal pipes.
 ;--Side-solid sprites like the turn block bridge can block the player's horizontal pipe traveling.
-;--Carried sprites will interact with other sprites even when carryed by player through pipes when
+;--Carried sprites may interact with other sprites even when carried by player through pipes when
 ;  freeze flag is set.
+;--When utilizing "invisible pipe connectors", carried sprites into pipes don't turn invisible
+;  with the player, which will reveal the player's animation traveling through.
 ;
 ;To tell if the player is in the pipe, use this code:
 ;	LDA !Freeram_SSP_PipeDir
@@ -185,6 +189,13 @@ org $038CA7
 
 org $00DA6C
 	autoclean JML Layer3TideDisablePush
+
+org $01981B
+	autoclean JSL MakeSpriteInvisibleWhenCarriedInSSP	;>Makes sprite invisible with the player when they are carried in pipes.
+		;Works on:
+		;-All 4 colors of koopa shells.
+		;-Buzzy Beetles.
+	nop #2
 freecode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 FixHDMA: ;>JSL from $00C5CE
@@ -430,9 +441,9 @@ Sprite_CarrotLft_Pos:              ;>JML from $038CA7
 	JML $038CE3
 
 	.Restore
-	LDA $187A|!addr
-	CMP #$01
-	JML $038CAC
+		LDA $187A|!addr
+		CMP #$01
+		JML $038CAC
 ;---------------------------------------------------------------------------------
 Layer3TideDisablePush:             ;>JML from $00DA6C
 	LDA !Freeram_SSP_PipeDir
@@ -446,3 +457,43 @@ Layer3TideDisablePush:             ;>JML from $00DA6C
 	JML $00DA71
 	+
 	JML $00DA79
+;---------------------------------------------------------------------------------
+MakeSpriteInvisibleWhenCarriedInSSP:            ;>JSL from $01981B
+	.Restore
+		STA !15EA,x
+	.CheckPipeState
+		JSL CheckIfSpriteIsInsideSSP
+		BCC ..Visible
+	..SpriteInvisible
+		RTL
+	..Visible
+		PHK
+		PEA.w ...jslrtsreturn-1
+		PEA.w $9D66-1
+		JML $019F0D
+		...jslrtsreturn
+			RTL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;Subroutines.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+CheckIfSpriteIsInsideSSP:
+	;Carry: Clear if outside pipe, Set if inside pipe.
+	.PlayerPipeStatus
+		LDA !Freeram_SSP_PipeDir	;\If player is outside...
+		AND.b #%00001111		;|
+		BEQ .Visible			;/
+		LDA !Freeram_SSP_EntrExtFlg	;\...or not in his stem phase
+		CMP #$01			;|
+		BNE .Visible			;/
+		LDA !Freeram_SSP_PipeTmr	;\...or in his entering phase before Mario turns invisible.
+		BNE .Visible			;/
+	.SpriteCarried
+		LDA !14C8,x			;\...or if sprite not carried
+		CMP #$0B			;|then make sprite visible.
+		BNE .Visible			;/
+	.Invisible
+		SEC
+		RTL
+	.Visible
+		CLC
+		RTL
