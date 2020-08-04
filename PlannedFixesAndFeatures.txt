@@ -24,3 +24,5 @@
 ----Baby yoshi
 ----Springboard
 ----Both p-switches
+
+Found some issues when hijacking at $019F0F causing a stack leak.

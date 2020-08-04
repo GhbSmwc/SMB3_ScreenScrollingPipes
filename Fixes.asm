@@ -33,7 +33,10 @@
 ;	AND.b #%00001111
 ;	;^After the above, A will be nonzero should the player be inside the pipe. Use BEQ/BNE
 ;	; after this.
-
+;
+;NOTE: This will apply to ALL levels since the patch modifies code used in all levels. Therefore
+;even if you don't have SSPs in any level and not have them run on uberasm tool on those levels,
+;the freeram are still used. So avoid recycling RAM address during levels used by the SSPs.
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;SA1 detector:
@@ -137,7 +140,7 @@ incsrc "SSPDef/Defines.asm"
 	org $01B8D5
 		autoclean JML Sprite_TurnBlockHV_SideSolidFix		;>Fix a bug that if mario moves horizontally into a turn block bridge, would block him.
 	org $01A417
-		autoclean JML SpriteSub_CarryInteractWithOtherSpr
+		autoclean JML SpriteSub_CarryInteractWithOtherSpr	;>Disable sprite interaction with the sprite carried into a SSP.
 	org $02CDD5
 		autoclean JML Sprite_Peabounceer_FirstFrameBounce
 		;^Fixes a bug if the player holds jump, and on the
@@ -200,10 +203,14 @@ incsrc "SSPDef/Defines.asm"
 	org $01A14D
 		autoclean JML MakeGoombaInvisible
 		nop #2
-	;org $01A187
-	;	autoclean JML MakeMostCarryableSpritesInvisible
-	;this handles pretty much most of the carryable sprite, sadly, this also have non-graphic-related stuff (such as physics),
-	;so potential bugs could happen if I modify to skip this entire subroutine when invisible with the player.
+
+;	org $019F0F		;>Modify $019F0F (SubSprGfx2Entry0 and SubSprGfx2Entry1)
+;		autoclean JML SubSprGfx2Invisible
+			;;^This one is scrapped because of stack leaking issue ($01A365) uses a "destructive return"
+			;;where you JSR, then PLA twice to destroy the first RTS return destination, which results the
+			;;RTS to jump 2 subroutines out instead of one. This does not work with the JSL-RTS trick which
+			;;causes the stack pointer to decrease in total (breakpint repeatedly at $019F0F), even going to
+			;;addresses before $010B (it's $010B-$01FF), which isn't stack data, and eventually a crash.
 freecode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 FixHDMA: ;>JSL from $00C5CE
@@ -522,8 +529,21 @@ MakeGoombaInvisible:    ;>JML from $01A14D
 	.Invisible
 		JML $019F5A
 ;---------------------------------------------------------------------------------
-MakeMostCarryableSpritesInvisible:              ;>JML from $01A187
-	.CheckFirst
+;SubSprGfx2Invisible:   ;>JML from $019F0F
+;	JSL CheckIfSpriteIsInsideSSPWhenInvisible
+;	BCS .Invisible
+;	
+;	.Visible
+;		PHK
+;		PEA.w ..jslrtsreturn-1
+;		PEA.w $9D66-1
+;		JML $01A365		;>Stack leaking issues (GetDrawInfoBnk1)
+;		..jslrtsreturn
+;
+;		LDA !157C,x
+;		JML $019F15
+;	.Invisible
+;		JML $019F5A
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Subroutines.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

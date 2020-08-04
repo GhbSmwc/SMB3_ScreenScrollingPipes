@@ -1,4 +1,5 @@
-;Put this in uberasm tool's library file.
+;Put this in uberasm tool's library file. Note: This code COULD be not to be run on certain levels, but fixes.asm will still be used for all levels so if the
+;freeram is set, would causes glitches. Therefore the freeram is constantly used during levels.
 
 incsrc "../SSPDef/Defines.asm"
 
