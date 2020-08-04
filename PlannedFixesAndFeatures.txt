@@ -1,4 +1,6 @@
--Prevent stunned sprites from being able to "unstun" themselves when the player is carrying them through pipes.
+-Prevent stunned sprites from being able to "unstun" themselves when the player is carrying them through pipes. Planned strategy: disable decrementation
+ (regardless if the freeze setting of the defines is on or off) of their stun timers when pipe-carried. Add a whitelist for some sprites for compatibility
+ with kaizo hacks involving carrying a throw block to enable it to vanish inside pipes.
 -[done!] Have "passable" pipe tiles that act as decorations in the background (not as layer 2, placed in the backdrop of layer 1) that are used for
  pipe traveling. This also should completely disable carried sprite from interacting with other sprites outside the pipe.
 -Because most hacks uses SSP to separate sections of the level (like a subroom), I am planning to add a loading trigger for SSP that will
@@ -19,10 +21,11 @@
 ----Key
 ----Mechakoopa
 ----Goomba
----Not turning invisible:
 ----Bob-omb
-----Baby yoshi
+----Baby yoshi (all 4 colors)
 ----Springboard
 ----Both p-switches
+----Throw block
+---Not turning invisible:
 
 Found some issues when hijacking at $019F0F causing a stack leak.

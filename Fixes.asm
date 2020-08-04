@@ -203,6 +203,25 @@ incsrc "SSPDef/Defines.asm"
 	org $01A14D
 		autoclean JML MakeGoombaInvisible
 		nop #2
+		
+	org $01A1EC
+		autoclean JSL MakeBobOmbInvisible
+		nop
+		
+	org $01A352
+		autoclean JSL MakeBabyYoshiInvisible
+		nop #3
+		
+	org $01E6F7
+		autoclean JSL MakeSpringBoardInvisible
+		nop
+		
+	org $01A21D
+		autoclean JSL MakePSwitchesInvisible
+		nop
+	
+	org $01A1D4
+		autoclean JML MakeThrowBlockInvisible
 
 ;	org $019F0F		;>Modify $019F0F (SubSprGfx2Entry0 and SubSprGfx2Entry1)
 ;		autoclean JML SubSprGfx2Invisible
@@ -544,6 +563,98 @@ MakeGoombaInvisible:    ;>JML from $01A14D
 ;		JML $019F15
 ;	.Invisible
 ;		JML $019F5A
+;---------------------------------------------------------------------------------
+MakeBobOmbInvisible:       ;>JSL from $01A1EC
+	JSL CheckIfSpriteIsInsideSSPWhenInvisible
+	BCS .Invisible
+	
+	.Visible
+		PHK
+		PEA.w ..jslrtsreturn-1
+		PEA.w $9D66-1
+		JML $019F0D
+		..jslrtsreturn
+		LDA #$CA
+	.Invisible
+	RTL
+;---------------------------------------------------------------------------------
+MakeBabyYoshiInvisible:     ;>JSL from $01A352
+	JSL CheckIfSpriteIsInsideSSPWhenInvisible
+	BCS .Invisible
+	
+	.Visible
+		PHK
+		PEA.w ..jslrtsreturn-1
+		PEA.w $9D66-1
+		JML $019F0D
+		..jslrtsreturn
+	.Invisible
+	.Restore
+		JSL $02EA25
+		RTL
+;---------------------------------------------------------------------------------
+MakeSpringBoardInvisible:          ;>JSL from $01E6F7
+	JSL CheckIfSpriteIsInsideSSPWhenInvisible
+	BCS .Invisible
+	
+	.Visible
+		LDA #$02
+		PHK
+		PEA.w ..jslrtsreturn-1
+		PEA.w $9D66-1
+		JML $019CF5
+		..jslrtsreturn
+	.Invisible
+	.Restore
+		RTL
+;---------------------------------------------------------------------------------
+MakePSwitchesInvisible:       ;>$JSL from $01A21D
+	JSL CheckIfSpriteIsInsideSSPWhenInvisible
+	BCS .Invisible
+	
+	.Visible
+		LDA #$02
+		PHK
+		PEA.w ..jslrtsreturn-1
+		PEA.w $9D66-1
+		JML $019F0D
+		..jslrtsreturn
+	.Invisible
+	.Restore
+		LDA #$42
+		RTL
+;---------------------------------------------------------------------------------
+MakeThrowBlockInvisible:        ;>JML from $01A1D4
+	;Had to recreate the whole block of code because of branches over towards the
+	;GFX JSR call at $01A1E8 (StunYoshiEgg) and there's another branch to that at
+	;$01A1D9.
+	JSL CheckIfSpriteIsInsideSSPWhenInvisible
+	BCS .Invisible
+	
+	.Visible
+	LDA !1540,x
+	CMP #$40
+	BCS ..CODE_01A1DE
+	LSR
+	BCS ..StunYoshiEgg
+	
+	..CODE_01A1DE
+		LDA !15F6,x
+		INC #2
+		AND #$0F
+		STA !15F6,x
+	
+	..StunYoshiEgg
+	..JumpToGFXSub
+		PHK
+		PEA.w ...jslrtsreturn-1
+		PEA.w $9D66-1
+		JML $019F0D
+		...jslrtsreturn
+	
+	.Done
+	.Invisible
+		JML $01A1EB
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Subroutines.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
