@@ -134,21 +134,24 @@
   !SSP_VerticalSpdPipeCap	= $40 ;/
  endif
 
- ;Pipe exiting (and entering) timers (needed in case if you changed the cap speeds and have to fiddle to make
- ;sure the player exit the pipes properly, as well as the player hitbox to not exit while overlapping the pipes.)
- ;Numbers here are how long (in frames) before the player returns to normal when hitting pipe caps.
+ ;Pipe entering/exiting timers (in frames). These are used to determine when the player "fully" enters or exits the pipe:
+ ;-When entering, it is the amount of time before the player (and carried sprite) turns invisible and goes from his cap speed to his stem speed.
+ ;-When exiting, it is the amount of time before the player is reverted to "out of pipe" (normal) state. He'll (and sprite) becomes visible
+ ; and goes cap speed immediately when triggering the pipe caps to exit.
+ ;
  ;The faster you set the pipe cap speed, the lower the values here should be.
  ;Hint: by using the scale by factor (Speed*X leads to Timer/X), it makes it much easier to work with this.
  ;
- ;Easiest to know is to test them, if the player exits the pipe further ahead of the cap past it, the timer is too long
- ;and needs to be a lower value, if the player exits the pipe while inside the cap (embedded inside the solid pipe, which
- ;may kill the player), the timer is too short and needs to be a higher value. For downwards facing pipes, shorter timers
- ;also enable entering back in them just after exiting it by holding up (you don't need to jump).
- 
- ;Alternative way, have the timer be $FF. Then use a debugger and check out the RAM address "!Freeram_SSP_PipeTmr" is
- ;using, from the time the timer is $FF about to decrement to the time the value is at a certain number when the player's
- ;body (including yoshi when riding it) is at the position he should be freely be able to move, the difference is the
- ;correct amount of frames for the player to exit the pipe properly:
+ ;How to get the correct number of frames when exiting pipes:
+ ; Easiest to know is to test them, if the player exits the pipe further ahead of the cap past it, the timer is too long
+ ; and needs to be a lower value, if the player exits the pipe while inside the cap (partially embedded inside the solid pipe,
+ ; which may kill the player), the timer is too short and needs to be a higher value. For downwards facing pipes, shorter
+ ; timers also enable entering back in them just after exiting it by holding up (you don't need to jump).
+ ;
+ ; An alternative way: have the timer be $FF. Then use a debugger and check out the RAM address "!Freeram_SSP_PipeTmr" is
+ ; using, from the time the timer is $FF about to decrement to the time the value is at a certain number when the player's
+ ; body (including yoshi when riding it) is at the position he should be freely be able to move, the difference is the
+ ; correct amount of frames for the player to exit the pipe properly:
  ;
  ; CorrectTimerValue = $FF - <Timer value when the player is completely out of the pipe>
  ;
@@ -179,13 +182,13 @@
    !SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario	= $25
   else
    ;FuSoYa enter and exit timers.
-   !SSP_PipeTimer_Enter_Leftwards			= $0A
-   !SSP_PipeTimer_Enter_Rightwards			= $0A
-   !SSP_PipeTimer_Enter_Upwards_OffYoshi		= $0A
+   !SSP_PipeTimer_Enter_Leftwards			= $06
+   !SSP_PipeTimer_Enter_Rightwards			= $06
+   !SSP_PipeTimer_Enter_Upwards_OffYoshi		= $06
    !SSP_PipeTimer_Enter_Upwards_OnYoshi			= $0A
-   !SSP_PipeTimer_Enter_Downwards_OffYoshi		= $0A
+   !SSP_PipeTimer_Enter_Downwards_OffYoshi		= $06
    !SSP_PipeTimer_Enter_Downwards_OnYoshi		= $0A
-   !SSP_PipeTimer_Enter_Downwards_SmallPipe		= $0A
+   !SSP_PipeTimer_Enter_Downwards_SmallPipe		= $06
  
    !SSP_PipeTimer_Exit_Leftwards			= $04
    !SSP_PipeTimer_Exit_Rightwards			= $04
