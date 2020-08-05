@@ -118,6 +118,25 @@
  !Setting_SSP_FuSoYaSpd		= 1
   ;^0 = SMW styled speed (pipe caps recreated from SMW's exit-enabled pipes, but with fast stem speed by default), 1 = FuSoYa's SSP speed.
  
+ !Setting_Minimal_StuntimerSprites	= $5A
+  ;^When having !Setting_SSP_FreezeTime = 0, this is the minimum amount of "double-frames" (each value here is 2 frames) remaining allowed when sprites
+  ; are carried through SSPs. What this mean is when the timer goes below this value, will be set to this value* so that they cannot unstun
+  ; during pipe travels and waits until the player exits the pipe, afterwards, the timer will continue counting and then unstun.
+  ;
+  ; You can remove the "$" to signal that this is a decimal number.
+  ;
+  ; Enter only values $00-$FC (0-252), values $FD-$FF (253-255) results an infinite stun time if the player exits the pipe after the timer runs out
+  ; mid-travel.
+  ;
+  ; 1 second is 30 ($1E) double-frames (DoubleFrames = Seconds*30). Therefore ~8.47 seconds (using $FC double-frames) is the maximum length of stun time. $00 here
+  ; means the sprite will immediately unstun once the timer runs out during travel and exits with the player, which may be seen as "unfair" to the
+  ; player, so I recommend giving a little reaction time upon exiting.
+  ;
+  ;*Note: The sprite actually unstun themselves when the stun timer value hits $03, so the actual amount of double-frames is that stun timer value, minus 3.
+  ; Infinite stun times occur if the timer is in range $00-$02.
+  ;
+  ; Note: This will also apply even if !Setting_SSP_FreezeTime = 1, because again, the player could enter the pipe on the last double-frame and can unfairly get hurt
+  ; on exit. The original SMW, when carrying stunned sprites into exit-enabled pipes causes them to remain stunned forever.
 ;Pipe travel speeds:
 ;Use only values $01-$7F (negative speeds already calculated).
  if !Setting_SSP_FuSoYaSpd == 0		;>Don't change this if statement.
@@ -186,7 +205,7 @@
    !SSP_PipeTimer_Enter_Rightwards			= $06
    !SSP_PipeTimer_Enter_Upwards_OffYoshi		= $06
    !SSP_PipeTimer_Enter_Upwards_OnYoshi			= $0A
-   !SSP_PipeTimer_Enter_Downwards_OffYoshi		= $06
+   !SSP_PipeTimer_Enter_Downwards_OffYoshi		= $08
    !SSP_PipeTimer_Enter_Downwards_OnYoshi		= $0A
    !SSP_PipeTimer_Enter_Downwards_SmallPipe		= $06
  

@@ -671,9 +671,9 @@ DontUnstunInPipes:   ;>$JML from $0196CB
 		STA !14C8,x
 		JML $0196D0
 	.DontUnstun
-		LDA #$04			;\If #$04 is less than timer (or timer >= #$04),
-		CMP !1540,x			;|don't set it to be 1 frame before unstun.
-		BCC ..NotDecrementPast		;/
+		LDA.b #($04+!Setting_Minimal_StuntimerSprites)	;\If #$04 is less than timer (or timer >= #$04),
+		CMP !1540,x					;|don't set it to be 1 frame before unstun.
+		BCC ..NotDecrementPast				;/
 		
 		..DecrementPast
 			STA !1540,x
