@@ -230,6 +230,12 @@ incsrc "SSPDef/Defines.asm"
 			;;RTS to jump 2 subroutines out instead of one. This does not work with the JSL-RTS trick which
 			;;causes the stack pointer to decrease in total (breakpint repeatedly at $019F0F), even going to
 			;;addresses before $010B (it's $010B-$01FF), which isn't stack data, and eventually a crash.
+;Prevent sprites from unstunning themselves when they're carried into SSPs. NOTE: Their timers will still keep counting down
+;and when it goes to zero (actually #$03 is when they awaken because #$00-#$02 is used for other purpose), will wait until the
+;player exits the pipe. This only happens if !Setting_SSP_FreezeTime is 0, otherwise its timer would also freeze.
+
+	org $0196CB
+	autoclean JML DontUnstunInPipes
 freecode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 FixHDMA: ;>JSL from $00C5CE
@@ -655,6 +661,27 @@ MakeThrowBlockInvisible:        ;>JML from $01A1D4
 	.Done
 	.Invisible
 		JML $01A1EB
+;---------------------------------------------------------------------------------
+DontUnstunInPipes:   ;>$JML from $0196CB
+	JSL CheckIfSpriteCarriedInPipe
+	BCS .DontUnstun
+	
+	.Unstun
+		LDA #$08
+		STA !14C8,x
+		JML $0196D0
+	.DontUnstun
+		LDA #$04			;\If #$04 is less than timer (or timer >= #$04),
+		CMP !1540,x			;|don't set it to be 1 frame before unstun.
+		BCC ..NotDecrementPast		;/
+		
+		..DecrementPast
+			STA !1540,x
+			;^Because $1540 will decrement TOWARDS ZERO, skipping the unstun code means
+			; the timer WILL decrement past #$03 (the value to unstun sprites), which results
+			; in sprites permanently stunned if the timer goes past below #$03 in a pipe.
+		..NotDecrementPast
+			JML $0196D6
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Subroutines.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -678,5 +705,19 @@ CheckIfSpriteIsInsideSSPWhenInvisible:
 		SEC
 		RTL
 	.Visible
+		CLC
+		RTL
+CheckIfSpriteCarriedInPipe:
+	LDA !Freeram_SSP_PipeDir
+	AND.b #%00001111
+	BEQ .OutsideOfPipe
+	LDA !14C8,x
+	CMP #$0B
+	BNE .OutsideOfPipe
+	
+	.InsideOfPipe
+		SEC
+		RTL
+	.OutsideOfPipe
 		CLC
 		RTL
