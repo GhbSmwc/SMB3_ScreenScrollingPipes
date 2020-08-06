@@ -234,7 +234,7 @@ incsrc "SSPDef/Defines.asm"
 ;and when it goes to zero (actually #$03 is when they awaken because #$00-#$02 is used for other purpose), will wait until the
 ;player exits the pipe. This only happens if !Setting_SSP_FreezeTime is 0, otherwise its timer would also freeze.
 
-	org $0196CB
+	org $0196A1
 	autoclean JML DontUnstunInPipes
 freecode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -662,15 +662,11 @@ MakeThrowBlockInvisible:        ;>JML from $01A1D4
 	.Invisible
 		JML $01A1EB
 ;---------------------------------------------------------------------------------
-DontUnstunInPipes:   ;>$JML from $0196CB
+DontUnstunInPipes:   ;>$JML from $0196A1
 	JSL CheckIfSpriteCarriedInPipe
-	BCS .DontUnstun
+	BCC .NoFreeze
 	
-	.Unstun
-		LDA #$08
-		STA !14C8,x
-		JML $0196D0
-	.DontUnstun
+	.FreezeTimerAtMinimum
 		LDA.b #($04+!Setting_Minimal_StuntimerSprites)	;\If #$04 is less than timer (or timer >= #$04),
 		CMP !1540,x					;|don't set it to be 1 frame before unstun.
 		BCC ..NotDecrementPast				;/
@@ -681,7 +677,14 @@ DontUnstunInPipes:   ;>$JML from $0196CB
 			; the timer WILL decrement past #$03 (the value to unstun sprites), which results
 			; in sprites permanently stunned if the timer goes past below #$03 in a pipe.
 		..NotDecrementPast
-			JML $0196D6
+	.NoFreeze
+	LDA !1540,x
+	CMP #$03
+	BEQ .Unstun
+	JML $0196A5
+	
+	.Unstun
+		JML $0196A9
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Subroutines.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
