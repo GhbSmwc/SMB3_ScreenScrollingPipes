@@ -1,34 +1,36 @@
 
 ;2-way pipe caps
-	;Vertical pipe caps
-		0400:0130		SSP_Tiles\caps\enterable\default\top_vertical_pipe_cap_L.asm
-		0401:0130		SSP_Tiles\caps\enterable\default\top_vertical_pipe_cap_R.asm
-		0410:0130		SSP_Tiles\caps\enterable\default\bottom_vertical_pipe_cap_L.asm
-		0411:0130		SSP_Tiles\caps\enterable\default\bottom_vertical_pipe_cap_R.asm
-	;Horizontal pipe caps
-		0402-0403:130		SSP_Tiles\pass_if_in_pipe.asm
-		0412:0130		SSP_Tiles\caps\enterable\default\left_horizontal_pipe_cap_B.asm
-		0413:0130		SSP_Tiles\caps\enterable\default\right_horizontal_pipe_cap_B.asm
+;;;Vertical pipe caps
+0400:0130		SSP_Tiles\caps\enterable\default\top_vertical_pipe_cap_L.asm
+0401:0130		SSP_Tiles\caps\enterable\default\top_vertical_pipe_cap_R.asm
+0410:0130		SSP_Tiles\caps\enterable\default\bottom_vertical_pipe_cap_L.asm
+0411:0130		SSP_Tiles\caps\enterable\default\bottom_vertical_pipe_cap_R.asm
+;;;Horizontal pipe caps
+0402-0403:130		SSP_Tiles\pass_if_in_pipe.asm
+0412:0130		SSP_Tiles\caps\enterable\default\left_horizontal_pipe_cap_B.asm
+0413:0130		SSP_Tiles\caps\enterable\default\right_horizontal_pipe_cap_B.asm
+
 ;1-way pipe caps
-	;Vertical caps
-		;Vertical pipe cap upwards travel
-			0404:0130		SSP_Tiles\caps\exit_only\top_vertical_pipe_cap_L_exit.asm
-			0405:0130		SSP_Tiles\caps\exit_only\top_vertical_pipe_cap_R_exit.asm
-			0414:0130		SSP_Tiles\caps\enterable\default\bottom_vertical_pipe_cap_L.asm
-			0415:0130		SSP_Tiles\caps\enterable\default\bottom_vertical_pipe_cap_R.asm
-		;Vertical pipe cap downwards travel
-			0406:0130		SSP_Tiles\caps\enterable\default\top_vertical_pipe_cap_L.asm
-			0407:0130		SSP_Tiles\caps\enterable\default\top_vertical_pipe_cap_R.asm
-			0416:0130		SSP_Tiles\caps\exit_only\bottom_vertical_pipe_cap_L_exit.asm
-			0417:0130		SSP_Tiles\caps\exit_only\bottom_vertical_pipe_cap_R_exit.asm
-	;Horizontal caps
-		;Top half of horizontal pipe caps
-			0408-040B:0130		SSP_Tiles\pass_if_in_pipe.asm
-		;Horizontal pipe cap leftwards travel
-			0418:0130		SSP_Tiles\caps\exit_only\left_horizontal_pipe_cap_B_exit.asm
-			0419:0130		SSP_Tiles\caps\enterable\default\right_horizontal_pipe_cap_B.asm
-		;Horizontal pipe cap rightwards travel
-			041A:0130		SSP_Tiles\caps\enterable\default\left_horizontal_pipe_cap_B.asm
-			041B:0130		SSP_Tiles\caps\exit_only\right_horizontal_pipe_cap_B_exit.asm
+;;Vertical caps
+;;;Vertical pipe cap upwards travel
+0404:0130		SSP_Tiles\caps\exit_only\top_vertical_pipe_cap_L_exit.asm
+0405:0130		SSP_Tiles\caps\exit_only\top_vertical_pipe_cap_R_exit.asm
+0414:0130		SSP_Tiles\caps\enterable\default\bottom_vertical_pipe_cap_L.asm
+0415:0130		SSP_Tiles\caps\enterable\default\bottom_vertical_pipe_cap_R.asm
+;;;Vertical pipe cap downwards travel
+0406:0130		SSP_Tiles\caps\enterable\default\top_vertical_pipe_cap_L.asm
+0407:0130		SSP_Tiles\caps\enterable\default\top_vertical_pipe_cap_R.asm
+0416:0130		SSP_Tiles\caps\exit_only\bottom_vertical_pipe_cap_L_exit.asm
+0417:0130		SSP_Tiles\caps\exit_only\bottom_vertical_pipe_cap_R_exit.asm
+
+;;Horizontal caps
+;;;Top half of horizontal pipe caps
+0408-040B:0130		SSP_Tiles\pass_if_in_pipe.asm
+;;;Horizontal pipe cap leftwards travel
+0418:0130		SSP_Tiles\caps\exit_only\left_horizontal_pipe_cap_B_exit.asm
+0419:0130		SSP_Tiles\caps\enterable\default\right_horizontal_pipe_cap_B.asm
+;;;Horizontal pipe cap rightwards travel
+041A:0130		SSP_Tiles\caps\enterable\default\left_horizontal_pipe_cap_B.asm
+041B:0130		SSP_Tiles\caps\exit_only\right_horizontal_pipe_cap_B_exit.asm
 ;Stems
-	R0420-0433:0130		SSP_Tiles\pass_if_in_pipe.asm
+R0420-0433:0130		SSP_Tiles\pass_if_in_pipe.asm
