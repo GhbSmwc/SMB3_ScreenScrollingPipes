@@ -1,0 +1,186 @@
+0400:0130	SSP_Tiles/caps/enterable/default/top_vertical_pipe_cap_L.asm
+043B:0130	SSP_Tiles/caps/enterable/default/top_vertical_pipe_cap_L.asm
+0401:0130	SSP_Tiles/caps/enterable/default/top_vertical_pipe_cap_R.asm
+043C:0130	SSP_Tiles/caps/enterable/default/top_vertical_pipe_cap_R.asm
+0420:0130	SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_L.asm
+042B:0130	SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_L.asm
+0421:0130	SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_R.asm
+042C:0130	SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_R.asm
+0412:0130	SSP_Tiles/caps/enterable/default/left_horizontal_pipe_cap_B.asm
+043D:0130	SSP_Tiles/caps/enterable/default/left_horizontal_pipe_cap_B.asm
+045D:0130	SSP_Tiles/caps/enterable/default/left_horizontal_pipe_cap_small.asm
+0414:0130	SSP_Tiles/caps/enterable/default/right_horizontal_pipe_cap_B.asm
+041F:0130	SSP_Tiles/caps/enterable/default/right_horizontal_pipe_cap_B.asm
+044F:0130	SSP_Tiles/caps/enterable/default/right_horizontal_pipe_cap_small.asm
+0430:0130	SSP_Tiles/caps/enterable/default/top_vertical_pipe_cap_small.asm
+046F:0130	SSP_Tiles/caps/enterable/default/top_vertical_pipe_cap_small.asm
+0450:0130	SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_small.asm
+048E:0130	SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_small.asm
+0422:0130	SSP_Tiles/caps/enterable/default/left_horizontal_pipe_cap_small.asm
+0424:0130	SSP_Tiles/caps/enterable/default/right_horizontal_pipe_cap_small.asm
+
+0418:0130	SSP_Tiles/turn_right-down.asm
+0438:0130	SSP_Tiles/turn_down-left.asm
+0435:0130	SSP_Tiles/turn_left-up.asm
+0415:0130	SSP_Tiles/turn_up-right.asm
+0449:0130	SSP_Tiles/turn_special_L.asm
+044A:0130	SSP_Tiles/turn_special_R.asm
+042A:0130	SSP_Tiles/turn_special_small.asm
+0409:0130	SSP_Tiles/turn_up-right_small.asm
+040A:0130	SSP_Tiles/turn_right-down_small.asm
+041A:0130	SSP_Tiles/turn_down-left_small.asm
+0419:0130	SSP_Tiles/turn_left-up_small.asm
+
+0431-0432:0130	SSP_Tiles/turn_special_prep_left.asm
+
+0433-0434:0130	SSP_Tiles/turn_special_prep_right.asm
+
+R0441-0451:0130	SSP_Tiles/turn_special_prep_up.asm
+
+R0442-0452:0130	SSP_Tiles/turn_special_prep_down.asm
+
+0460:0130	SSP_Tiles/turn_special_prep_left.asm
+0470:0130	SSP_Tiles/turn_special_prep_left.asm
+
+0461:0130	SSP_Tiles/turn_special_prep_right.asm
+0471:0130	SSP_Tiles/turn_special_prep_right.asm
+
+0462:0130	SSP_Tiles/turn_special_prep_up.asm
+0463:0130	SSP_Tiles/turn_special_prep_up.asm
+
+0472:0130	SSP_Tiles/turn_special_prep_down.asm
+0473:0130	SSP_Tiles/turn_special_prep_down.asm
+
+0443:0130	SSP_Tiles/turn_special_prep_left.asm
+0444:0130	SSP_Tiles/turn_special_prep_right.asm
+0453:0130	SSP_Tiles/turn_special_prep_up.asm
+0454:0130	SSP_Tiles/turn_special_prep_down.asm
+
+R046B-047B:0130	SSP_Tiles/turn_special_prep_left.asm
+046C-046D:0130	SSP_Tiles/turn_special_prep_left.asm
+047C-047D:0130	SSP_Tiles/turn_special_prep_right.asm
+R048B-049B:0130	SSP_Tiles/turn_special_prep_right.asm
+048C-048D:0130	SSP_Tiles/turn_special_prep_up.asm
+049C-049D:0130	SSP_Tiles/turn_special_prep_down.asm
+R049E-04AE:0130	SSP_Tiles/turn_special_prep_up.asm
+R049F-04AF:0130	SSP_Tiles/turn_special_prep_down.asm
+
+040B:0130	SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_L_exit.asm
+040C:0130	SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_R_exit.asm
+045B:0130	SSP_Tiles/caps/exit_only/bottom_vertical_pipe_cap_L_exit.asm
+045C:0130	SSP_Tiles/caps/exit_only/bottom_vertical_pipe_cap_R_exit.asm
+041D:0130	SSP_Tiles/caps/exit_only/left_horizontal_pipe_cap_B_exit.asm
+044D:0130	SSP_Tiles/caps/exit_only/left_horizontal_pipe_cap_B_exit.asm
+043F:0130	SSP_Tiles/caps/exit_only/right_horizontal_pipe_cap_B_exit.asm
+045F:0130	SSP_Tiles/caps/exit_only/right_horizontal_pipe_cap_B_exit.asm
+
+046E:0130	SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_small_exit.asm
+048F:0130	SSP_Tiles/caps/exit_only/bottom_vertical_pipe_cap_small_exit.asm
+
+0480:0130	SSP_Tiles/pass_if_in_pipe.asm
+0490:0130	SSP_Tiles/caps/enterable/enter_horiz_midair/left_horizontal_pipe_cap_B.asm
+
+0481:0130	SSP_Tiles/pass_if_in_pipe.asm
+0491:0130	SSP_Tiles/caps/enterable/enter_horiz_midair/right_horizontal_pipe_cap_B.asm
+
+04A0:0130	SSP_Tiles/caps/enterable/enter_horiz_midair/left_horizontal_pipe_cap_small.asm
+04A1:0130	SSP_Tiles/caps/enterable/enter_horiz_midair/right_horizontal_pipe_cap_small.asm
+
+
+04AC:0130	SSP_Tiles/pass_if_in_pipe.asm
+04BC:0130	SSP_Tiles/caps/enterable/enter_horiz_midair/left_horizontal_pipe_cap_B.asm
+
+04AD:0130	SSP_Tiles/pass_if_in_pipe.asm
+04BD:0130	SSP_Tiles/caps/enterable/enter_horiz_midair/right_horizontal_pipe_cap_B.asm
+
+04CC:0130	SSP_Tiles/caps/enterable/enter_horiz_midair/left_horizontal_pipe_cap_small.asm
+04CD:0130	SSP_Tiles/caps/enterable/enter_horiz_midair/right_horizontal_pipe_cap_small.asm
+
+
+04B0:0130	SSP_Tiles/caps/enterable/no_items/top_vertical_pipe_cap_L.asm
+04B1:0130	SSP_Tiles/caps/enterable/no_items/top_vertical_pipe_cap_R.asm
+
+04C0:0130	SSP_Tiles/caps/enterable/no_items/bottom_vertical_pipe_cap_L.asm
+04C1:0130	SSP_Tiles/caps/enterable/no_items/bottom_vertical_pipe_cap_R.asm
+
+04B2:0130	SSP_Tiles/caps/enterable/no_items/top_vertical_pipe_cap_small.asm
+04C2:0130	SSP_Tiles/caps/enterable/no_items/bottom_vertical_pipe_cap_small.asm
+
+04D0:0130	SSP_Tiles/pass_if_in_pipe.asm
+04E0:0130	SSP_Tiles/caps/enterable/no_items/left_horizontal_pipe_cap_B.asm
+
+04D1:0130	SSP_Tiles/pass_if_in_pipe.asm
+04E1:0130	SSP_Tiles/caps/enterable/no_items/right_horizontal_pipe_cap_B.asm
+
+04F0:0130	SSP_Tiles/caps/enterable/no_items/left_horizontal_pipe_cap_small.asm
+04F1:0130	SSP_Tiles/caps/enterable/no_items/right_horizontal_pipe_cap_small.asm
+
+04DB:0130	SSP_Tiles/caps/enterable/no_items/top_vertical_pipe_cap_small.asm
+04EB:0130	SSP_Tiles/caps/enterable/no_items/bottom_vertical_pipe_cap_small.asm
+
+04DC:0130	SSP_Tiles/caps/enterable/no_items/top_vertical_pipe_cap_L.asm
+04DD:0130	SSP_Tiles/caps/enterable/no_items/top_vertical_pipe_cap_R.asm
+
+04EC:0130	SSP_Tiles/caps/enterable/no_items/bottom_vertical_pipe_cap_L.asm
+04ED:0130	SSP_Tiles/caps/enterable/no_items/bottom_vertical_pipe_cap_R.asm
+
+04DE:0130	SSP_Tiles/pass_if_in_pipe.asm
+04EE:0130	SSP_Tiles/caps/enterable/no_items/left_horizontal_pipe_cap_B.asm
+
+04DF:0130	SSP_Tiles/pass_if_in_pipe.asm
+04EF:0130	SSP_Tiles/caps/enterable/no_items/right_horizontal_pipe_cap_B.asm
+
+04FC:0130	SSP_Tiles/caps/enterable/no_items/left_horizontal_pipe_cap_small.asm
+04FD:0130	SSP_Tiles/caps/enterable/no_items/right_horizontal_pipe_cap_small.asm
+
+0455:0025	SSP_Tiles/turn_up-right.asm
+0458:0025	SSP_Tiles/turn_right-down.asm
+0478:0025	SSP_Tiles/turn_down-left.asm
+0475:0025	SSP_Tiles/turn_left-up.asm
+
+0459:0025	SSP_Tiles/turn_up-right_small.asm
+045A:0025	SSP_Tiles/turn_right-down_small.asm
+046A:0025	SSP_Tiles/turn_down-left_small.asm
+0469:0025	SSP_Tiles/turn_left-up_small.asm
+
+047A:0025	SSP_Tiles/turn_special_small.asm
+0499:0025	SSP_Tiles/turn_special_L.asm
+049A:0025	SSP_Tiles/turn_special_R.asm
+
+04E7:0025	SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_L_exit.asm
+04E8:0025	SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_R_exit.asm
+
+04F7:0025	SSP_Tiles/caps/exit_only/bottom_vertical_pipe_cap_L_exit.asm
+04F8:0025	SSP_Tiles/caps/exit_only/bottom_vertical_pipe_cap_R_exit.asm
+
+04F9:0025	SSP_Tiles/caps/exit_only/left_horizontal_pipe_cap_B_exit.asm
+04FA:0025	SSP_Tiles/caps/exit_only/right_horizontal_pipe_cap_B_exit.asm
+
+04E6:0025	SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_small_exit.asm
+04F6:0025	SSP_Tiles/caps/exit_only/bottom_vertical_pipe_cap_small_exit.asm
+
+04D9:0025	SSP_Tiles/caps/exit_only/left_horizontal_pipe_cap_B_exit.asm
+04DA:0025	SSP_Tiles/caps/exit_only/right_horizontal_pipe_cap_B_exit.asm
+
+0402-0408:0130	SSP_Tiles/pass_if_in_pipe.asm
+040D-040F:0130	SSP_Tiles/pass_if_in_pipe.asm
+0410-0411:0130	SSP_Tiles/pass_if_in_pipe.asm
+0413:0130	SSP_Tiles/pass_if_in_pipe.asm
+0416-0417:0130	SSP_Tiles/pass_if_in_pipe.asm
+041B-041C:0130	SSP_Tiles/pass_if_in_pipe.asm
+041E:0130	SSP_Tiles/pass_if_in_pipe.asm
+0423:0130	SSP_Tiles/pass_if_in_pipe.asm
+0425-0429:0130	SSP_Tiles/pass_if_in_pipe.asm
+042D:0130	SSP_Tiles/pass_if_in_pipe.asm
+042E:0130	SSP_Tiles/pass_if_in_pipe.asm
+042F:0130	SSP_Tiles/pass_if_in_pipe.asm
+0436-0437:0130	SSP_Tiles/pass_if_in_pipe.asm
+0439-043A:0130	SSP_Tiles/pass_if_in_pipe.asm
+043E:0130	SSP_Tiles/pass_if_in_pipe.asm
+0440:0130	SSP_Tiles/pass_if_in_pipe.asm
+044B:0130	SSP_Tiles/pass_if_in_pipe.asm
+044C:0130	SSP_Tiles/pass_if_in_pipe.asm
+044E:0130	SSP_Tiles/pass_if_in_pipe.asm
+045E:0130	SSP_Tiles/pass_if_in_pipe.asm
+047E:0130	SSP_Tiles/pass_if_in_pipe.asm
+047F:0130	SSP_Tiles/pass_if_in_pipe.asm

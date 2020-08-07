@@ -177,12 +177,12 @@ on the new page you're moving to). A faster way to do this is to use <a href="ht
 <table><tr><td><pre>Note: include ALL that is underlined!
 
 1) replace the numbers at the left edge of the document:
-	Find what: <u>^[0-9A-F][0-9A-F](?'NonPageNumber'[0-9A-F][0-9A-F]:)</u>
+	Find what: <u>^\t*[0-9A-F][0-9A-F](?'NonPageNumber'[0-9A-F][0-9A-F]:)</u>
 	Replace with: <u><font color="red">05</font>$+{NonPageNumber}</u>
 	Search mode: Regular expression
 
 2) same as before but for rectangle of blocks:
-	Find what: <u>^R[0-9A-F][0-9A-F](?'NonPageNumber'[0-9A-F][0-9A-F]:)</u>
+	Find what: <u>^\t*R[0-9A-F][0-9A-F](?'NonPageNumber'[0-9A-F][0-9A-F]:)</u>
 	Replace with: <u>R<font color="red">05</font>$+{NonPageNumber}</u>
 	Search mode: Regular expression
 
