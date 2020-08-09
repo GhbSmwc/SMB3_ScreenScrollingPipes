@@ -100,6 +100,13 @@
 
 ;Settings. NOTE: There are other defines settings in [SSP_Tiles\caps\enterable\*\cap_defines.asm] (* means any valid filename, including "default")
 ;so that you can multiple blocks with different variations (such as having some pipe caps that allow carrying sprites or allowing yoshi).
+ !Setting_SSP_Hijack_00EA18	= 1
+  ;^If you are planning to install the “Walljump/Note Block Glitch Fix” patch, set this to 0, reinstall Fixes.asm, and then patch the WJNB fix patch.
+  ; Otherwise set this to 1 to prevent potential pushing the player 1 pixel to the left when entering small pipes facing downwards by hitting their
+  ; bottom corners.
+  ;
+  ; Make sure you avoid doing this: set to 1, patch Fixes.asm, and then patch WJNB fix afterwards, because the WJNB fix will merely overwrite
+  ; $00EA16-$00EA21 (which overwrites Fixes.asm's $00EA18 hijack), but not clean out the old freespace code, which may have a freespace leak.
  !Setting_SSP_PipeDebug		= 0
   ;^This will make mario visible and in front of objects when enabled, set to 1 if you encounter issues and need to know where is Mario.
   

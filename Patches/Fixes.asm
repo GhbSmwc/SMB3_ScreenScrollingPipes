@@ -62,7 +62,7 @@ endif
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Walljump/Note Block Glitch Fix
 	!WalljumpNoteBlockFixPatch = 0
-	if read1($00EA16) != $C2
+	if read1($00EA16) != $C2		;>Originally [REP #$20] [C2 20]
 		!WalljumpNoteBlockFixPatch = 1
 	endif
 
@@ -138,14 +138,28 @@ incsrc "../SSPDef/Defines.asm"
 		autoclean JSL BlockedFix	;/are stored as zero (this runs every frame).
 		nop #1
 	if !WalljumpNoteBlockFixPatch == 0
-		org $00EA18
-			autoclean JML DisablePushingPlayer
-				;^This prevents a strange oddity that if you are small mario, and enter the downwards facing small pipe cap from the
-				; very bottom corners, can push the player 1 pixel to the left. Note that this is fixed automatically if you've patched
-				; the “Walljump/Note Block Glitch Fix”.
-		print "Hijack at $00EA18 applied. If you're going to install the walljump/note block fix patch after inserting this, patch [Uninstall_00EA18.asm] before doing so!"
+		;Assuming there only exist SMW's code or my patch code, but not the WJNB fix patch.
+			if !Setting_SSP_Hijack_00EA18 == 0
+				;Remove the SSP's Fixes.asm patch hijack at $00EA18
+					if read1($00EA18) == $5C
+						autoclean read3($00EA18+1)
+					endif
+					org $00EA18
+						LDA $94
+						CLC
+						ADC.w $00E90D,y
+					print "This patch no longer fixes the possible 1-pixel off issue with downwards-facing small pipe cap unless you set Setting_SSP_Hijack_00EA18 to 1 or (don't choose both) install the WJNB fix patch, and then repatch this."
+			else
+				;Hijack at $00EA18
+					org $00EA18
+						autoclean JML DisablePushingPlayer
+							;^This prevents a strange oddity that if you are small mario, and enter the downwards facing small pipe cap from the
+							; very bottom corners, can push the player 1 pixel to the left. Note that this is fixed automatically if you've patched
+							; the “Walljump/Note Block Glitch Fix”.
+					print "$00EA18 hijack applied. This fixes a possible 1-pixel off issue with downwards-facing small pipe cap. Not compatible with the WJNB fix patch though unless you set Setting_SSP_Hijack_00EA18, repatch this, then install WJNB fix patch."
+			endif
 	else
-		print "Hijack at $00EA18 not applied (it is taken over by the walljump/note block fix patch)."
+		print "WJNB patch detected, so $00EA18 is not modified by this patch. You're good to go."
 	endif
 ;Fix various springboard glitches.
 	org $01E650
@@ -301,7 +315,7 @@ BlockedFix: ;>JSL from $00EAA9
 	;this freeram, it will do nothing, write on those default ram address.
 	RTL
 ;---------------------------------------------------------------------------------
-if !WalljumpNoteBlockFixPatch == 0
+if and(equal(!WalljumpNoteBlockFixPatch, 0), notequal(!Setting_SSP_Hijack_00EA18, 0))
 	DisablePushingPlayer:	;>JML from $00EA18
 		;A: 16-bit
 		LDA !Freeram_SSP_PipeDir
