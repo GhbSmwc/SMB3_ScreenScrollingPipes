@@ -99,8 +99,7 @@ past the point he needs to change direction (it will center the player correctly
 <ul>
 <li><a href="https://www.smwcentral.net/?p=section&a=details&id=19982">Uberasm Tool</a> (Not the patch version)</li>
 <li><a href="https://www.smwcentral.net/?p=section&a=details&id=19047">Gopher Popcorn Stew (GPS)</a></li>
-<li>Lunar Magic's map16 page 4 not used, unless if you know how to make it use a different
-page.</li>
+<li>Lunar Magic's map16 page 4 not used, unless you can <a href="#MoveToDifferentM16Page">move it to another page</a></li>
 <li><a href="https://www.smwcentral.net/?p=section&a=details&id=18741">No More Sprite Tile Limits patch</a>.
 Certain sprites on screen randomly disappear when in pipes. Ignore this if you have SA-1 installed.</li>
 <li><s>No shooting fireballs/cape spin when carrying something (to prevent auto-capespin when
@@ -110,7 +109,7 @@ carrying a sprite when exiting pipes)</s> EDIT: this is fixed.</li>
 <h2>Instructions to apply to your game.</h2>
 
 <ol>
-<li>Lunar Magic</li><br>
+<li>Lunar Magic (Everything related to this is located in <kbd>LM_Stuff</kbd> folder.)</li><br>
 <ol>
 <li>Simply copy the graphic files and paste them in their respective folder. The file naming should
 be obvious.</li><br>
@@ -128,32 +127,34 @@ arrow on it; <img src="Readme_files/LM_ImportMap16FromFile.png">). After the blo
 <li>Define note</li>
 <ol>
 <li>Make necessary changes to <tt>SSPDef/Defines.asm</tt>. Of course, if you already inserted the ASM
-codes and wish to edit and re-insert, make sure you have the copies of it up to date with correct information.</li>
+codes and wish to edit and re-insert, make sure you have the copies of it up to date with correct information.
+You must update every time you make changes.</li>
 
 </ol>
-<li>Uberasm Tool</li>
+<li>Uberasm Tool (inside <kbd>UberasmTool_Stuff</kbd> folder)</li>
 <ol>
 <li>Copy the folder (the folder itself) <tt>SSPDef</tt> and paste it in the same directory as uberasm tool.exe
 is in, not in any of the subfolder of uberasm tool.</li><br>
 
-<li>In the folder <tt>UberasmTool</tt>, the sub directory folders should be obvious of where should you put the ASM files
-in. In the case if you previously have code for gamemode 14, open one of them up and combine them (because you cannot have two
+<li>The sub directory folders should be obvious of where should you put the ASM files in. In the case if you
+previously have code for gamemode 14, open one of them up and combine them (because you cannot have two
 files used for the same gamemode number.)</li><br>
 
-<li>On <tt>list.txt</tt>, under gamemode, just put this:
+<li>On Uberasm tool's <tt>list.txt</tt>, under gamemode, just put this:
 
 <table><tr><td><pre>14 GM14.asm</pre></td></tr></table></li><br>
 
 <li>Now insert the code by running uberasm tool.</li>
 </ol>
 
-<li>GPS</li>
+<li>GPS (in <kbd>GPS_Stuff</kbd> folder)</li>
 <ol>
 <li>Copy the <i>folder</i> of <tt>SSP_Tiles</tt>, and paste that in GPS's <tt>blocks</tt> folder. After doing that, then
 paste another copy of <tt>SSPDef</tt> in the main directory of GPS (where the exe program is at, not in the subfolder/subdirectory).
 Also paste the asm file(s) in <tt>BlockRoutines</tt> in GPS's routines folder.</li><br>
 
-<li>Copy the text from <tt>pipe_tiles_list.txt</tt> and paste it in GPS's list file. Now run GPS to insert the blocks.*</li><br>
+<li>Copy the text from one of the two files in <tt>GPS_TileList</tt> folder and paste it in GPS's list file. Now run GPS to insert the blocks.*
+Both the tile lists and the map16 blocks provided must match.</li><br>
 </ol>
 
 <li>Fix patch</li>
@@ -171,7 +172,7 @@ Click <a name="UseBlocksInLevel" href="Readme_files/BlocksUsageInLevel.html">her
 
 </ol>
 
-*If you need to move your pipes to a different map16 page, simply change <tt>$PPNN</tt> where PP is the page number to move to.
+<span id="MoveToDifferentM16Page">*If you need to move your pipes to a different map16 page, simply change <tt>$PPNN</tt> where PP is the page number to move to.
 Make sure they line up properly (the first block that was originally placed on the top-left corner should remain on the top corner
 on the new page you're moving to). A faster way to do this is to use <a href="https://notepad-plus-plus.org/downloads/">notepad plus plus</a>'s regular expression to replace (CTRL+H) the page numbers:
 <table><tr><td><pre>Note: include ALL that is underlined!
@@ -460,10 +461,4 @@ be cleared but his controllers still disabled until a frame later, causing the p
 
 <li>Although, you may not use the SSPs on certain levels at your own discretion, and that you could only have the SSP uberasm tool code run at specific levels, be warned that the <kbd>Fixes.asm</kbd>
 patch will apply to all levels, meaning that the freeram addresses the SSPs use are still used even if the uberasm tool code isn't running, which can cause glitches when being set to nonzero values.</li><br>
-
-<li>As of the time of writing this (2020-08-08), when viewing the custom block description via hovering the mouse over, the description tooltip may appeared to be glitched, such as displaying a description
-from another block, having some of the characters in the string missing (screenshot taken during development), or the textbox itself using a different color, for example:<br>
-<img src="Readme_files/BuggedDescription_MissingChars.png"><br>
-A while ago, I thought that simply disabling the block description (by setting <kbd>!Setting_SSP_Description</kbd> to 0) would end this, however when turned off, GPS will display the file path to the ASM
-file, and that got glitched too (as the image above tested with that define turned off).</li>
 </ul>
