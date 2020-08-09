@@ -157,9 +157,15 @@ Also paste the asm file(s) in <tt>BlockRoutines</tt> in GPS's routines folder.</
 Both the tile lists and the map16 blocks provided must match.</li><br>
 </ol>
 
-<li>Fix patch</li>
+<li>Patches (in <kbd>Patches</kbd> folder)</li>
 <ol>
-<li>Not much to say, simply install <tt>Fixes.asm</tt> via asar. This patch fixes various bugs relating with the pipes.</li>
+<li>Not much to say, simply install <tt>Fixes.asm</tt> via asar. This patch fixes various bugs relating with the pipes. Make sure you do not move the file, else you have to edit the
+<kbd>incsrc "<path to the defines file>"</kbd> to get it to work</li><br>
+
+<li>Note: If you installed this, and wanted to install the &ldquo;<a href="https://www.smwcentral.net/?p=section&a=details&id=19932">Walljump/Note block fix patch</a>&rdquo; afterwards, make sure you apply <kbd>Uninstall_00EA18.asm</kbd>
+to remove the hijack at $00EA18. The reason why fixes.asm would hijack that area is to prevent a minor glitch that pushes the player 1 pixel to the left if he tries to enter a downwards-facing small pipe cap by hitting them
+on the bottom corners. If you installed the &ldquo;Walljump/Note block fix patch&rdquo; without removing the hijack at $00EA18, the game will work fine, but the freespace code from Fixes.asm may not be removed. You're fine if you have patched
+&ldquo;Walljump/Note block fix patch&rdquo; before patching Fixes.asm as Fixes.asm detects a walljump patch and will not modify that area.</li>
 </ol>
 
 </ol>
