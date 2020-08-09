@@ -407,7 +407,8 @@ is before the controller gets disabled by the code handling pipe traveling from 
 
 </ol>
 
-<li>If you want blocks to be passable while the player is in his pipe state (such as a pipe that goes into a solid object for scenery), I provided you this code:
+<li>If you want blocks to be passable while the player is in his pipe state (such as a pipe that goes into a solid object for scenery), I provided you this code (see below)
+Make sure all offsets must be passible during pipe travel.
 <table><tr><td><pre>
 
 incsrc "../SSPDef/Defines.asm"
@@ -421,10 +422,10 @@ JMP TopCorner : JMP BodyInside : JMP HeadInside
 ; JMP WallFeet : JMP WallBody ; when using db $37
 
 MarioBelow:			;\ALL mario-related offsets MUST run a check if he is in a pipe state,
-MarioAbove:			;|or bugs may occur.
+MarioAbove:			;|or bugs may occur (often Mario will get obstructed or pushed).
 MarioSide:			;|
-TopCorner:			;|
-BodyInside:			;|
+TopCorner:			;|The block can have any behavor set by Lunar Magic, however this block must
+BodyInside:			;|be "ignored" during pipe travel to avoid potential issue.
 HeadInside:			;/
 ;WallFeet:			
 ;WallBody:			
@@ -454,7 +455,7 @@ print "<description>"
 
 </li><br>
 
-Now note that if RAM address <tt>$7E1419</tt> (this is the RAM that handles when the player enters an exit enabled pipe, it also affects yoshi pose, even when not mounted,
+<li>Note that if RAM address <tt>$7E1419</tt> (this is the RAM that handles when the player enters an exit enabled pipe, it also affects yoshi pose, even when not mounted,
 this even happens in the original game with the exit-enabled pipes) is a nonzero value, will force the player to hold the sprite, regardless the dash button is held down,
 disabled (clears the controller bit every frame) or not pressed at all. Once the player exits the pipe, the frame the player exits the pipe completely will have <tt>$7E1419</tt>
 be cleared but his controllers still disabled until a frame later, causing the player to let go the sprite.</li><br><br>
