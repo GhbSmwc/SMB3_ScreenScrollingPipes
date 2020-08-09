@@ -111,8 +111,6 @@
  
  !Setting_SSP_Description	= 0
   ;^0 = off, 1 = on. Due to a bug in GPS with blocks with the wrong description, I added an option just in case if GPS has that fixed in the future.
-  ; EDIT: The glitched text also occurs even when showing the file path (just the file name if not inside subfolders) when this is switched off.
-  ; Therefore, I really cannot find ways to prevent misleading block descriptions.
   
  !Setting_SSP_FreezeTime	= 0
   ;^0 = FuSoYa's pipe to not freeze stuff, 1 = freeze stuff.
