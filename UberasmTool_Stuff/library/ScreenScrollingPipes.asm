@@ -18,10 +18,10 @@ SSPMaincode:
 		RTL
 
 	.InPipeTraveling
+		PHB					;\Setup banks
+		PHK					;|
+		PLB					;/
 		..FreezeCheck
-			PHB					;\Setup banks
-			PHK					;|
-			PLB					;/
 			LDA $13D4|!addr				;>$13D4 - pause flag.
 			if !Setting_SSP_FreezeTime == 0
 				ORA $9D				;>Prevent glitches in which !Freeram_SSP_PipeTmr still decrements during freezes like baby yoshi growing when the user disable pipe freezing.
@@ -183,16 +183,17 @@ SSPMaincode:
 					DEC A				;\otherwise decrement timer.
 					STA !Freeram_SSP_PipeTmr	;/
 					BEQ ..ResetStatus		;>Reset status if timer hits zero (happens once after -1 to 0).
-	
-					LDA !Freeram_SSP_PipeDir	;\Switch to cap speed keeping the same direction.
-					AND.b #%00001111		;|>Check only bits 0-3 (normal direction bits)
-					CMP #$05			;|\If already at pipe cap speed, don't add again.
-					BCS ..pose			;|/
-					LDA !Freeram_SSP_PipeDir	;|>Reload because we want to retain bits 4-7 (planned direction bits).
-					CLC				;|
-					ADC #$04			;/
-					STA !Freeram_SSP_PipeDir	;>Set direction
-					BRA ..pose			;>and skip the reset routine
+					
+					.....CapSpeed
+						LDA !Freeram_SSP_PipeDir	;\Switch to cap speed keeping the same direction.
+						AND.b #%00001111		;|>Check only bits 0-3 (normal direction bits)
+						CMP #$05			;|\If already at pipe cap speed, don't add again.
+						BCS ..pose			;|/
+						LDA !Freeram_SSP_PipeDir	;|>Reload because we want to retain bits 4-7 (planned direction bits).
+						CLC				;|
+						ADC #$04			;/
+						STA !Freeram_SSP_PipeDir	;>Set direction
+						BRA ..pose			;>and skip the reset routine
 ;---------------------------------
 ;This resets mario's status.
 ;It must be exceuted for one frame
@@ -253,7 +254,7 @@ SSPMaincode:
 				BRA ...SetPose
 		
 				....YoshiFaceScrn
-					LDA #$21		;>pose that mario turns around partically face the screen
+					LDA #$21		;>pose that mario turns around partially face the screen
 					BRA ...SetPose
 	
 			...Horiz
