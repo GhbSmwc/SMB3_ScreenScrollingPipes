@@ -12,7 +12,7 @@ SSPMaincode:
 	
 	.PipeStateCheck
 		LDA !Freeram_SSP_PipeDir		;\don't do anything while outside the pipe.
-		AND.b #%00001111			;|
+		AND.b #%00001111			;|(this also should prevent running the reset pipe state every frame when the pipe state == 0)
 		ORA !Freeram_SSP_PipeTmr		;|
 		BNE .InPipeTraveling			;/
 		RTL
@@ -59,13 +59,13 @@ SSPMaincode:
 			AND.b #%00010000			;||While enabling only the pause button.
 			STA $16					;//
 
-		..ResetControlsPBalloonStompCountAndFire
-			STZ $17			;\Lock other controls.
-			STZ $18			;/
-			STZ $13F3|!addr		;\remove p-balloon
-			STZ $1891|!addr		;/
-			STZ $1697|!addr		;>remove consecutive stomps.
-			STZ $140D|!addr		;>so fire mario cannot shoot fireballs in pipe
+			...ResetControlsPBalloonStompCountAndFire
+				STZ $17			;\Lock other controls.
+				STZ $18			;/
+				STZ $13F3|!addr		;\remove p-balloon
+				STZ $1891|!addr		;/
+				STZ $1697|!addr		;>remove consecutive stomps.
+				STZ $140D|!addr		;>so fire mario cannot shoot fireballs in pipe
 
 		..HidePlayer
 			LDA !Freeram_SSP_EntrExtFlg	;\hide player if timer hits zero when entering.
@@ -108,7 +108,7 @@ SSPMaincode:
 				....SetYoshiPipePose
 					STA $1419|!addr			;>Even if you are not mounted on yoshi, you still have to write a value here, or carrying sprites don't work.
 
-		..InPipeMode
+		..InPipeMode ;>Somewhat mimicks the way SMW handles pipes when entered.
 			if !Setting_SSP_PipeDebug == 0
 				LDA #$02		;\go behind layers
 				STA $13F9|!addr		;/
@@ -143,9 +143,9 @@ SSPMaincode:
 			STA $7D				;/
 
 		..EnterExitTransition
-			LDA !Freeram_SSP_EntrExtFlg	;\If mario is already entered the pipe, return.
+			LDA !Freeram_SSP_EntrExtFlg	;\If mario is transitioning between in and out of pipe state, branch to handle entering and exiting code
 			BNE ...InPipe			;/
-			JMP .PipeCodeReturn
+			JMP .PipeCodeReturn		;>Otherwise do nothing and player will continue pipe movement.
 	
 			...InPipe
 				CMP #$01		;\If entering a pipe...
@@ -234,7 +234,7 @@ SSPMaincode:
 					STA !Freeram_SSP_CarrySpr	;|
 				endif
 				STA !Freeram_SSP_EntrExtFlg	;/>Make code assume mario is out of the pipe.
-				LDA !Freeram_SSP_PipeDir	;\Clear direction bits.
+				LDA !Freeram_SSP_PipeDir	;\Clear direction bits (resets the pipe state).
 				AND.b #%11110000		;|
 				STA !Freeram_SSP_PipeDir	;/
 				JMP .PipeCodeReturn
