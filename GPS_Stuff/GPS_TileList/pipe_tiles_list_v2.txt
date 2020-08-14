@@ -1,18 +1,20 @@
 ;GHB's SMB3 Screen Scrolling pipes.
 ;;2-way pipe caps
-;;;;Vertical pipe caps
+;;;Vertical pipe caps
 0400:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_cap_L.asm
 0401:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_cap_R.asm
 0410:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_L.asm
 0411:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_R.asm
 0420:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_cap_small.asm
 0430:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_small.asm
-;;;;Horizontal pipe caps
+
+;;;Horizontal pipe caps
 0402-0403:130		SSP_Tiles/pass_if_in_pipe.asm
 0412:0130		SSP_Tiles/caps/enterable/default/left_horizontal_pipe_cap_B.asm
 0413:0130		SSP_Tiles/caps/enterable/default/right_horizontal_pipe_cap_B.asm
 0421:0130		SSP_Tiles/caps/enterable/default/left_horizontal_pipe_cap_small.asm
 0422:0130		SSP_Tiles/caps/enterable/default/right_horizontal_pipe_cap_small.asm
+
 ;;1-way pipe caps
 ;;;Vertical caps
 ;;;;Vertical pipe cap upwards travel
@@ -44,6 +46,18 @@
 0436:0130		SSP_Tiles/caps/enterable/default/left_horizontal_pipe_cap_small.asm
 0437:0130		SSP_Tiles/caps/exit_only/right_horizontal_pipe_cap_B_exit.asm
 
+;;;Background Pipe caps (exit only, enterable caps should always be solid).
+04E0:0025		SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_L_exit.asm
+04E1:0025		SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_R_exit.asm
+04F0:0025		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_cap_L_exit.asm
+04F1:0025		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_cap_R_exit.asm
+04F2:0025		SSP_Tiles/caps/exit_only/left_horizontal_pipe_cap_B_exit.asm
+04F3:0025		SSP_Tiles/caps/exit_only/right_horizontal_pipe_cap_B_exit.asm
+04E4:0025		SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_small_exit.asm
+04F4:0025		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_cap_small_exit.asm
+04F5:0025		SSP_Tiles/caps/exit_only/left_horizontal_pipe_cap_B_exit.asm
+04F6:0025		SSP_Tiles/caps/exit_only/right_horizontal_pipe_cap_B_exit.asm
+
 ;;Stems
 R0440-0455:0130		SSP_Tiles/pass_if_in_pipe.asm
 
@@ -56,9 +70,21 @@ R0440-0455:0130		SSP_Tiles/pass_if_in_pipe.asm
 0490:0130		SSP_Tiles/turn_left-up.asm
 0491-0492:0130		SSP_Tiles/pass_if_in_pipe.asm
 0493:0130		SSP_Tiles/turn_down-left.asm
+;;;4-way “turn corner”
+04A2:0130		SSP_Tiles/pass_if_in_pipe.asm
 
 ;;;Small turn corners
 04A0:0130		SSP_Tiles/turn_up-right_small.asm
 04A1:0130		SSP_Tiles/turn_right-down_small.asm
 04B0:0130		SSP_Tiles/turn_left-up_small.asm
 04B1:0130		SSP_Tiles/turn_down-left_small.asm
+
+;;;Background turn corners:
+04AE:0025		SSP_Tiles/turn_up-right_small.asm
+04AF:0025		SSP_Tiles/turn_right-down_small.asm
+04BE:0025		SSP_Tiles/turn_left-up_small.asm
+04BF:0025		SSP_Tiles/turn_down-left_small.asm
+04DC:0025		SSP_Tiles/turn_up-right.asm
+04DF:0025		SSP_Tiles/turn_right-down.asm
+04FC:0025		SSP_Tiles/turn_left-up.asm
+04FF:0025		SSP_Tiles/turn_down-left.asm
