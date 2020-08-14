@@ -15,27 +15,28 @@ MarioSide:
 HeadInside:
 MarioBelow:
 BodyInside:
-	LDA !Freeram_SSP_PipeDir	;\If not in pipe mode, Return as being a solid block
-	AND.b #%00001111		;|
-	BEQ Return			;/
-
-	LDY #$00			;\Render pipe passable
-	LDA #$25			;|
-	STA $1693|!addr			;/
-
-	JSR DistanceFromTurnCornerCheck
-	BCC Return
-
-	LDA !Freeram_SSP_PipeDir	;\Get current direction
-	AND.b #%00001111		;/
-	CMP #$02			;\If going right, translate to down
-	BEQ right_to_down		;|
-	CMP #$06			;|
-	BEQ right_to_down		;/
-	CMP #$01			;\If going up, translate to left
-	BEQ up_to_left			;|
-	CMP #$05			;|
-	BEQ up_to_left			;/
+	;Check pipe state
+		LDA !Freeram_SSP_PipeDir	;\If not in pipe mode, Return as being a solid block
+		AND.b #%00001111		;|
+		BEQ Return			;/
+	;Render passable
+		LDY #$00			;\Render pipe passable
+		LDA #$25			;|
+		STA $1693|!addr			;/
+	;Adjust player pipe travel direction and centering
+		JSR DistanceFromTurnCornerCheck
+		BCC Return
+	
+		LDA !Freeram_SSP_PipeDir	;\Get current direction
+		AND.b #%00001111		;/
+		CMP #$02			;\If going right, translate to down
+		BEQ right_to_down		;|
+		CMP #$06			;|
+		BEQ right_to_down		;/
+		CMP #$01			;\If going up, translate to left
+		BEQ up_to_left			;|
+		CMP #$05			;|
+		BEQ up_to_left			;/
 Return:
 	RTL
 
