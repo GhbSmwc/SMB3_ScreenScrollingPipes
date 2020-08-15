@@ -88,3 +88,38 @@ R0440-0455:0130		SSP_Tiles/pass_if_in_pipe.asm
 04DF:0025		SSP_Tiles/turn_right-down.asm
 04FC:0025		SSP_Tiles/turn_left-up.asm
 04FF:0025		SSP_Tiles/turn_down-left.asm
+
+;;Custom caps
+;;;No-items
+04A8:0130		SSP_Tiles/caps/enterable/no_items/top_vertical_pipe_cap_small.asm
+04B8:0130		SSP_Tiles/caps/enterable/no_items/bottom_vertical_pipe_cap_small.asm
+04B9:0130		SSP_Tiles/caps/enterable/no_items/left_horizontal_pipe_cap_small.asm
+04BA:0130		SSP_Tiles/caps/enterable/no_items/right_horizontal_pipe_cap_small.asm
+04A9:0130		SSP_Tiles/caps/enterable/no_items/left_horizontal_pipe_cap_small.asm
+04AA:0130		SSP_Tiles/caps/enterable/no_items/right_horizontal_pipe_cap_small.asm
+04AB:0130		SSP_Tiles/caps/enterable/no_items/top_vertical_pipe_cap_small.asm
+04BB:0130		SSP_Tiles/caps/enterable/no_items/bottom_vertical_pipe_cap_small.asm
+
+04C4:0130		SSP_Tiles/caps/enterable/no_items/top_vertical_pipe_cap_L.asm
+04C5:0130		SSP_Tiles/caps/enterable/no_items/top_vertical_pipe_cap_R.asm
+04D4:0130		SSP_Tiles/caps/enterable/no_items/bottom_vertical_pipe_cap_L.asm
+04D5:0130		SSP_Tiles/caps/enterable/no_items/bottom_vertical_pipe_cap_R.asm
+04C6:0130		SSP_Tiles/caps/enterable/no_items/top_vertical_pipe_cap_L.asm
+04C7:0130		SSP_Tiles/caps/enterable/no_items/top_vertical_pipe_cap_R.asm
+04D6:0130		SSP_Tiles/caps/enterable/no_items/bottom_vertical_pipe_cap_L.asm
+04D7:0130		SSP_Tiles/caps/enterable/no_items/bottom_vertical_pipe_cap_R.asm
+04C8-04CB:0130		SSP_Tiles/pass_if_in_pipe.asm
+04D8:0130		SSP_Tiles/caps/enterable/no_items/left_horizontal_pipe_cap_B.asm
+04D9:0130		SSP_Tiles/caps/enterable/no_items/right_horizontal_pipe_cap_B.asm
+04DA:0130		SSP_Tiles/caps/enterable/no_items/left_horizontal_pipe_cap_B.asm
+04DB:0130		SSP_Tiles/caps/enterable/no_items/right_horizontal_pipe_cap_B.asm
+;;;Enter horizontal caps in midair
+048C-048F:0130		SSP_Tiles/pass_if_in_pipe.asm
+047C:0130		SSP_Tiles/caps/enterable/enter_horiz_midair/left_horizontal_pipe_cap_small.asm
+047D:0130		SSP_Tiles/caps/enterable/enter_horiz_midair/right_horizontal_pipe_cap_small.asm
+047E:0130		SSP_Tiles/caps/enterable/enter_horiz_midair/left_horizontal_pipe_cap_small.asm
+047F:0130		SSP_Tiles/caps/enterable/enter_horiz_midair/right_horizontal_pipe_cap_small.asm
+049C:0130		SSP_Tiles/caps/enterable/enter_horiz_midair/left_horizontal_pipe_cap_B.asm
+049D:0130		SSP_Tiles/caps/enterable/enter_horiz_midair/right_horizontal_pipe_cap_B.asm
+049E:0130		SSP_Tiles/caps/enterable/enter_horiz_midair/left_horizontal_pipe_cap_B.asm
+049F:0130		SSP_Tiles/caps/enterable/enter_horiz_midair/right_horizontal_pipe_cap_B.asm
