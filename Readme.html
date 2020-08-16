@@ -25,9 +25,31 @@
 <center><h2>By GreenHammerBro.</h2></center>
 <hr>
 This block pack contains custom block pipes that when the player enters them, instead of
-screen-fading to the next level, scrolls the screen following the pipe as the player
-travels through to the other end.<br><br>
+screen-fading to the next level, the player will move through the pipes (along with the screen following the player) to the other end.<br><br>
 
+<hr>
+<h3>Table of Contents</h3>
+<ol>
+	<li>
+		<a href="#Introduction" id="TOC_Introduction">Introduction</a>
+		<ol>
+			<li><a href="#FeaturesNotSeenBefore" id="TOC_FeaturesNotSeenBefore">Features not seen before</a></li>
+		</ol>
+	</li>
+	<li>
+		<a href="#Insertion" id="TOC_Insertion">How to insert</a>
+	</li>
+	<li>
+		<a href="#FAQ" id="TOC_FAQ">F.A.Q</a>
+	</li>
+	<li>
+		<a href="#Notes" id="TOC_Notes">Notes</a>
+	</li>
+</ol>
+<hr>
+
+
+<h2><a href="#TOC_Introduction" id="Introduction">^</a>Introduction</h2>
 The primary purpose of this release was because FuSoYa's SMB3 screen scrolling pipes are incompatible with the custom block
 insertion tool; <i>Gopher Popcorn Stew</i> (GPS). <a href="https://www.smwcentral.net/?p=section&a=details&id=19984">it was updated to work with GPS</a> on 05/30/2019 but other glitches remain:
 
@@ -76,7 +98,7 @@ state before he fully emerges from the pipe, so he slightly clips into the block
 
 
 
-<h2>Features not seen before:</h2>
+<h3><a href="#TOC_FeaturesNotSeenBefore" id="FeaturesNotSeenBefore">^</a>Features not seen before:</h3>
 <ul>
 <li>This package do not use exit tiles placed in front of pipe caps (air tiles or water tiles placed in front of pipe caps),
 instead it relies on a RAM frame timer to determine if the player is fully out of the pipes; Therefore you can put any tiles
@@ -94,7 +116,7 @@ past the point he needs to change direction (it will center the player correctly
 
 </ul>
 
-<h2>Insertion</h2>
+<h2><a href="#TOC_Insertion" id="Insertion">^</a>Insertion</h2>
 <h3>What you need:</h3>
 <ul>
 <li><a href="https://www.smwcentral.net/?p=section&a=details&id=19982">Uberasm Tool</a> (Not the patch version)</li>
@@ -108,7 +130,7 @@ carrying a sprite when exiting pipes)</s> EDIT: this is fixed.</li>
 use the &ldquo;misc direction&rdquo; feature to stop gravity.</li>
 </ul><br>
 
-<h2>Instructions to apply to your game.</h2>
+<h3>Instructions to apply to your game.</h3>
 
 <ol>
 <li>Lunar Magic (Everything related to this is located in <kbd>LM_Stuff</kbd> folder.)</li><br>
@@ -216,7 +238,7 @@ The red <font color="red">05</font> is the page number to move to. Make sure ALL
 so that the regex will only replace block IDs and not the behavors.
 
 
-<h2>FAQ</h2>
+<h2><a href="#TOC_FAQ" id="FAQ">^</a>FAQ</h2>
 <ul>
 
 <li>How do I set the freeram and settings?
@@ -238,7 +260,7 @@ the player will be out of &ldquo;pipe mode&rdquo;). Make sure you read <a href="
 corners and exit caps without interacting them, causing the player to continue in his pipe state and direction when he shouldn't.</li></ul></li>
 </ul>
 
-<h2>Notes</h2>
+<h2><a href="#TOC_Notes" id="Notes">^</a>Notes</h2>
 <ul>
 
 <li>If you carry any <b>custom</b> sprites through these pipes, they will not go behind the layer;
