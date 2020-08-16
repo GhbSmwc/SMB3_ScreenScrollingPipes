@@ -186,23 +186,32 @@ Click <a name="UseBlocksInLevel" href="Readme_files/BlocksUsageInLevel.html">her
 <span id="MoveToDifferentM16Page">*If you need to move your pipes to a different map16 page, simply change <kbd>$PPNN</kbd> where PP is the page number to move to.
 Make sure they line up properly (the first block that was originally placed on the top-left corner should remain on the top corner
 on the new page you're moving to). A faster way to do this is to use <a href="https://notepad-plus-plus.org/downloads/">notepad plus plus</a>'s regular expression to replace (CTRL+H) the page numbers:
-<table><tr><td><pre>Note: include ALL that is underlined!
+Note: include ALL that is boxed!
+<ol>
+<li>replace the numbers at the left edge of the document:
+<table>
+<tr><td>Find what:</td><td>^\t*[0-9A-F][0-9A-F](?'NonPageNumber'[0-9A-F][0-9A-F]:)</td></tr>
+<tr><td>Replace with:</td><td><font color="red">05</font>$+{NonPageNumber}</td></tr>
+<tr><td>Search mode:</td><td>Regular expression</td></tr>
+</table>
+</li><br>
+<li>same as before but for multi-blocks (rectangle of blocks):
+<table>
+<tr><td>Find what:</td><td>^\t*R[0-9A-F][0-9A-F](?'NonPageNumber'[0-9A-F][0-9A-F]:)</td></tr>
+<tr><td>Replace with:</td><td>R<font color="red">05</font>$+{NonPageNumber}</td></tr>
+<tr><td>Search mode:</td><td>Regular expression</td></tr>
+</table>
+</li><br>
 
-1) replace the numbers at the left edge of the document:
-	Find what: <u>^\t*[0-9A-F][0-9A-F](?'NonPageNumber'[0-9A-F][0-9A-F]:)</u>
-	Replace with: <u><font color="red">05</font>$+{NonPageNumber}</u>
-	Search mode: Regular expression
+<li>same as before but for range of block numbers:
+<table>
+<tr><td>Find what:</td><td>-[0-9A-F][0-9A-F](?'NonPageNumber'[0-9A-F][0-9A-F])</td></tr>
+<tr><td>Replace with:</td><td>-<font color="red">05</font>$+{NonPageNumber}</td></tr>
+<tr><td>Search mode:</td><td>Regular expression</td></tr>
+</table>
+</ol>
 
-2) same as before but for rectangle of blocks:
-	Find what: <u>^\t*R[0-9A-F][0-9A-F](?'NonPageNumber'[0-9A-F][0-9A-F]:)</u>
-	Replace with: <u>R<font color="red">05</font>$+{NonPageNumber}</u>
-	Search mode: Regular expression
-
-3) replace the numbers for all multi-blocks assigning:
-	Find what: <u>-[0-9A-F][0-9A-F](?'NonPageNumber'[0-9A-F][0-9A-F])</u>
-	Replace with: <u>-<font color="red">05</font>$+{NonPageNumber}</u>
-	Search mode: Regular expression
-</pre></td></tr></table><br>
+</li>
 The red <font color="red">05</font> is the page number to move to. Make sure ALL the block digits are <b>4 digits long</b> which means have leading zeroes should less digits exist (<kbd>400</kbd> &rightarrow; <kbd>0400</kbd>)
 so that the regex will only replace block IDs and not the behavors.
 
