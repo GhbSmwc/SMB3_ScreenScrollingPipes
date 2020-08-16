@@ -137,7 +137,10 @@ SSPMaincode:
 			LDA !Freeram_SSP_PipeDir	;\set player speed within pipe (use transfer commands
 			AND.b #%00001111		;|>Only read the low 4 bits (nibble)
 			CMP #$09			;|\Null direction
-			BCS ...Skip			;|/
+			;BCS .PipeCodeReturn		;|/
+			BCC +
+			JMP .PipeCodeReturn
+			+
 			TAY				;|so you can use long freeram address)
 			LDA.w SSP_PipeXSpeed-1,y	;|
 			STA $7B				;|
