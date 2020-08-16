@@ -68,13 +68,19 @@ SSPMaincode:
 				STZ $140D|!addr		;>so fire mario cannot shoot fireballs in pipe
 
 		..HidePlayer
+			LDA !Freeram_SSP_PipeDir	;\If mario isn't one of the 8 main states, make him invisible.
+			AND.b #%00001111		;|
+			CMP #$09			;|
+			BCS ...Hide			;/
 			LDA !Freeram_SSP_EntrExtFlg	;\hide player if timer hits zero when entering.
 			CMP #$02			;|
 			BEQ ...NoHide			;|
 			LDA !Freeram_SSP_PipeTmr	;|\If timer == 0, make player invisible.
-			BNE ...NoHide			;||Carried sprites turning invisible is handled by Fixes.asm
+			BNE ...NoHide			;|/Carried sprites turning invisible is handled by Fixes.asm
+			
+			...Hide
 			if !Setting_SSP_PipeDebug == 0
-				LDA #$FF		;||
+				LDA #$FF		;|\Render player invisible
 				STA $78			;//
 			endif
 
@@ -136,11 +142,11 @@ SSPMaincode:
 		..DirectionalSpeed
 			LDA !Freeram_SSP_PipeDir	;\set player speed within pipe (use transfer commands
 			AND.b #%00001111		;|>Only read the low 4 bits (nibble)
-			CMP #$09			;|\Null direction
-			;BCS .PipeCodeReturn		;|/
-			BCC +
-			JMP .PipeCodeReturn
-			+
+			CMP #$09			;|\If directional bits not using the normal 8 statuses, skip all and end (treat it as a non-transition between entering and exiting)
+			;BCS .PipeCodeReturn		;||
+			BCC +				;||
+			JMP .PipeCodeReturn		;||
+			+				;|/
 			TAY				;|so you can use long freeram address)
 			LDA.w SSP_PipeXSpeed-1,y	;|
 			STA $7B				;|
