@@ -16,17 +16,20 @@ MarioSide:
 TopCorner:
 BodyInside:
 HeadInside:
-
-	LDA !Freeram_SSP_PipeDir		;\If outside a pipe, return.
-	AND.b #%00001111			;|
-	BEQ Return				;/
-	
-	LDY #$00				;\Render pipe passable
-	LDA #$25				;|
-	STA $1693|!addr				;/
-	
-	JSR DistanceFromTurnCornerCheck
-	BCC Return
+	;Check pipe state
+		LDA !Freeram_SSP_PipeDir	;\If not in pipe mode, Return as being a solid block
+		AND.b #%00001111		;|
+		BEQ Return			;/
+	;Render passable
+		LDY #$00			;\Become passable when in pipe.
+		LDX #$25			;|
+		STX $1693|!addr			;/
+	;Check if the block should be merely passable.
+		CMP #$09			;\If traveling in any direction, do nothing except be passable.
+		BCS Return			;/
+	;Adjust player pipe travel direction and centering
+		JSR DistanceFromTurnCornerCheck
+		BCC Return
 	
 	LDA !Freeram_SSP_PipeDir		;\Set planned direction to up.
 	AND.b #%00001111			;|

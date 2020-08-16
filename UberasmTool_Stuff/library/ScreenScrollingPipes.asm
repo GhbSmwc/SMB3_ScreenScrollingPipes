@@ -13,7 +13,7 @@ SSPMaincode:
 	.PipeStateCheck
 		LDA !Freeram_SSP_PipeDir		;\don't do anything while outside the pipe.
 		AND.b #%00001111			;|(this also should prevent running the reset pipe state every frame when the pipe state == 0)
-		ORA !Freeram_SSP_PipeTmr		;|
+		;ORA !Freeram_SSP_PipeTmr		;|
 		BNE .InPipeTraveling			;/
 		RTL
 
@@ -136,11 +136,15 @@ SSPMaincode:
 		..DirectionalSpeed
 			LDA !Freeram_SSP_PipeDir	;\set player speed within pipe (use transfer commands
 			AND.b #%00001111		;|>Only read the low 4 bits (nibble)
+			CMP #$09			;|\Null direction
+			BCS ...Skip			;|/
 			TAY				;|so you can use long freeram address)
 			LDA.w SSP_PipeXSpeed-1,y	;|
 			STA $7B				;|
 			LDA.w SSP_PipeYSpeed-1,y	;|
 			STA $7D				;/
+			
+			...Skip
 
 		..EnterExitTransition
 			LDA !Freeram_SSP_EntrExtFlg	;\If mario is transitioning between in and out of pipe state, branch to handle entering and exiting code
@@ -175,7 +179,7 @@ SSPMaincode:
 						STA !Freeram_SSP_PipeDir	;>And set pipe direction from cap to stem speed with the same direction.
 		
 						......StemSpeedDone
-							BRA .pose
+							BRA ..pose
 	
 				....ExitingPipe			;
 					LDA !Freeram_SSP_PipeTmr	;\if timer already = 0, then skip the reset (so it does it once).
@@ -244,6 +248,9 @@ SSPMaincode:
 ;-----------------------------------------
 		..pose
 			LDA !Freeram_SSP_PipeDir
+			AND.b #%00001111
+			CMP #$09
+			BCS ...Skip
 			AND #$01
 			BEQ ...Horiz		;>If even number (bit 0 is clear), branch to Horizontal
 	
@@ -268,7 +275,7 @@ SSPMaincode:
 	
 			...SetPose
 				STA $13E0|!addr		;>set player pose
-	
+			...Skip
 	.PipeCodeReturn
 		PLB
 		RTL

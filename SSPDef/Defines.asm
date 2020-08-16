@@ -54,9 +54,10 @@
   ; Bit format: PPPPDDDD
   ;
   ; DDDD bits (The stem and pipe cap directions):
-  ;  #$00 = out of pipe (normal mode).
-  ;  #$01-#$04 = travel up, right, down and left (in that order) for stem sections.
-  ;  #$05-#$08 = same as above, but for cap speeds.
+  ;  $00 = out of pipe (normal mode).
+  ;  $01-$04 (%0001-%0100) = travel up, right, down and left (in that order) for stem sections.
+  ;  $05-$08 (%0101-%1000) = same as above, but for cap speeds.
+  ;  $09-$0A (%1001-%1010) = Travel in any direction.
   ;
   ; PPPP bits (the planned direction for "special turning corners"):
   ;  #$00 = Keep going straight, don't change direction.
@@ -67,8 +68,11 @@
  else
   !Freeram_SSP_PipeTmr		= $61
  endif
-  ;^[1 byte] for exiting and entering animations. Stored here is how
-  ; long the player perform a cap entering and exiting, in frames.
+  ;^[1 byte] Used for various purposes:
+  ;-If !Freeram_SSP_PipeDir's low nybble (DDDD bits) is 0-4:
+  ; -for exiting and entering animations. Stored here is how
+  ;  long the player perform a cap entering and exiting, in frames.
+  ;
 
  if !sa1 == 0
   !Freeram_SSP_EntrExtFlg	= $7E0062
