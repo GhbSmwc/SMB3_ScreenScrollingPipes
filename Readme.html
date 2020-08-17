@@ -40,6 +40,12 @@ screen-fading to the next level, the player will move through the pipes (along w
 		<a href="#Insertion" id="TOC_Insertion">How to insert</a>
 	</li>
 	<li>
+		<a href="#ExtraFeatures" id="TOC_ExtraFeatures">Extra features</a>
+		<ol>
+			<li><a href="#PipeDirectionAnyDirection" id="TOC_PipeDirectionAnyDirection">Pipe travel of any directions (diagonals)</a></li>
+		</ol>
+	</li>
+	<li>
 		<a href="#FAQ" id="TOC_FAQ">F.A.Q</a>
 	</li>
 	<li>
@@ -237,7 +243,23 @@ Note: include ALL that is boxed!
 The red <font color="red">05</font> is the page number to move to. Make sure ALL the block digits are <b>4 digits long</b> which means have leading zeroes should less digits exist (<kbd>400</kbd> &rightarrow; <kbd>0400</kbd>)
 so that the regex will only replace block IDs and not the behavors.
 
+<h2><a href="#TOC_ExtraFeatures" id="ExtraFeatures">^</a>Extra features</h2>
+<h3><a href="#TOC_PipeDirectionAnyDirection" id="PipeDirectionAnyDirection">^</a>Pipe travel of any directions (diagonals)</h3>
+<p>I also have given a new feature that let you have pipes involving the player also traveling in <b>any</b> direction besides
+the default 4 directional-based states. Like I said, you'll need the <a href="">Same Fall Acceleration Speed</a> patch to prevent
+gravity interfering with the player's custom pipe traveling mode.</p>
 
+<p>This works differently, when traveling in custom directions, <kbd>!Freeram_SSP_PipeDir</kbd>'s low nybble is <b>set to <kbd>$09</kbd> (<kbd>%XXXX1001</kbd>)</b>.
+A special mode that:
+<ul>
+	<li>The way Mario moves is no longer handled by uberasm tool at all, meaning his XY speeds are &ldquo;suspended&rdquo;, constantly going in one direction in a straight line
+	like he is in space. He only changes his direction (or velocity) by <i>path nodes</i>, a series of blocks that they themselves are the only ones responsible
+	for setting the player's velocity.</li><br>
+	
+	<li>All pipe parts will become passable and do nothing besides the blocks that would switch between state $09 and states $01-$08 as well as path node blocks.</li><br>
+	
+	<li>The high nibble of <kbd>!Freeram_SSP_PipeDir</kbd> now acts as a direction-er.</li>
+</ul></p>
 <h2><a href="#TOC_FAQ" id="FAQ">^</a>FAQ</h2>
 <ul>
 

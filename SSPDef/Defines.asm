@@ -53,15 +53,24 @@
   ;
   ; Bit format: PPPPDDDD
   ;
-  ; DDDD bits (The stem and pipe cap directions):
-  ;  $00 = out of pipe (normal mode).
-  ;  $01-$04 (%0001-%0100) = travel up, right, down and left (in that order) for stem sections.
-  ;  $05-$08 (%0101-%1000) = same as above, but for cap speeds.
-  ;  $09-$0A (%1001-%1010) = Travel in any direction.
+  ;-DDDD bits (The stem and pipe cap directions):
+  ;--$00 = out of pipe (normal mode).
+  ;--Values $01-$0A:
+  ;---$01-$04 (%0001-%0100) = travel up, right, down and left (in that order) for stem sections.
+  ;---$05-$08 (%0101-%1000) = same as above, but for cap speeds.
+  ;---$09 (%1001) = Travel in any direction (node-based traveling).
   ;
-  ; PPPP bits (the planned direction for "special turning corners"):
-  ;  #$00 = Keep going straight, don't change direction.
-  ;  #$01-#$04 = travel up, right, down and left (in that order).
+  ;-PPPP bits (the planned direction for "special turning corners"):
+  ;--$00 = Keep going straight, don't change direction.
+  ;--Values $01-$04:
+  ;---$01-$04 (%0001-%0100) = travel up, right, down and left (in that order). Note:
+  ;   if DDDD bits set to $09 (node-based traveling), PPPP is now determines which direction
+  ;   (velocity) the pipe nodes set the player's XY speed. Using default settings, I only use 2
+  ;   values, mainly for a 2-way path (3 techinically, because 0 means do nothing... just in
+  ;   case if you have crossing path intended to keep going straight):
+  ;---$00 = do nothing
+  ;---$01 = Direction A ("forward")
+  ;---$02 = Direction B ("backward")
 
  if !sa1 == 0
   !Freeram_SSP_PipeTmr		= $7E0061
