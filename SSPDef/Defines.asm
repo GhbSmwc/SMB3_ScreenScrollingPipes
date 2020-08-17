@@ -12,22 +12,24 @@
 ;Place this at the very top of gamemode_code.asm.
 ;Do not change anything here unless you know what are you doing.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;	!dp = $0000
-;	!addr = $0000
-;	!sa1 = 0
-;	!gsu = 0
-;
-;if read1($00FFD6) == $15
-;	sfxrom
-;	!dp = $6000
-;	!addr = !dp
-;	!gsu = 1
-;elseif read1($00FFD5) == $23
-;	sa1rom
-;	!dp = $3000
-;	!addr = $6000
-;	!sa1 = 1
-;endif
+if defined("sa1") == 0
+		!dp = $0000
+		!addr = $0000
+		!sa1 = 0
+		!gsu = 0
+	
+	if read1($00FFD6) == $15
+		sfxrom
+		!dp = $6000
+		!addr = !dp
+		!gsu = 1
+	elseif read1($00FFD5) == $23
+		sa1rom
+		!dp = $3000
+		!addr = $6000
+		!sa1 = 1
+	endif
+endif
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;uberasm code for GHB's screen scrolling pipes.
 ;Do not insert this as blocks, paste this code in "gamemode_code.asm"
@@ -58,19 +60,14 @@
   ;--Values $01-$0A:
   ;---$01-$04 (%0001-%0100) = travel up, right, down and left (in that order) for stem sections.
   ;---$05-$08 (%0101-%1000) = same as above, but for cap speeds.
-  ;---$09 (%1001) = Travel in any direction (node-based traveling).
+  ;---$09 (%1001) = Warp mode (more like drag) to specific XY position (!Freeram_SSP_DragWarpPipeDestinationXPos and
+  ;   !Freeram_SSP_DragWarpPipeDestinationYPos)
   ;
   ;-PPPP bits (the planned direction for "special turning corners"):
   ;--$00 = Keep going straight, don't change direction.
   ;--Values $01-$04:
-  ;---$01-$04 (%0001-%0100) = travel up, right, down and left (in that order). Note:
-  ;   if DDDD bits set to $09 (node-based traveling), PPPP is now determines which direction
-  ;   (velocity) the pipe nodes set the player's XY speed. Using default settings, I only use 2
-  ;   values, mainly for a 2-way path (3 techinically, because 0 means do nothing... just in
-  ;   case if you have crossing path intended to keep going straight):
-  ;---$00 = do nothing
-  ;---$01 = Direction A ("forward")
-  ;---$02 = Direction B ("backward")
+  ;---$01-$04 (%0001-%0100) = travel up, right, down and left (in that order).
+  ;   Note: When using warp mode, this will be the direction upon Mario reaches his war destination his DDDD bits to be set to.
 
  if !sa1 == 0
   !Freeram_SSP_PipeTmr		= $7E0061
@@ -99,17 +96,29 @@
  else
   !Freeram_SSP_CarrySpr		= $63
  endif
-  ;^[BytesUsed = !Setting_SSP_CarryAllowed] used for if mario enters a
-  ; pipe while holding a sprite. Will store a #$01 if you did carry a sprite though pipe.
-  ; Not used should your entire hack doesn't allow entering SSP with a sprite, otherwise
-  ; 1 byte taken.
+  ;^[BytesUsed = !Setting_SSP_CarryAllowed, either not used or 1 byte taken] used for if
+  ; mario enters a pipe while holding a sprite. Will store a #$01 if you did carry a
+  ; sprite though pipe. Not used should your entire hack doesn't allow entering SSP with
+  ; a sprite, otherwise 1 byte taken.
   
  if !sa1 == 0
   !Freeram_BlockedStatBkp	= $7E0079
  else
   !Freeram_BlockedStatBkp	= $79
  endif
-  ;^[1 byte] A backup of $77 to determine if mario is on the ground.
+  ;^[1 byte] A backup of $77 to determine if Mario is on the ground.
+ ;Warp mode destination. 2 bytes each. This determines where Mario will
+ ;be warped to (via dragging the player towards that location).
+  if !sa1 == 0
+   !Freeram_SSP_DragWarpPipeDestinationXPos = $0F3A
+  else
+   !Freeram_SSP_DragWarpPipeDestinationXPos = $0F3A|!addr
+  endif
+  if !sa1 == 0
+   !Freeram_SSP_DragWarpPipeDestinationYPos = $0F3C
+  else
+   !Freeram_SSP_DragWarpPipeDestinationYPos = $0F3C|!addr
+  endif
 
 ;Settings. NOTE: There are other defines settings in [SSP_Tiles\caps\enterable\*\cap_defines.asm] (* means any valid filename, including "default")
 ;so that you can multiple blocks with different variations (such as having some pipe caps that allow carrying sprites or allowing yoshi).
@@ -165,12 +174,14 @@
   !SSP_VerticalSpd		= $40 ;/
   !SSP_HorizontalSpdPipeCap	= $08 ;\cap speed (if changed, you must change the timers below this section)
   !SSP_VerticalSpdPipeCap	= $10 ;/
+  !SSP_DragSpd			= $40 ;>Speed mario travels when using warp mode.
  else
   ;FuSoYa styled speed.
   !SSP_HorizontalSpd		= $40 ;\Duplicate of above, but for fusoya style speeds.
   !SSP_VerticalSpd		= $40 ;|
   !SSP_HorizontalSpdPipeCap	= $40 ;|
   !SSP_VerticalSpdPipeCap	= $40 ;/
+  !SSP_DragSpd			= $40 ;>Speed mario travels when using warp mode.
  endif
 
  ;Pipe entering/exiting timers (in frames). These are used to determine when the player "fully" enters or exits the pipe:

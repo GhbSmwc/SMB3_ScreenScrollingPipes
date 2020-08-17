@@ -42,7 +42,7 @@ screen-fading to the next level, the player will move through the pipes (along w
 	<li>
 		<a href="#ExtraFeatures" id="TOC_ExtraFeatures">Extra features</a>
 		<ol>
-			<li><a href="#PipeDirectionAnyDirection" id="TOC_PipeDirectionAnyDirection">Pipe travel of any directions (diagonals)</a></li>
+			<li><a href="#ScreenScrollingWarpPipes" id="TOC_ScreenScrollingWarpPipes">Screen Scrolling *warp* pipes</a></li>
 		</ol>
 	</li>
 	<li>
@@ -132,8 +132,6 @@ past the point he needs to change direction (it will center the player correctly
 Certain sprites on screen randomly disappear when in pipes. Ignore this if you have SA-1 installed.</li>
 <li><s>No shooting fireballs/cape spin when carrying something (to prevent auto-capespin when
 carrying a sprite when exiting pipes)</s> EDIT: this is fixed.</li>
-<li><a href="https://www.smwcentral.net/?p=section&a=details&id=15970">Same Fall Acceleration Speed</a>, if you are going to
-use the &ldquo;misc direction&rdquo; feature to stop gravity.</li>
 </ul><br>
 
 <h3>Instructions to apply to your game.</h3>
@@ -244,22 +242,20 @@ The red <font color="red">05</font> is the page number to move to. Make sure ALL
 so that the regex will only replace block IDs and not the behavors.
 
 <h2><a href="#TOC_ExtraFeatures" id="ExtraFeatures">^</a>Extra features</h2>
-<h3><a href="#TOC_PipeDirectionAnyDirection" id="PipeDirectionAnyDirection">^</a>Pipe travel of any directions (diagonals)</h3>
-<p>I also have given a new feature that let you have pipes involving the player also traveling in <b>any</b> direction besides
-the default 4 directional-based states. Like I said, you'll need the <a href="">Same Fall Acceleration Speed</a> patch to prevent
-gravity interfering with the player's custom pipe traveling mode.</p>
+<h3><a href="#TOC_ScreenScrollingWarpPipes" id="ScreenScrollingWarpPipes">^</a>Screen Scrolling *Warp* Pipes</h3>
+<p>I also have given a new feature that let you have pipes &ldquo;warp&rdquo; (or teleport) the player to another location (this is not as in, refresh the level! I mean be at another location without using exit-enabled effects).
+This is somewhat similar to the <a href="https://www.smwcentral.net/?p=section&a=details&id=20835">carryable pipe</a> in the sprites section that the pipe pairs appear not to be physically connected to another, but they acts
+as portals that teleports the player to the other end.</p>
 
-<p>This works differently, when traveling in custom directions, <kbd>!Freeram_SSP_PipeDir</kbd>'s low nybble is <b>set to <kbd>$09</kbd> (<kbd>%XXXX1001</kbd>)</b>.
-A special mode that:
-<ul>
-	<li>The way Mario moves is no longer handled by uberasm tool at all, meaning his XY speeds are &ldquo;suspended&rdquo;, constantly going in one direction in a straight line
-	like he is in space. He only changes his direction (or velocity) by <i>path nodes</i>, a series of blocks that they themselves are the only ones responsible
-	for setting the player's velocity.</li><br>
-	
-	<li>All pipe parts will become passable and do nothing besides the blocks that would switch between state $09 and states $01-$08 as well as path node blocks.</li><br>
-	
-	<li>The high nibble of <kbd>!Freeram_SSP_PipeDir</kbd> now acts as a direction-er.</li>
-</ul></p>
+<p>This works by making use of the aiming routine so that the player will seamlessly move to where he should be dragged to without the noticeable 8-direction movement as the screen scrolls to follow the player. During this effect,
+he will ignore all object interactions and the way to determine mario should switch between states $01-$08 (his pipe state in <kbd>!Freeram_SSP_PipeDir</kbd>) is using uberasm tool's level feature to generate
+2 points (a &ldquo;teleport_from&rdquo; and a &ldquo;teleport_to&rdquo;) instead of using custom blocks.</p>
+
+<p>The reason of this is because you don't have to have blocks that are rendered passable during pipe state (literally have <kbd>pass_if_in_pipe.asm</kbd>, which is cumbersome and the fact that manuelly creating a path using blocks
+can make designing levels inconvenient (passible turn corners must be placed in places you don't want it to be in, for example). You literally can put vanilla SMW blocks such as walls, cement blocks, coins in between these points
+without worry.</p>
+
+<p>Psst, Nintendo called them &ldquo;warp pipes&rdquo; instead of just &ldquo;pipes&rdquo; because of that very reason of not always being physically connected to the other end.</p>
 <h2><a href="#TOC_FAQ" id="FAQ">^</a>FAQ</h2>
 <ul>
 
