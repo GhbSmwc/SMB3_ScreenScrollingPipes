@@ -172,6 +172,7 @@ SSPMaincode:
 					SBC !Freeram_SSP_DragWarpPipeDestinationYPos
 					STA $02
 					SEP #$20
+					LDA.b #!SSP_DragSpd
 					JSL Aiming
 					LDA $00
 					STA $7B
@@ -180,6 +181,7 @@ SSPMaincode:
 				....StopPotentialIssues
 					LDA #$01
 					STA $185C|!addr
+					JMP .PipeCodeReturn ;>Don't run the ..EnterExitTransition!!
 
 		..EnterExitTransition
 			LDA !Freeram_SSP_EntrExtFlg	;\If mario is transitioning between in and out of pipe state, branch to handle entering and exiting code
@@ -362,22 +364,24 @@ db %00010000, %01010000
 ;Other routines
 ;-------------------------------------------------------
 
-;Aiming Routine by MarioE. Edited by Akaginite to enable
-;unlimited distance.
-
-;Input:  A   = 8 bit projectile speed
-;        $00 = 16 bit (shooter x pos - target x pos)
-;        $02 = 16 bit (shooter y pos - target y pos)
-;
-;Output: $00 = 8 bit X speed of projectile
-;        $02 = 8 bit Y speed of projectile
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Aiming Routine by MarioE. Improved by Akaginite to allow unlimited
+;;distance.
+;;
+;;Input:  A   = 8 bit projectile speed
+;;        $00 = 16 bit (shooter x pos - target x pos)
+;;        $02 = 16 bit (shooter y pos - target y pos)
+;;
+;;Output: $00 = 8 bit X speed of projectile
+;;        $02 = 8 bit Y speed of projectile
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Aiming:
 .aiming
 		PHX
 		PHP
 		SEP #$30
 		STA $0F
-		if !SA1
+		if !sa1
 			STZ $2250
 		endif
 		LDX #$00
@@ -406,18 +410,18 @@ Aiming:
 		LSR A
 		BNE -
 	+
-		if !SA1
+		if !sa1
 			LDA $00
 			STA $2251
 			STA $2253
-			;NOP
-			;BRA $00
+			NOP
+			BRA $00
 			LDA $2306
 			
 			LDX $02
 			STX $2251
 			STX $2253
-			;BRA $00
+			BRA $00
 			CLC
 			ADC $2306
 		else
@@ -425,13 +429,13 @@ Aiming:
 			LDA $00
 			STA $4202
 			STA $4203
-			;NOP #4
+			NOP #4
 			LDX $4216
 			
 			LDA $02
 			STA $4202
 			STA $4203
-			;NOP
+			NOP
 			REP #$21
 			TXA
 			ADC $4216
@@ -489,7 +493,7 @@ Aiming:
 ..s2		LSR A
 ..s1		LSR A
 ..s0
-		if !SA1
+		if !sa1
 			STA $2251
 			ASL A
 			LDA $0F
@@ -529,12 +533,12 @@ Aiming:
 			LDX $0F
 			STX $4202
 			STA $4203
-			;NOP #4
+			NOP #4
 			LDX $4217
 			XBA
 			STA $4203
 			
-			;BRA $00
+			BRA $00
 			REP #$21
 			TXA
 			ADC $4216
@@ -544,11 +548,11 @@ Aiming:
 			LDX $02
 			STX $4202
 			STA $4203
-			;NOP #4
+			NOP #4
 			LDX $4217
 			XBA
 			STA $4203
-			;BRA $00
+			BRA $00
 			REP #$21
 			TXA
 			ADC $4216
@@ -563,11 +567,11 @@ Aiming:
 			STA $4202
 			LDA $04
 			STA $4203
-			;NOP #4
+			NOP #4
 			LDX $4217
 			LDA $05
 			STA $4203
-			;BRA $00
+			BRA $00
 			REP #$21
 			TXA
 			ADC $4216

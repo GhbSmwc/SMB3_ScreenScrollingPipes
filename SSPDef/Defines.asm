@@ -12,24 +12,24 @@
 ;Place this at the very top of gamemode_code.asm.
 ;Do not change anything here unless you know what are you doing.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-if defined("sa1") == 0
-		!dp = $0000
-		!addr = $0000
-		!sa1 = 0
-		!gsu = 0
-	
-	if read1($00FFD6) == $15
-		sfxrom
-		!dp = $6000
-		!addr = !dp
-		!gsu = 1
-	elseif read1($00FFD5) == $23
-		sa1rom
-		!dp = $3000
-		!addr = $6000
-		!sa1 = 1
-	endif
-endif
+;if defined("sa1") == 0
+;	!dp = $0000
+;	!addr = $0000
+;	!sa1 = 0
+;	!gsu = 0
+;	
+;	if read1($00FFD6) == $15
+;		sfxrom
+;		!dp = $6000
+;		!addr = !dp
+;		!gsu = 1
+;	elseif read1($00FFD5) == $23
+;		sa1rom
+;		!dp = $3000
+;		!addr = $6000
+;		!sa1 = 1
+;	endif
+;endif
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;uberasm code for GHB's screen scrolling pipes.
 ;Do not insert this as blocks, paste this code in "gamemode_code.asm"
@@ -146,7 +146,9 @@ endif
   
  !Setting_SSP_FuSoYaSpd		= 1
   ;^0 = SMW styled speed (pipe caps recreated from SMW's exit-enabled pipes, but with fast stem speed by default), 1 = FuSoYa's SSP speed.
- 
+ !Setting_SSP_CarryAllowed	= 1
+  ;^0 = In your entire hack, you never allowed carrying sprites through pipes.
+  ; 1 = In your entire hack, there are at least 1 case that you can enter pipes while carrying sprites.
  !Setting_Minimal_StuntimerSprites	= $5A
   ;^When having !Setting_SSP_FreezeTime = 0, this is the minimum amount of "double-frames" (each value here is 2 frames) remaining allowed when sprites
   ; are carried through SSPs. What this mean is when the timer goes below this value, will be set to this value* so that they cannot unstun
