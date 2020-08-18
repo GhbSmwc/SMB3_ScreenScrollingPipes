@@ -186,6 +186,7 @@ SSPMaincode:
 						JSL CheckPlayerBottomCollisionPointIsInDestinationHitBox
 						BCC ....DragMarioXYSpeed
 					.....MarioReachDestination
+						;Go from state $09 to states $01-$08.
 						LDA !Freeram_SSP_PipeDir			;\Switch player state to whatever was his prep direction
 						LSR #4						;|
 						STA $00						;|
@@ -203,7 +204,10 @@ SSPMaincode:
 						SEP #$20					;/
 						STZ $7B						;\Just in case if the speed routine at $00DC4F is processed AFTER
 						STZ $7D						;/this here is done setting XY position.
-						JMP ..EnterExitTransition
+						LDA !Freeram_SSP_PipeDir			;\If the high nybble was 0 and got written to his pipe status, cancel all pipe states.
+						AND.b #%00001111				;|
+						BNE ..EnterExitTransition			;|
+						JMP ..ResetStatus				;/
 				....DragMarioXYSpeed
 					REP #$20
 					.....XPos
@@ -237,6 +241,7 @@ SSPMaincode:
 					JMP .PipeCodeReturn ;>Don't run the ..EnterExitTransition!!
 
 		..EnterExitTransition
+			;This should ONLY be executed when Mario's state is $01-$08.
 			LDA !Freeram_SSP_EntrExtFlg	;\If mario is transitioning between in and out of pipe state, branch to handle entering and exiting code
 			BNE ...InPipe			;/
 			JMP .PipeCodeReturn		;>Otherwise do nothing and player will continue pipe movement.
@@ -259,10 +264,13 @@ SSPMaincode:
 					JMP ..pose			;>Otherwise still set pose (cap speed).
 	
 					.....StemSpeed
+						;Switches Mario to stem speed
 						LDA !Freeram_SSP_PipeDir	;\Switch to stem speed keeping the same direction.
 						AND.b #%00001111		;|>Check only bits 0-3 (normal direction bits)
 						CMP #$05			;|\If already at stem speed, don't subtract again.
 						BCC ......StemSpeedDone		;|/(It shouldn't land on #$00 or underflow, stay within #$01-#$08)
+						CMP #$09			;|\If state $09-$0F, this is not the cap transition at all, so don't subtract by 4
+						BCS ......StemSpeedDone		;|/(a failsafe, $09-$04=$05, which leads to the player going upwards at pipe cap speed when he shouldn't).
 						LDA !Freeram_SSP_PipeDir	;|>Reload because we want to retain bits 4-7 (planned direction bits).
 						SEC				;|
 						SBC #$04			;/
@@ -279,6 +287,7 @@ SSPMaincode:
 					BEQ ..ResetStatus		;>Reset status if timer hits zero (happens once after -1 to 0).
 					
 					.....CapSpeed
+						;Switches Mario to cap speed
 						LDA !Freeram_SSP_PipeDir	;\Switch to cap speed keeping the same direction.
 						AND.b #%00001111		;|>Check only bits 0-3 (normal direction bits)
 						CMP #$05			;|\If already at pipe cap speed, don't add again.
@@ -291,6 +300,7 @@ SSPMaincode:
 ;---------------------------------
 ;This resets mario's status.
 ;It must be exceuted for one frame
+;(or bugs will occur if executed every frame)
 ;the player exits a pipe.
 ;---------------------------------
 		..ResetStatus
@@ -320,6 +330,7 @@ SSPMaincode:
 				STZ $7D				;/
 				STZ $1419|!addr			;>revert yoshi
 				STZ $149F|!addr			;>zero cape "rise up timer"
+				STZ $185C|!addr			;>Reenable block interaction, just in case...
 				LDA $16				;\Prevent fireballs and cape action.
 				AND.b #%00010000		;|While enabling only the pause button.
 				STA $16				;/
