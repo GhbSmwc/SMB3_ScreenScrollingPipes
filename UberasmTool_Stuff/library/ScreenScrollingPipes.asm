@@ -154,30 +154,83 @@ SSPMaincode:
 					STA $7D				;/
 				....StopPotentialIssues
 					STZ $185C|!addr
-				BRA ..EnterExitTransition
+				JMP ..EnterExitTransition
 			
 			...DragWarpMode
 				;This has to run every frame as mario goes towards his warp destination
 				;as although it doesn't glitch out due to an overflow, an extreme distance
 				;between the player and "target" can cause imprecise direction and may miss.
-				
+				....CheckIfMarioArrivedDestination
+					;Again, using the pseudo collision point, reason not to use the player's
+					;AABB-collision is because it has a risk of snapping the player XY pos from the
+					;very edges of the boxes at such a long distance that could risk layer 1/2 graphic loading
+					;glitches. He should not snap more than 8 pixels in any direction.
+					.....GetXPositionPoint
+						REP #$20
+						LDA $94
+						CLC
+						ADC #$0008
+						STA $00
+						SEP #$20
+					.....GetYPositionPoint
+						LDA $187A|!addr
+						ASL
+						TAY
+						REP #$20
+						LDA $96
+						CLC
+						ADC SSP_YoshiCollisionPoint,y
+						STA $02
+						SEP #$20
+					.....CheckIfPointIsInDestinationHitBox
+						JSL CheckPlayerBottomCollisionPointIsInDestinationHitBox
+						BCC ....DragMarioXYSpeed
+					.....MarioReachDestination
+						LDA !Freeram_SSP_PipeDir			;\Switch player state to whatever was his prep direction
+						LSR #4						;|
+						STA $00						;|
+						LDA !Freeram_SSP_PipeDir			;|
+						AND.b #%11110000				;|
+						ORA $00						;|
+						STA !Freeram_SSP_PipeDir			;/
+						REP #$20					;\Snap player XY position
+						LDA !Freeram_SSP_DragWarpPipeDestinationXPos	;|
+						STA $94						;|
+						LDA !Freeram_SSP_DragWarpPipeDestinationYPos	;|
+						SEC						;|
+						SBC SSP_YoshiCollisionPoint,y			;|
+						STA $96						;|
+						SEP #$20					;/
+						STZ $7B						;\Just in case if the speed routine at $00DC4F is processed AFTER
+						STZ $7D						;/this here is done setting XY position.
+						JMP ..EnterExitTransition
 				....DragMarioXYSpeed
 					REP #$20
-					LDA $94
-					SEC
-					SBC !Freeram_SSP_DragWarpPipeDestinationXPos
-					STA $00
-					LDA $96
-					SEC
-					SBC !Freeram_SSP_DragWarpPipeDestinationYPos
-					STA $02
-					SEP #$20
-					LDA.b #!SSP_DragSpd
-					JSL Aiming
-					LDA $00
-					STA $7B
-					LDA $02
-					STA $7D
+					.....XPos
+						LDA $94
+						SEC
+						SBC !Freeram_SSP_DragWarpPipeDestinationXPos
+						STA $00
+					.....YPos
+						SEP #$20
+						LDA $187A|!addr
+						ASL
+						TAY
+						REP #$20
+						LDA $96						;\Get the approximate vector of movement from the player/yoshi's feet
+						CLC						;|to the block.
+						ADC SSP_DragWarpDestinationYOffsetYoshi,y	;/
+						SEC
+						SBC !Freeram_SSP_DragWarpPipeDestinationYPos
+						STA $02
+						SEP #$20
+					.....Aim
+						LDA.b #!SSP_DragSpd
+						JSL Aiming
+						LDA $00
+						STA $7B
+						LDA $02
+						STA $7D
 				....StopPotentialIssues
 					LDA #$01
 					STA $185C|!addr
@@ -321,45 +374,53 @@ SSPMaincode:
 ;-------------------------------------------------------
 
 SSP_PipeXSpeed:
-;X speed table
-db $00                            ;>#$01 Stem upwards
-db !SSP_HorizontalSpd             ;>#$02 Stem rightwards
-db $00                            ;>#$03 Stem downwards
-db $100-!SSP_HorizontalSpd        ;>#$04 Sten leftwards
-db $00                            ;>#$05 Pipe cap upwards
-db !SSP_HorizontalSpdPipeCap      ;>#$06 Pipe cap rightwards
-db $00                            ;>#$07 Pipe cap downwards
-db $100-!SSP_HorizontalSpdPipeCap ;>#$08 Pipe cap leftwards
+	;X speed table
+	db $00                            ;>#$01 Stem upwards
+	db !SSP_HorizontalSpd             ;>#$02 Stem rightwards
+	db $00                            ;>#$03 Stem downwards
+	db $100-!SSP_HorizontalSpd        ;>#$04 Sten leftwards
+	db $00                            ;>#$05 Pipe cap upwards
+	db !SSP_HorizontalSpdPipeCap      ;>#$06 Pipe cap rightwards
+	db $00                            ;>#$07 Pipe cap downwards
+	db $100-!SSP_HorizontalSpdPipeCap ;>#$08 Pipe cap leftwards
 
 
 SSP_PipeYSpeed:
-;Y speed table
-db $100-!SSP_VerticalSpd          ;>#$01 Stem upwards
-db $00                            ;>#$02 Stem rightwards
-db !SSP_VerticalSpd               ;>#$03 Stem downwards
-db $00                            ;>#$04 Stem leftwards
-db $100-!SSP_VerticalSpdPipeCap   ;>#$05 Pipe cap upwards
-db $00                            ;>#$06 Pipe cap rightwards
-db !SSP_VerticalSpdPipeCap        ;>#$07 Pipe cap downwards
-db $00                            ;>#$08 Pipe cap leftwards
+	;Y speed table
+	db $100-!SSP_VerticalSpd          ;>#$01 Stem upwards
+	db $00                            ;>#$02 Stem rightwards
+	db !SSP_VerticalSpd               ;>#$03 Stem downwards
+	db $00                            ;>#$04 Stem leftwards
+	db $100-!SSP_VerticalSpdPipeCap   ;>#$05 Pipe cap upwards
+	db $00                            ;>#$06 Pipe cap rightwards
+	db !SSP_VerticalSpdPipeCap        ;>#$07 Pipe cap downwards
+	db $00                            ;>#$08 Pipe cap leftwards
 
-SSP_CarryControlsForceSet:
 ; first number = force button held when not carrying sprites, second is when carrying.
-; a set bit here means a bit is forced to be enabled (button will be held down)
-db %00000000, %01000000
-SSP_CarryControlsForceClear:
+; a set bit here means a bit is forced to be enabled (button will be held down):
+	SSP_CarryControlsForceSet:
+		db %00000000, %01000000
 ; Same format as above, but fores a button to not be pressed.
 ; a bit clear here means the button will be forced to be cleared.
-db %00010000, %01010000
+	SSP_CarryControlsForceClear:
+		db %00010000, %01010000
 
 
 ;Don't touch these unless you remap the poses: [beta stuff]
 ;WalkingFrames:
-;db $00,$00,$00,$00,$01,$01,$01,$01,$02,$02,$02,$02
+	;db $00,$00,$00,$00,$01,$01,$01,$01,$02,$02,$02,$02
 ;
 
+;Don't touch these:
+	SSP_DragWarpDestinationYOffsetYoshi:
+		dw $0010
+		dw $0020
+		dw $0020
 
-
+	SSP_YoshiCollisionPoint:
+		dw $0018
+		dw $0028
+		dw $0028
 ;-------------------------------------------------------
 ;Other routines
 ;-------------------------------------------------------
@@ -621,3 +682,34 @@ Aiming:
 		dw $10CF,$10C5,$10BC,$10B3,$10AA,$10A1,$1098,$108F
 		dw $1086,$107E,$1075,$106C,$1064,$105B,$1052,$104A
 		dw $1042,$1039,$1031,$1029,$1020,$1018,$1010,$1008
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Check if a given pixel at the player's (or yoshi's if riding yoshi)
+;;feet is in the 16x16 hitbox.
+;$00-$01: Feet position point X pos
+;$02-$03: Feet position point Y pos
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+CheckPlayerBottomCollisionPointIsInDestinationHitBox:
+	REP #$20
+	.XAxis
+		LDA $00
+		CMP !Freeram_SSP_DragWarpPipeDestinationXPos
+		BMI .NoCollision				;>Point vs Left boundary
+		SEC
+		SBC #$0010
+		CMP !Freeram_SSP_DragWarpPipeDestinationXPos
+		BPL .NoCollision				;>Point, minus 16, vs left boundary (or point vs right boundary)
+	.YAxis
+		LDA $02
+		CMP !Freeram_SSP_DragWarpPipeDestinationYPos
+		BMI .NoCollision				;>Point vs top boundary
+		SEC
+		SBC #$0010
+		CMP !Freeram_SSP_DragWarpPipeDestinationYPos
+		BPL .NoCollision				;>Point, minus 16, vs top boundary (or point vs bottom boundary)
+	.Collision
+		SEP #$21
+		RTL
+	.NoCollision
+		SEP #$20
+		CLC
+		RTL
