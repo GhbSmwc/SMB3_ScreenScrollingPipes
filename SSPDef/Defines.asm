@@ -12,24 +12,24 @@
 ;Place this at the very top of gamemode_code.asm.
 ;Do not change anything here unless you know what are you doing.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;if defined("sa1") == 0
-;	!dp = $0000
-;	!addr = $0000
-;	!sa1 = 0
-;	!gsu = 0
-;	
-;	if read1($00FFD6) == $15
-;		sfxrom
-;		!dp = $6000
-;		!addr = !dp
-;		!gsu = 1
-;	elseif read1($00FFD5) == $23
-;		sa1rom
-;		!dp = $3000
-;		!addr = $6000
-;		!sa1 = 1
-;	endif
-;endif
+if defined("sa1") == 0
+	!dp = $0000
+	!addr = $0000
+	!sa1 = 0
+	!gsu = 0
+	
+	if read1($00FFD6) == $15
+		sfxrom
+		!dp = $6000
+		!addr = !dp
+		!gsu = 1
+	elseif read1($00FFD5) == $23
+		sa1rom
+		!dp = $3000
+		!addr = $6000
+		!sa1 = 1
+	endif
+endif
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;uberasm code for GHB's screen scrolling pipes.
 ;Do not insert this as blocks, paste this code in "gamemode_code.asm"
