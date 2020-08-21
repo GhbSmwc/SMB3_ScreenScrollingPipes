@@ -199,7 +199,7 @@ SSPMaincode:
 						STA $94						;|
 						LDA !Freeram_SSP_DragWarpPipeDestinationYPos	;|
 						SEC						;|
-						SBC SSP_YoshiCollisionPoint,y			;|
+						SBC SSP_DragWarpDestinationYOffsetYoshi,y	;|
 						STA $96						;|
 						SEP #$20					;/
 						STZ $7B						;\Just in case if the speed routine at $00DC4F is processed AFTER
