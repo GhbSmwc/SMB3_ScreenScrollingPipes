@@ -22,7 +22,7 @@
 0405:0130		SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_R_exit.asm
 0414:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_L.asm
 0415:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_R.asm
-040C:0424		SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_small_exit.asm
+0424:0130		SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_small_exit.asm
 0434:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_small.asm
 ;;;;Vertical pipe cap downwards travel
 0406:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_cap_L.asm
