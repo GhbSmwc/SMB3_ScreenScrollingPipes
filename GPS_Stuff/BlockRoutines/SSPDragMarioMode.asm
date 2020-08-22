@@ -78,13 +78,24 @@ incsrc "../SSPDef/Defines.asm"
 ;These are the destination positions, in pixels (why not block positions, then LSR #4?,
 ;well, because it is possible that the player must be centered horizontally between 2 blocks
 ;than 16x16 grid-aligned as in the case with traveling through normal-sized vertical pipes).
-
+;
 ;You can easily convert them into pixel coordinate via this formula:
 ;	dw (BlockPos*$10)+HalfBlock
 ;	
 ;	-BlockPos = the X or Y position, in units of 16x16 (the coordinates of the block seen in Lunar Magic).
 ;	-HalfBlock = $00 (16x16 aligned) or $08 (half-block aligned, with vertical normal-sized pipes, you
 ;	 normally do this for X position though).
+
+;These positions are “feet” position of the player, rather than the head position.
+;When riding on yoshi, it is the position of Yoshi's saddle part, not the player's.
+;Therefore, to get the correct position in a pipe:
+;
+;-For Small horizontal pipes, it is the tile of the stem part, nuff said, same goes with vertical small pipe.
+;-For regular sized horizontal pipes, it is the bottom half of the stem.
+;-For regular sized vertical pipes, it is the bottom-left tile of the 2x2 16x16 block space the player is at least
+; touching, assuming you are using the [(BlockPos*$10)+HalfBlock] formula.
+
+
 	?EndPositionX
 		dw ($000C*$10)+$08	;>Index 0 (Index 0 * 2)
 		dw ($0005*$10)+$08	;>Index 2 (Index 1 * 2)

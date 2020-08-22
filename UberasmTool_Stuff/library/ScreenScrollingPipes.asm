@@ -695,30 +695,48 @@ Aiming:
 		dw $1042,$1039,$1031,$1029,$1020,$1018,$1010,$1008
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Check if a given pixel at the player's (or yoshi's if riding yoshi)
-;;feet is in the 16x16 hitbox.
+;;feet is close enough (within 4 pixels in any direction) to his centering position.
 ;$00-$01: Feet position point X pos
 ;$02-$03: Feet position point Y pos
+;Destroyed values:
+;$04-$05: Offset of destination point X and Y pos
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 CheckPlayerBottomCollisionPointIsInDestinationHitBox:
 	REP #$20
 	.XAxis
+		LDA !Freeram_SSP_DragWarpPipeDestinationXPos
+		CLC
+		ADC #$0008
+		STA $04
 		LDA $00
-		CMP !Freeram_SSP_DragWarpPipeDestinationXPos
-		BMI .NoCollision				;>Point vs Left boundary
 		SEC
-		SBC #$0010
-		CMP !Freeram_SSP_DragWarpPipeDestinationXPos
-		BPL .NoCollision				;>Point, minus 16, vs left boundary (or point vs right boundary)
+		SBC $04
+		BPL ..Positive
+		
+		..Negative
+			EOR #$FFFF
+			INC
+		..Positive
+			CMP #$0004
+			BCS .NoCollision
 	.YAxis
+		LDA !Freeram_SSP_DragWarpPipeDestinationYPos
+		CLC
+		ADC #$0008
+		STA $04
 		LDA $02
-		CMP !Freeram_SSP_DragWarpPipeDestinationYPos
-		BMI .NoCollision				;>Point vs top boundary
 		SEC
-		SBC #$0010
-		CMP !Freeram_SSP_DragWarpPipeDestinationYPos
-		BPL .NoCollision				;>Point, minus 16, vs top boundary (or point vs bottom boundary)
+		SBC $04
+		BPL ..Positive
+		
+		..Negative
+			EOR #$FFFF
+			INC
+		..Positive
+			CMP #$0004
+			BCS .NoCollision
 	.Collision
-		SEP #$21
+		SEP #$21					;>M and C flags set.
 		RTL
 	.NoCollision
 		SEP #$20
