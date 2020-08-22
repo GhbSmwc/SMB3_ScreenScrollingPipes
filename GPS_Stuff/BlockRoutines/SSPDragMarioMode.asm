@@ -16,12 +16,12 @@ incsrc "../SSPDef/Defines.asm"
 	REP #$30
 	LDX.w #(?LevelNumberTable_End-?LevelNumberTable)-2
 	LDY.w #((?LevelNumberTable_End-?LevelNumberTable)/2)-1
-	?.Loop
+	?Loop
 		;Find if current level matches
 			LDA $010B|!addr
 			CMP ?LevelNumberTable,x
 			BNE ?.Next
-		;Level matched, now the XY start position
+		;Level matched, now check the XY start position
 			;Is Xposition matched?
 				REP #$20
 				LDA $9A
@@ -36,58 +36,31 @@ incsrc "../SSPDef/Defines.asm"
 				CMP ?StartPositionY,x
 				SEP #$20
 				BNE ?.Next
-		;Now obtain the destination XY pos and direction from there
-			;But first, get the relative position between player and the block he hits the start point
-			;so that his half-block offset traveling through regular-sized vertical pipes applies at the
-			;destination.
-				;X position offset from block
-					REP #$20
-					LDA $9A
-					AND #$FFF0
-					STA $00
-					LDA $94
-					SEC
-					SBC $00
-					STA $00
-				;Y position offset from block
-					LDA $98
-					AND #$FFF0
-					STA $02
-					LDA $96
-					SEC
-					SBC $02
-					STA $02
-			;Now take the destination position, offset it, and then write it to
-			;!Freeram_SSP_DragWarpPipeDestinationXPos and !Freeram_SSP_DragWarpPipeDestinationYPos
-			
-			;And finally the direction
-			
-			;Done.
-				BRA ?Done
+		;With the XY start position matched, now take the destination position, write it to
+		;!Freeram_SSP_DragWarpPipeDestinationXPos and !Freeram_SSP_DragWarpPipeDestinationYPos
+			REP #$20
+			LDA ?EndPositionX,x
+			STA !Freeram_SSP_DragWarpPipeDestinationXPos
+			LDA ?EndPositionY,x
+			STA !Freeram_SSP_DragWarpPipeDestinationYPos
+			SEP #$20
+		;State and prep direction
+			LDA #$09			;>$09 = %00001001
+			ORA ?DestinationDirection,y	;>%XXXX1001
+			STA !Freeram_SSP_PipeDir
+		;Done.
+			CLC
+			BRA ?Done
 	?.Next
 		DEY
 		DEX #2
-		BPL ?.Loop
+		BPL ?Loop
 		SEC
 		BRA ?Done
-	
-	
-	
 	?Done
 		SEP #$30
 		PLB
 		RTL
-
-
-
-
-
-
-
-
-
-
-
 ;Level the start wrap points are in.
 	?LevelNumberTable
 		dw $0105		;>Index 0 (Index 0 * 2)
@@ -102,13 +75,22 @@ incsrc "../SSPDef/Defines.asm"
 	?StartPositionY
 		dw $0018		;>Index 0 (Index 0 * 2)
 		dw $0010		;>Index 2 (Index 1 * 2)
-;These are the destination (relative to (or offset from) start position). Numbers here are 2-complement signed.
+;These are the destination positions, in pixels (why not block positions, then LSR #4?,
+;well, because it is possible that the player must be centered horizontally between 2 blocks
+;than 16x16 grid-aligned as in the case with traveling through normal-sized vertical pipes).
+
+;You can easily convert them into pixel coordinate via this formula:
+;	dw (BlockPos*$10)+HalfBlock
+;	
+;	-BlockPos = the X or Y position, in units of 16x16 (the coordinates of the block seen in Lunar Magic).
+;	-HalfBlock = $00 (16x16 aligned) or $08 (half-block aligned, with vertical normal-sized pipes, you
+;	 normally do this for X position though).
 	?EndPositionX
-		dw $000C		;>Index 0 (Index 0 * 2)
-		dw $0005		;>Index 2 (Index 1 * 2)
+		dw ($000C*$10)+$08	;>Index 0 (Index 0 * 2)
+		dw ($0005*$10)+$08	;>Index 2 (Index 1 * 2)
 	?EndPositionY
-		dw $000F		;>Index 0 (Index 0 * 2)
-		dw $0017		;>Index 2 (Index 1 * 2)
+		dw ($000F*$10)		;>Index 0 (Index 0 * 2)
+		dw ($0017*$10)		;>Index 2 (Index 1 * 2)
 ;This is the prep direction to set to that the player will start moving in that direction
 ;upon reaching his destination.
 ;Only use these values
