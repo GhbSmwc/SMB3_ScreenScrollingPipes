@@ -13,6 +13,7 @@ incsrc "../SSPDef/Defines.asm"
 	PHB							;>Preserve bank
 	PHK							;\Adjust bank for any $xxxx,y
 	PLB							;/
+	PHY							;>Preserve block behaver
 	REP #$30
 	LDX.w #(?LevelNumberTable_End-?LevelNumberTable)-2
 	LDY.w #((?LevelNumberTable_End-?LevelNumberTable)/2)-1
@@ -59,6 +60,7 @@ incsrc "../SSPDef/Defines.asm"
 		BRA ?Done
 	?Done
 		SEP #$30
+		PLY				;>Restore block behaver
 		PLB
 		RTL
 ;Level the start wrap points are in.

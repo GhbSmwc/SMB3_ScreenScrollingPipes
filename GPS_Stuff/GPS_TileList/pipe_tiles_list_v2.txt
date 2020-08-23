@@ -182,3 +182,6 @@ R046C-047C:0025		SSP_Tiles/turn_special_prep_up.asm
 R046D-047D:0025		SSP_Tiles/turn_special_prep_down.asm
 R046E-047E:0025		SSP_Tiles/turn_special_prep_left.asm
 R046F-047F:0025		SSP_Tiles/turn_special_prep_right.asm
+
+;;DragPlayer mode
+R04C0-04D3:0130		SSP_Tiles/DragPlayer.asm
