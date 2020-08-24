@@ -1,0 +1,101 @@
+<html>
+	<head>
+		<style>
+			html {
+			background-color: #000207;
+			color: white;
+			font-family: sans-serif;
+			}
+			table, th, td {
+			border: 1px solid white;
+			border-collapse: collapse;
+			}
+		</style>
+	</head>
+<body>
+<a href="../Readme.html#UseBlocksInLevel2">Back</a><br>
+<hr>
+Navigation:
+<ol>
+	<li><a href="#TOC_BlockPlacements" id="TOC_BlockPlacementsBack">Block Placements (basic)</a></li>
+	<li><a href="#TOC_BackgroundPipeTiles" id="TOC_BackgroundPipeTilesBack">Background pipe tiles</a></li>
+	<li><a href="#TOC_WarpMode" id="TOC_WarpModeBack">Warp mode usage</a></li>
+</ol>
+<hr>
+<h1><a href="#TOC_BlockPlacementsBack" id="TOC_BlockPlacements">^</a>Block pipe placements</h1>
+<ul>
+
+<li>Custom block pipe parts:
+<table><tr><td><img src="PipeParts.png"></td></tr></table>
+<table><tr><td><img src="PipeParts1.png"></td></tr></table>
+
+
+</li><br>
+
+<li>Pipe directions:<br>
+
+<table><tr><td><img src="Map16_pipeDirections2.png"><br></td></tr></table>
+Keep in mind that the pipe stems and turn corners (they yellow 32x32 and 16x16 for small pipes) <b>aren't 1-way themselves</b>, the only blocks
+that makes them 1-way are the pipe caps being &ldquo;exit only&rdquo;.</li><br>
+
+<li>Things you should avoid placing and what you can do:</li>
+<ul>
+<li>I don't recommend using the pipes on layer 2, as the position can glitch around.</li><br>
+<li>While using the pipes on layer 1 in a layer 2 level, be careful not to place solid blocks above the space in front of the small pipe caps, as
+they would teleport/clip the player through the floor:
+<table><tr><td><img src="DontPlaceLikeThis.png"></td></tr></table></li><br>
+
+<li>3-way (T-shaped) intersections using turn pipe corners are possible. If the player enters the (normal) turn corners from the
+&ldquo;outer&rdquo; edges that are not directly connected, the player will maintain his current direction:<br>
+<table><tr><td><img src="3WayIntersectionWithNormalCorners.png"></td></tr></table></li><br>
+
+<li>With the new update with special turn corner parts, you can have different connections based on where the player enters them on the same turn corner
+(A&rarr;B, B&rarr;C, C&rarr;D, D&rarr;A):<br>
+<table><tr><td><img src="SpecialTurnCornersDemonstration.png"></td></tr></table></li><br>
+
+How about A&harr;B, C&harr;D? (note that I use &harr; and not &rarr; to indicate a 2-way between points). Now you can have 2 &ldquo;opposite&rdquo; corners
+on the same area.
+<table><tr><td><img src="SpecialTurnCornersDemonstration1.png"></td></tr></table></li><br>
+
+Just remember that if the player hits any <tt>turn_special_prep_&lt;direction&gt;.asm</tt>, they will set the <i>prep-direction</i> that
+Mario will turn to that direction when he hits a special turn corner (<tt>turn_special_L.asm</tt>, <tt>turn_special_R.asm</tt>, and <tt>turn_special_small.asm</tt>).
+This allows &ldquo;roundabout&rdquo; and &ldquo;U-turn&rdquo;-type intersections and much more.<br><br>
+
+<li>You may be wondering, why did I have both types of corners if I can just have special turn corners? Well, here is my answer: Regular turn corners
+don't require any prep-turns. With this, you can have two regular turn corners touching each other without the need to have a turn setup in between,
+allowing compact pipe placements. Special turn corners, on the other hand, always have to have a setup direction if the next special turn corner needs
+a different direction. Things to note about the corners:<br><br>
+
+<ul>
+<li>ALL turn corners, regular and special, themselves do not change the prep-direction, instead, it will keep its direction until
+<tt>turn_special_prep_&lt;direction&gt;.asm</tt> have been triggered again, thus you can do something like this where the second
+and later in the sequence special turn corners no longer need a prep-turn:
+
+<table><tr><td><img src="MaintainedTurnCorners.png"></td></tr></table>
+Note the red circles means that no turn-preps.<br><br>
+
+And even when you wanted parallel pipes that switch places without having them to re-straighten them out (this is a 2-way pipe demonstration, if 1-way, you
+only need 1 connector in between the parallel pipes), you can do this in a more compact way:
+
+<table><tr><td><img src="ParallelPipeSwap.png"></td></tr></table></li>
+
+</ul></li>
+
+
+</ul>
+
+</ul>
+<h1><a href="#TOC_BackgroundPipeTilesBack" id="TOC_BackgroundPipeTiles">^</a>Background pipe tiles</h1>
+You may be wondering what is up with the darken pipe tiles in the map16 editor? Well these are &ldquo;background pipes&rdquo;. They're just background objects (not layer 2 background, I mean a
+non-interactable scenery, like SMW's bushes) the player can past right through them, but when in pipe mode, are interactable. This is useful if you want two parts in your level connected via a pipe
+but not act as a solid wall separating the level. Do note that most of these tiles are not actually custom blocks but a mere tile that acts $0025 (mainly a contrast to <kbd>pass_if_in_pipe.asm</kbd> which
+is solid when outside a pipe and passible when inside pipe mode, does nothing other than that), since this SSP package relies on a state-based mechanism in which nothing happens to the player, means the player
+keeps going straight in one direction in pipe mode. Therefore, you don't even need those tiles (besides the turn corners and pipe caps) to make sure the player keeps going in the same direction.<br><br>
+
+Note that I do not include passable enterable pipe caps here, it would be weird that in order to walk through them, you must not be pressing in the direction to enter the pipe and have momentum towards it. Therefore
+enterable pipe caps must always be solid.
+
+Most of designing a level using these is the same as the basics, so no further explanation is needed here.
+<h1><a href="#TOC_WarpModeBack" id="TOC_WarpMode">^</a>Warp mode</h1>
+This feature involves blocks that would cause the player to be &ldquo;dragged&rdquo; towards a given position across the level.
+<center><a href="../Readme.html#UseBlocksInLevel2">Back</a><br></center>
