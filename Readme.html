@@ -251,19 +251,21 @@ so that the regex will only replace block IDs and not the behavors.
 
 <h2><a href="#TOC_ExtraFeatures" id="ExtraFeatures">^</a>Extra features</h2>
 <h3><a href="#TOC_ScreenScrollingWarpPipes" id="ScreenScrollingWarpPipes">^</a>Screen Scrolling *Warp* Pipes</h3>
-<p>I also have given a new feature that let you have pipes &ldquo;warp&rdquo; (or teleport) the player to another location (this is not as in, refresh the level! I mean be at another location without using exit-enabled effects).
-This is somewhat similar to the <a href="https://www.smwcentral.net/?p=section&a=details&id=20835">carryable pipe</a> in the sprites section that the pipe pairs appear not to be physically connected to another, but they acts
-as portals that teleports the player to the other end.</p>
+<p>I also have given a new feature that let you have pipes &ldquo;warp&rdquo; (or teleport) the player to another location in the same level (this is not as in, refresh the level! I mean to be at another location without using exit-enabled
+pixelulate to black level-refresh effects). This is somewhat similar to the <a href="https://www.smwcentral.net/?p=section&a=details&id=20835">carryable pipe</a> in the sprites section that the pipe pairs appear not to be
+physically connected to another, but they acts as portals that &ldquo;teleports&rdquo; (The player actually gets dragged to his destination ignoring all object and sprite interactions, since instant teleporting result in graphical glitches)
+the player to the other end.</p>
 
 <p>This works by making use of the aiming routine so that the player will seamlessly move to where he should be dragged to without the noticeable 8-direction movement as the screen scrolls to follow the player. During this effect,
-he will ignore all object interactions and the way to determine mario should switch between states $01-$08 (his pipe state in <kbd>!Freeram_SSP_PipeDir</kbd>) is using uberasm tool's level feature to generate
-2 points (a &ldquo;teleport_from&rdquo; and a &ldquo;teleport_to&rdquo;) instead of using custom blocks.</p>
+he will ignore all object interactions and the way to determine mario should switch back to states $01-$08 (his pipe state in <kbd>!Freeram_SSP_PipeDir</kbd>) is using uberasm to generate a destination point hitbox
+which will revert the state and reenable block interaction when collided.</p>
 
-<p>The reason of this is because you don't have to have blocks that are rendered passable during pipe state (literally have <kbd>pass_if_in_pipe.asm</kbd>, which is cumbersome and the fact that manuelly creating a path using blocks
-can make designing levels inconvenient (passible turn corners must be placed in places you don't want it to be in, for example). You literally can put vanilla SMW blocks such as walls, cement blocks, coins in between these points
-without worry.</p>
+<p>This will allow you to have anything in between those two ends of the travel without interfering the player's pipe traveling (<a href="#MarioInPipeInteractWithCustomSprites">but be careful with some custom sprites though</a>), enabling you
+not to be required to have any pipe-related blocks in the area in between.</p>
 
 <p>Psst, Nintendo called them &ldquo;warp pipes&rdquo; instead of just &ldquo;pipes&rdquo; because of that very reason of not always being physically connected to the other end.</p>
+
+<p>To get this running, see this tutorial <a href="Readme_files/BlocksUsageInLevel2.html#TOC_WarpMode" target="_blank">here</a></p>
 <h2><a href="#TOC_FAQ" id="FAQ">^</a>FAQ</h2>
 <ul>
 
@@ -359,7 +361,7 @@ editing the files (like the if statement containing the print commands) in this 
 and removing this notice). In the future, they may be fixed due to the bugs happening in the tool itself.</li><br>
 
 
-<li>While most sprites don't interact with the player in any way when the player is traveling through pipes,
+<li id="MarioInPipeInteractWithCustomSprites">While most sprites don't interact with the player in any way when the player is traveling through pipes,
 be aware that some sprites still do interact with the player:</li><br>
 
 <ul>
