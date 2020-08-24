@@ -17,18 +17,21 @@
 <hr>
 Navigation:
 <ol>
+	<li><a href="#TOC_GeneralBlockParts" id="TOC_GeneralBlockPartsBack">General block parts</a></li>
 	<li><a href="#TOC_BlockPlacements" id="TOC_BlockPlacementsBack">Block Placements (basic)</a></li>
 	<li><a href="#TOC_BackgroundPipeTiles" id="TOC_BackgroundPipeTilesBack">Background pipe tiles</a></li>
 	<li><a href="#TOC_WarpMode" id="TOC_WarpModeBack">Warp mode usage</a></li>
 </ol>
 <hr>
+<h1><a href="#TOC_GeneralBlockPartsBack" id="TOC_GeneralBlockParts">^</a>General block parts</h1>
+This is the summary of the map16 blocks on what they do:<br>
+<img src="WhatPipeTilesDo.png">
 <h1><a href="#TOC_BlockPlacementsBack" id="TOC_BlockPlacements">^</a>Block pipe placements</h1>
 <ul>
 
 <li>Custom block pipe parts:
 <table><tr><td><img src="PipeParts.png"></td></tr></table>
 <table><tr><td><img src="PipeParts1.png"></td></tr></table>
-
 
 </li><br>
 
@@ -93,9 +96,89 @@ is solid when outside a pipe and passible when inside pipe mode, does nothing ot
 keeps going straight in one direction in pipe mode. Therefore, you don't even need those tiles (besides the turn corners and pipe caps) to make sure the player keeps going in the same direction.<br><br>
 
 Note that I do not include passable enterable pipe caps here, it would be weird that in order to walk through them, you must not be pressing in the direction to enter the pipe and have momentum towards it. Therefore
-enterable pipe caps must always be solid.
+enterable pipe caps must always be solid.<br>
+
+How you assemble them in the level is pretty much the same you would do with <a href="#TOC_BlockPlacements">Block pipe placements</a>.
 
 Most of designing a level using these is the same as the basics, so no further explanation is needed here.
 <h1><a href="#TOC_WarpModeBack" id="TOC_WarpMode">^</a>Warp mode</h1>
-This feature involves blocks that would cause the player to be &ldquo;dragged&rdquo; towards a given position across the level.
+This feature involves blocks that would cause the player to be &ldquo;dragged&rdquo; towards a given position across the level. They are a pipe stem part the player touches in order to trigger this mode. For normal-sized
+pipe caps, they are only the left half of the vertical stem and only the bottom of the horizontal stem. This is because it is unnecessary to have both halves since the player's hitbox is wide enough to touch both sides (similar
+to the turn corners and horizontal pipe caps), and also, the cramped space of 256 blocks per page. This means you place them like this:<br>
+<img src="WarpModeTilePosition.png"><br>
+<h2>Setting up warp destinations</h2>
+The warp destinations are located in <kbd>GPS_Stuff/BlockRoutines/SSPDragMarioMode.asm</kbd>. At the bottom, you'll find tables of various information, with each warp is 1 entry (meaning if 2-way, would count as two warps).
+Follow these instructions:
+<ol>
+	<li>Set two pipes in the level, can be either 1-way or 2-way.</li>
+	<li>Place your <kbd>DragPlayer.asm</kbd> onto the left/bottom half of the vertical/horizontal pipe stem the player will be entering in Lunar Magic. If 2-way, do it on both.</li>
+	<li>Now, open <kbd>SSPDragMarioMode.asm</kbd>, and scroll to where the tables are at. I put descriptions on them so it be easy to understand, I don't have to further explain here soo...
+	<li>What about the X and Y positions? Well, In LM, the status bar on the bottom left shows the block coordinate (in hex if version 3.03 released on 2019-04-01), hover the mouse over
+	<kbd>DragPlayer.asm</kbd> and get their coordinates. Then enter those numbers into the table.</li>
+</ol>
+Here is an example, tested in level $105:<br>
+<img src="DragMarioSetup.png"><br>
+And the tables should be like this:<br>
+<table><tr><td><pre>			?CorrectDirection
+				db $03			;&gt;Index 0
+				db $03			;&gt;Index 1
+				?.End			;&gt;Keep this here, and make sure all numbers in the table are after label [?LevelNumberTable] and [?.End]!
+					;^This table uses math on the labels to assume how many entries on each table. Make sure all the number of entries matches!
+					; (I use the term “entries” to refer each number or unit as 1 entry, regardless if the value is 8 or 16-bit)
+		;Level the start wrap points are in.
+			?LevelNumberTable
+				dw $0105		;&gt;Index 0 (Index 0 * 2)
+				dw $0105		;&gt;Index 2 (Index 1 * 2)
+		
+		;These is the current block position (block coordinates, in units of 16x16, not pixels)
+		;where Mario comes from.
+			?StartPositionX
+				dw $0005		;&gt;Index 0 (Index 0 * 2)
+				dw $0014		;&gt;Index 2 (Index 1 * 2)
+			?StartPositionY
+				dw $0018		;&gt;Index 0 (Index 0 * 2)
+				dw $000F		;&gt;Index 2 (Index 1 * 2)
+	;These are the destination positions, in pixels (why not block positions, then LSR #4?,
+	;well, because it is possible that the player must be centered horizontally between 2 blocks
+	;than 16x16 grid-aligned as in the case with traveling through normal-sized vertical pipes).
+	;
+	;You can easily convert them into pixel coordinate via this formula:
+	;	dw (BlockPos*$10)+HalfBlock
+	;	
+	;	-BlockPos = the X or Y position, in units of 16x16 (the coordinates of the block seen in Lunar Magic).
+	;	-HalfBlock = $00 (16x16 aligned) or $08 (half-block aligned, with vertical normal-sized pipes, you
+	;	 normally do this for X position though).
+
+	;These positions are “feet” position of the player, rather than the head position.
+	;When riding on yoshi, it is the position of Yoshi's saddle part, not the player's.
+	;Therefore, to get the correct position in a pipe:
+	;
+	;-For Small horizontal pipes, it is the tile of the stem part, nuff said, same goes with vertical small pipe.
+	;-For regular sized horizontal pipes, it is the bottom half of the stem.
+	;-For regular sized vertical pipes, it is the bottom-left tile of the 2x2 16x16 block space the player is at least
+	; touching, assuming you are using the [(BlockPos*$10)+HalfBlock] formula.
+
+
+		?EndPositionX
+			dw ($0014*$10)+$08	;&gt;Index 0 (Index 0 * 2)
+			dw ($0005*$10)+$08	;&gt;Index 2 (Index 1 * 2)
+		?EndPositionY
+			dw ($000F*$10)		;&gt;Index 0 (Index 0 * 2)
+			dw ($0018*$10)		;&gt;Index 2 (Index 1 * 2)
+	;This is the prep direction to set to that the player will start moving in that direction
+	;upon reaching his destination.
+	;Only use these values
+	;-$00 = Revert to normal mode (“exit” the pipe with no animation nor sound)
+	;-$10 = up
+	;-$20 = right
+	;-$30 = down
+	;-$40 = left
+		?DestinationDirection
+			db $10			;&gt;Index 0
+			db $10			;&gt;Index 1
+</pre></td></tr></table>
+One thing to note is that you may make a mistake and have the player go in directions in an unintended way (and softlock), and you
+cannot see him because the SSP system is designed to make the player invisible to hide the illusion the player was dragged rather
+than warped. To make fixing or discovering what happens, go to <kbd>SSPDef/Defines.asm</kbd>, and set <kbd>!Setting_SSP_PipeDebug</kbd>
+to <kbd>1</kbd> and reinsert. Don't forget to set this back to <kbd>0</kbd> once you finish your hack.
 <center><a href="../Readme.html#UseBlocksInLevel2">Back</a><br></center>
