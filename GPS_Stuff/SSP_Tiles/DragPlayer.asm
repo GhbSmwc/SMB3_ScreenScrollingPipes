@@ -78,7 +78,8 @@ SSPWarpmode:
 			AND #$FFF0				;/
 			CMP $94					;>Compare with Player's X
 			SEP #$20
-			BMI .EnterState9			;>If block X < Player X (or Player X >= Block X), state 9.
+			BEQ .EnterState9
+			BMI .EnterState9			;>If block X =< Player X (or Player X >= Block X), state 9.
 			RTL
 		.Down
 			LDA $187A|!addr
@@ -91,7 +92,8 @@ SSPWarpmode:
 			SBC YoshiYPositionThresholdOffset,x	;/
 			CMP $96					;>Compare with player's Y position
 			SEP #$20
-			BMI .EnterState9			;>If block Y pos is < player's (or playerY is > BlockY), enter state 9
+			BEQ .EnterState9
+			BMI .EnterState9			;>If block Y pos is <= player's (or playerY is >= BlockY), enter state 9
 			RTL
 		.Left
 			REP #$20
@@ -110,9 +112,10 @@ MarioFireball:
 Done:
 	RTL
 YoshiYPositionThresholdOffset:
-	dw $0010
-	dw $0020
-	dw $0020
+	;In units of blocks, plus 1 to avoid potential interaction with blocks place below this.
+		dw $0011
+		dw $0021
+		dw $0021
 DistanceFromDragModeBlockCheck:
 	;Prevents such glitches that you can touch other triggers that would
 	;change the pipe state and hitting this block at the same time.
