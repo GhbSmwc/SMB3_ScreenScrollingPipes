@@ -23,7 +23,10 @@ SSPWarpmode:
 	;Check
 		LDA !Freeram_SSP_PipeDir	;\Pipe state
 		AND.b #%00001111		;/
-		BEQ Done			;>If outside the pipe, do nothing
+		BNE +
+		;BEQ Done			;>If outside the pipe, do nothing
+		RTL
+		+
 	;Render passable
 		LDY #$00			;\Become passable when in pipe.
 		LDX #$25			;|
