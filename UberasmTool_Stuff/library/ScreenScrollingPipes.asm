@@ -148,13 +148,31 @@ SSPMaincode:
 			...NormalPipeMode
 				....NormalPipeStates
 					TAY				;|so you can use long freeram address)
+					LDA !Freeram_SSP_EntrExtFlg
+					CMP #$03
+					BEQ ....CannonExit
 					LDA.w SSP_PipeXSpeed-1,y	;|
 					STA $7B				;|
 					LDA.w SSP_PipeYSpeed-1,y	;|
 					STA $7D				;/
 				....StopPotentialIssues
 					STZ $185C|!addr
-				JMP ..EnterExitTransition
+					JMP ..EnterExitTransition
+				
+				....CannonExit
+					TYA
+					CMP #$05
+					BCC .....AlreadyLessThan5
+					SEC
+					SBC #$04
+					.....AlreadyLessThan5
+						TAY
+					
+					LDA.w SSP_CannonExitXSpeed-1,y
+					STA $7B
+					LDA.w SSP_CannonExitYSpeed-1,y
+					STA $7D
+					BRA ....StopPotentialIssues
 			
 			...DragWarpMode
 				;This has to run every frame as mario goes towards his warp destination
@@ -251,6 +269,8 @@ SSPMaincode:
 				BEQ ....entering_pipe	;/
 				CMP #$02		;\If exiting a pipe...
 				BEQ ....ExitingPipe	;/
+				CMP #$03		;\If the player cannon-exits the cap
+				BEQ ....ExitingPipe	;/
 				JMP .PipeCodeReturn
 	
 				....entering_pipe		;
@@ -326,8 +346,15 @@ SSPMaincode:
 				STZ $71				;>mario can move
 				STZ $73				;>stop crouching (when going exiting down on yoshi)
 				STZ $140D|!addr			;>no spinjump out the pipe (possable if both enter and exit caps are bottoms)
-				STZ $7B				;\cancel speed
-				STZ $7D				;/
+				LDA !Freeram_SSP_EntrExtFlg	;\Don't cancel speed if in firing mode.
+				CMP #$03			;|
+				BEQ ....FireOut			;/
+				
+				....CancelSpeed
+					STZ $7B				;\cancel speed
+					STZ $7D				;/
+				....FireOut
+				
 				STZ $1419|!addr			;>revert yoshi
 				STZ $149F|!addr			;>zero cape "rise up timer"
 				STZ $185C|!addr			;>Reenable block interaction, just in case...
@@ -383,30 +410,38 @@ SSPMaincode:
 ;-------------------------------------------------------
 ;tables.
 ;-------------------------------------------------------
-
-SSP_PipeXSpeed:
-	;X speed table
-	db $00                            ;>#$01 Stem upwards
-	db !SSP_HorizontalSpd             ;>#$02 Stem rightwards
-	db $00                            ;>#$03 Stem downwards
-	db $100-!SSP_HorizontalSpd        ;>#$04 Sten leftwards
-	db $00                            ;>#$05 Pipe cap upwards
-	db !SSP_HorizontalSpdPipeCap      ;>#$06 Pipe cap rightwards
-	db $00                            ;>#$07 Pipe cap downwards
-	db $100-!SSP_HorizontalSpdPipeCap ;>#$08 Pipe cap leftwards
-
-
-SSP_PipeYSpeed:
-	;Y speed table
-	db $100-!SSP_VerticalSpd          ;>#$01 Stem upwards
-	db $00                            ;>#$02 Stem rightwards
-	db !SSP_VerticalSpd               ;>#$03 Stem downwards
-	db $00                            ;>#$04 Stem leftwards
-	db $100-!SSP_VerticalSpdPipeCap   ;>#$05 Pipe cap upwards
-	db $00                            ;>#$06 Pipe cap rightwards
-	db !SSP_VerticalSpdPipeCap        ;>#$07 Pipe cap downwards
-	db $00                            ;>#$08 Pipe cap leftwards
-
+;Cap and stem speeds:
+	SSP_PipeXSpeed:
+		;X speed table
+		db $00                            ;>$01 = Stem upwards
+		db !SSP_HorizontalSpd             ;>$02 = Stem rightwards
+		db $00                            ;>$03 = Stem downwards
+		db $100-!SSP_HorizontalSpd        ;>$04 = Sten leftwards
+		db $00                            ;>$05 = Pipe cap upwards
+		db !SSP_HorizontalSpdPipeCap      ;>$06 = Pipe cap rightwards
+		db $00                            ;>$07 = Pipe cap downwards
+		db $100-!SSP_HorizontalSpdPipeCap ;>$08 = Pipe cap leftwards
+	SSP_PipeYSpeed:
+		;Y speed table
+		db $100-!SSP_VerticalSpd          ;>$01 = Stem upwards
+		db $00                            ;>$02 = Stem rightwards
+		db !SSP_VerticalSpd               ;>$03 = Stem downwards
+		db $00                            ;>$04 = Stem leftwards
+		db $100-!SSP_VerticalSpdPipeCap   ;>$05 = Pipe cap upwards
+		db $00                            ;>$06 = Pipe cap rightwards
+		db !SSP_VerticalSpdPipeCap        ;>$07 = Pipe cap downwards
+		db $00                            ;>$08 = Pipe cap leftwards
+;Cannon fire exit speeds:
+	SSP_CannonExitXSpeed:
+		db $00					;>$01 = upwards
+		db !SSP_Cannon_HorizontalSpd		;>$02 = rightwards
+		db $00					;>$03 = downwards
+		db $100-!SSP_Cannon_HorizontalSpd	;>$04 = leftwards
+	SSP_CannonExitYSpeed:
+		db !SSP_Cannon_UpwardsSpd		;>$01 = upwards
+		db $00					;>$02 = rightwards
+		db !SSP_Cannon_DownwardsSpd		;>$03 = downwards
+		db $00					;>$04 = leftwards
 ; first number = force button held when not carrying sprites, second is when carrying.
 ; a set bit here means a bit is forced to be enabled (button will be held down):
 	SSP_CarryControlsForceSet:

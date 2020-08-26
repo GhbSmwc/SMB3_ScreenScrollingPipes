@@ -185,6 +185,10 @@ endif
   !SSP_VerticalSpdPipeCap	= $40 ;/
   !SSP_DragSpd			= $40 ;>Speed mario travels when using warp mode.
  endif
+ ;Cannon launcher speeds (special pipe caps that fire the player out of the caps with momentum):
+  !SSP_Cannon_HorizontalSpd	= $40		;>Use only $01-$7F, this covers both left and right speeds
+  !SSP_Cannon_UpwardsSpd	= $B0		;>Use only $80-$FF, fires the player upwards
+  !SSP_Cannon_DownwardsSpd	= $40		;>Use only $01-$7F, fires the player downwards.
 
  ;Pipe entering/exiting timers (in frames). These are used to determine when the player "fully" enters or exits the pipe:
  ;-When entering, it is the amount of time before the player (and carried sprite) turns invisible and goes from his cap speed to his stem speed.
@@ -251,3 +255,12 @@ endif
    !SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario	= $07
    !SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario	= $08
   endif
+  ;Cannon exit timers
+   !SSP_PipeTimer_CannonExit_Leftwards				= $1B
+   !SSP_PipeTimer_CannonExit_Rightwards				= $1B
+   !SSP_PipeTimer_CannonExit_Upwards_OffYoshi			= $09
+   !SSP_PipeTimer_CannonExit_Upwards_OnYoshi			= $09
+   !SSP_PipeTimer_CannonExit_Downwards_OffYoshi_SmallMario	= $0E
+   !SSP_PipeTimer_CannonExit_Downwards_OffYoshi_BigMario	= $1B
+   !SSP_PipeTimer_CannonExit_Downwards_OnYoshi_SmallMario	= $18
+   !SSP_PipeTimer_CannonExit_Downwards_OnYoshi_BigMario		= $25

@@ -1,0 +1,5 @@
+;SSPs - cannon caps
+;;2-way caps
+0500:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_capCannon_L.asm
+0501:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_capCannon_R.asm
+;;1-way caps
