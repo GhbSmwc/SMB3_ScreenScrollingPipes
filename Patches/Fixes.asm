@@ -181,6 +181,8 @@ incsrc "../SSPDef/Defines.asm"
 		; a pipe, causes mario to to fly upwards at the
 		; other end of the pipe should that bouncer is
 		; onscreen.
+	org $01AB31
+		autoclean JML SpringBoardAndKeyNoPush
 ;Prevent platforms from setting the player's Y position (which that create problems with entering horizontal pipe caps.)
 	org $01AAD8
 		autoclean JML Sprite_Key_pos			;>Prevent Key from setting mario position (also p-switch).
@@ -356,6 +358,24 @@ SpriteSub_CarryInteractWithOtherSpr: ;>JML from $01A417
 				JML $01A4B0		;>Ignore interaction should carried sprite is in pipe.
 			...OutOfPipe
 				JML $01A421
+;---------------------------------------------------------------------------------
+SpringBoardAndKeyNoPush:		;>JML from $01AB31
+	;I found a minor bug that keys and springboard can push the player, when placed above small horizontal pipe caps.
+	LDA !Freeram_SSP_PipeDir
+	AND.b #%00001111
+	BNE .NoPush
+	
+	.RestorePushPlayer
+		STZ $7B
+		PHK
+		PEA.w ..jslrtsreturn-1
+		PEA.w $01AB98-1
+		JML $01AD30
+			..jslrtsreturn
+		JML $01AB36
+	
+	.NoPush
+		JML $01AB45
 ;---------------------------------------------------------------------------------
 Sprite_Springboard_CancelLaunch:         ;>JML from $01E650
 	LDA !Freeram_SSP_PipeDir
