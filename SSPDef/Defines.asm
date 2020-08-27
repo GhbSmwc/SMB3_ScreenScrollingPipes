@@ -256,11 +256,11 @@ endif
    !SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario	= $08
   endif
   ;Cannon exit timers
-   !SSP_PipeTimer_CannonExit_Leftwards				= $1B
-   !SSP_PipeTimer_CannonExit_Rightwards				= $1B
+   !SSP_PipeTimer_CannonExit_Leftwards				= $04
+   !SSP_PipeTimer_CannonExit_Rightwards				= $04
    !SSP_PipeTimer_CannonExit_Upwards_OffYoshi			= $09
    !SSP_PipeTimer_CannonExit_Upwards_OnYoshi			= $09
-   !SSP_PipeTimer_CannonExit_Downwards_OffYoshi_SmallMario	= $0E
-   !SSP_PipeTimer_CannonExit_Downwards_OffYoshi_BigMario	= $1B
-   !SSP_PipeTimer_CannonExit_Downwards_OnYoshi_SmallMario	= $18
-   !SSP_PipeTimer_CannonExit_Downwards_OnYoshi_BigMario		= $25
+   !SSP_PipeTimer_CannonExit_Downwards_OffYoshi_SmallMario	= $06
+   !SSP_PipeTimer_CannonExit_Downwards_OffYoshi_BigMario	= $09
+   !SSP_PipeTimer_CannonExit_Downwards_OnYoshi_SmallMario	= $09
+   !SSP_PipeTimer_CannonExit_Downwards_OnYoshi_BigMario		= $09

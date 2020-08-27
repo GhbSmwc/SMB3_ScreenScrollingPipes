@@ -2,4 +2,9 @@
 ;;2-way caps
 0500:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_capCannon_L.asm
 0501:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_capCannon_R.asm
+0502-0503:0130		SSP_Tiles/pass_if_in_pipe.asm
+0512:0130		SSP_Tiles/caps/enterable/default/left_horizontal_pipe_capCannon_B.asm
+0513:0130		SSP_Tiles/caps/enterable/default/right_horizontal_pipe_capCannon_B.asm
+0510:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_capCannon_L.asm
+0511:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_capCannon_R.asm
 ;;1-way caps
