@@ -1,5 +1,7 @@
-;SSPs - cannon caps
-;;2-way caps
+;SSPs - page 6
+;;Cap cannons
+;;;2-way caps
+;;;;Regular sized-caps
 0500:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_capCannon_L.asm
 0501:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_capCannon_R.asm
 0502-0503:0130		SSP_Tiles/pass_if_in_pipe.asm
@@ -7,4 +9,37 @@
 0513:0130		SSP_Tiles/caps/enterable/default/right_horizontal_pipe_capCannon_B.asm
 0510:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_capCannon_L.asm
 0511:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_capCannon_R.asm
-;;1-way caps
+;;;;Small caps
+0520:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_capCannon_small.asm
+0530:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_capCannon_small.asm
+0521:0130		SSP_Tiles/caps/enterable/default/left_horizontal_pipe_capCannon_small.asm
+0522:0130		SSP_Tiles/caps/enterable/default/right_horizontal_pipe_capCannon_small.asm
+;;;1-way exit caps
+;;;;Regular sized-caps
+0504:0130		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_L_exit.asm
+0505:0130		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_R_exit.asm
+0514:0130		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_L_exit.asm
+0515:0130		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_R_exit.asm
+0506-0507:0130		SSP_Tiles/pass_if_in_pipe.asm
+0516:0130		SSP_Tiles/caps/exit_only/left_horizontal_pipe_capCannon_B_exit.asm
+0517:0130		SSP_Tiles/caps/exit_only/right_horizontal_pipe_capCannon_B_exit.asm
+;;;;Small caps
+0524:0130		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_small_exit.asm
+0525:0130		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_small_exit.asm
+0525:0130		SSP_Tiles/caps/exit_only/left_horizontal_pipe_capCannon_B_exit.asm
+0526:0130		SSP_Tiles/caps/exit_only/right_horizontal_pipe_capCannon_B_exit.asm
+;;;;1-way exit passable caps
+;;;;;Regular sized-caps
+0508:0025		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_L_exit.asm
+0509:0025		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_R_exit.asm
+0518:0025		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_L_exit.asm
+0519:0025		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_R_exit.asm
+051A:0025		SSP_Tiles/caps/exit_only/left_horizontal_pipe_capCannon_B_exit.asm
+051B:0025		SSP_Tiles/caps/exit_only/right_horizontal_pipe_capCannon_B_exit.asm
+;;;;;Small caps
+0529:0025		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_small_exit.asm
+0539:0025		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_small_exit.asm
+053A:0025		SSP_Tiles/caps/exit_only/left_horizontal_pipe_capCannon_B_exit.asm
+053B:0025		SSP_Tiles/caps/exit_only/right_horizontal_pipe_capCannon_B_exit.asm
+;;Drag mode (passable)
+R050C-051F:0025		SSP_Tiles/DragPlayer.asm

@@ -189,6 +189,11 @@ endif
   !SSP_Cannon_HorizontalSpd	= $40		;>Use only $01-$7F, this covers both left and right speeds
   !SSP_Cannon_UpwardsSpd	= $B0		;>Use only $80-$FF, fires the player upwards
   !SSP_Cannon_DownwardsSpd	= $40		;>Use only $01-$7F, fires the player downwards.
+   ;^Note: The downwards speed, once initially exiting the cap and returning to normal state, you'll lose your additional speed,
+   ; and will revert to your normal maximum downwards Y speed. If you don't want this, install “Same Fall Acceleration Speed”
+   ; from the patch section: https://www.smwcentral.net/?p=section&a=details&id=24286 and you can fall faster gained from the
+   ; downwards cap. The only difference is that the regular pipe caps zero out your XY speed, so upon exiting a downwards cap,
+   ; you kinda “slow down”.
 
  ;Pipe entering/exiting timers (in frames). These are used to determine when the player "fully" enters or exits the pipe:
  ;-When entering, it is the amount of time before the player (and carried sprite) turns invisible and goes from his cap speed to his stem speed.
