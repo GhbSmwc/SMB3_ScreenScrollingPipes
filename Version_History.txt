@@ -298,19 +298,30 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	 of the sprite to be off from the actual hitbox of the sprite.
 	-Realized that GPS now adopts SA-1 defines in "defines.asm"; the routine file "FaceYoshi.asm" now
 	 adopts to it.
-07/25/2020 4.0.0
-	-Settings to forbid items and yoshi can now be on separate blocks, meaning you can have two pipes
-	 that allows and disallow things traveled with the player. This also includes horizontal pipe caps
-	 enabling to be entered in midair.
-	-Now features “background” (not layer-2, I meant layer 1 decoration) pipes that are passable that
-	 the player can pipe travel through them.
-	-Fixed a bug that turn block bridges can block the player's horizontal movement
-	-Fixed an issue with the turn block bridge (sprite $59)'s bug that cause the player to not rise up
-	 with the sprite when expanding vertically due to a faulty restore code (also it merely zeroes the
-	 Y position without aligning him to the platform vertically).
-	-Fix a rather minor bug that downwards-facing small pipe cap may not center the player correctly
-	 if he enters them by hitting them on the bottom corners at an angle (often would position Mario
-	 1 pixel left from center).
-	-Feature a new map16 block format (both GPS list and .map16 file) that have no duplicates and is
-	 overall a lot cleaner.
-	-Several files are now rearranged for cleaner organized format.
+07/25/2020 4.0.0 - Super update
+	-Features:
+	--Settings to forbid items and yoshi can now be on separate blocks, meaning you can have two pipes
+	  that allows and disallow things traveled with the player. This also includes horizontal pipe caps
+	  enabling to be entered in midair.
+	--Now features “background” (not layer-2, I meant layer 1 decoration) pipes that are passable that
+	  the player can pipe travel through them.
+	--Feature a new map16 block format (both GPS list and .map16 file) that have no duplicates and is
+	  overall a lot cleaner.
+	--Several files are now rearranged for cleaner organized format.
+	--Introduced the cannon caps that would fire the player out of pipes with momentum. When combined
+	  with background pipes, is useful for kaizo hacks.
+	--Introduced a new feature: “Screen scrolling *warp* pipes”, a new pipe mode that lets you have pipes
+	  that aren't connected to another, but traveling through them drags the player (in any direction,
+	  including diagonal) to the other end. This enables you not being required to have pipe-related
+	  blocks in between the two terminals and design the level a lot more freely.
+	-Bug fixes:
+	--Fixed a bug that turn block bridges can block the player's horizontal movement
+	--Fixed an issue with the turn block bridge (sprite $59)'s bug that cause the player to not rise up
+	  with the sprite when expanding vertically due to a faulty restore code (also it merely zeroes the
+	  Y speed without aligning him to the platform vertically when outside of pipes).
+	--Fix a rather minor bug that downwards-facing small pipe cap may not center the player correctly
+	  if he enters them by hitting them on the bottom corners at an angle (often would position Mario
+	  1 pixel left from center).
+	--Fixed a minor and potential bug that placing keys on top of small horizontal pipes may push the
+	  player, this is noticeable when placed above turn_right-down and turn_up-right corners when the
+	  key is placed above them, which de-centers the player when going horizontal to downwards.
