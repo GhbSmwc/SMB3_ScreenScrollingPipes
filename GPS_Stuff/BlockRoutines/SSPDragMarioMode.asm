@@ -100,6 +100,7 @@ incsrc "../SSPDef/Defines.asm"
 			?CorrectDirection
 				db $03			;>Index 0
 				db $03			;>Index 1
+				db $02
 				?.End			;>Keep this here, and make sure all numbers in the table are after label [?LevelNumberTable] and [?.End]!
 					;^This table uses math on the labels to assume how many entries on each table. Make sure all the number of entries matches!
 					; (I use the term “entries” to refer each number or unit as 1 entry, regardless if the value is 8 or 16-bit)
@@ -107,15 +108,18 @@ incsrc "../SSPDef/Defines.asm"
 			?LevelNumberTable
 				dw $0105		;>Index 0 (Index 0 * 2)
 				dw $0105		;>Index 2 (Index 1 * 2)
+				dw $0105		;>Index 4 (Index 2 * 2)
 		
 		;These is the current block position (block coordinates, in units of 16x16, not pixels)
 		;where Mario comes from.
 			?StartPositionX
-				dw $0005		;>Index 0 (Index 0 * 2)
-				dw $000C		;>Index 2 (Index 1 * 2)
+				dw $00A2		;>Index 0 (Index 0 * 2)
+				dw $0094		;>Index 2 (Index 1 * 2)
+				dw $00A9		;>Index 4 (Index 2 * 2)
 			?StartPositionY
-				dw $0018		;>Index 0 (Index 0 * 2)
-				dw $0010		;>Index 2 (Index 1 * 2)
+				dw $0007		;>Index 0 (Index 0 * 2)
+				dw $0015		;>Index 2 (Index 1 * 2)
+				dw $0020		;>Index 4 (Index 2 * 2)
 	;These are the destination positions, in pixels (why not block positions, then LSR #4?,
 	;well, because it is possible that the player must be centered horizontally between 2 blocks
 	;than 16x16 grid-aligned as in the case with traveling through normal-sized vertical pipes).
@@ -138,11 +142,13 @@ incsrc "../SSPDef/Defines.asm"
 
 
 		?EndPositionX
-			dw ($000C*$10)+$08	;>Index 0 (Index 0 * 2)
-			dw ($0005*$10)+$08	;>Index 2 (Index 1 * 2)
+			dw ($0094*$10)+$08	;>Index 0 (Index 0 * 2)
+			dw ($00A2*$10)+$08	;>Index 2 (Index 1 * 2)
+			dw ($00AC*$10)+$00	;>Index 4 (Index 2 * 2)
 		?EndPositionY
-			dw ($000F*$10)		;>Index 0 (Index 0 * 2)
-			dw ($0017*$10)		;>Index 2 (Index 1 * 2)
+			dw ($0015*$10)		;>Index 0 (Index 0 * 2)
+			dw ($0007*$10)		;>Index 2 (Index 1 * 2)
+			dw ($0019*$10)		;>Index 4 (Index 2 * 2)
 	;This is the prep direction to set to that the player will start moving in that direction
 	;upon reaching his destination.
 	;Only use these values
@@ -154,3 +160,4 @@ incsrc "../SSPDef/Defines.asm"
 		?DestinationDirection
 			db $10			;>Index 0
 			db $10			;>Index 1
+			db $20			;>Index 2

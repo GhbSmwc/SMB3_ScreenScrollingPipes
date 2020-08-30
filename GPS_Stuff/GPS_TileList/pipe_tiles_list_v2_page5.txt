@@ -25,7 +25,7 @@
 0517:0130		SSP_Tiles/caps/exit_only/right_horizontal_pipe_capCannon_B_exit.asm
 ;;;;Small caps
 0524:0130		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_small_exit.asm
-0525:0130		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_small_exit.asm
+0534:0130		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_small_exit.asm
 0525:0130		SSP_Tiles/caps/exit_only/left_horizontal_pipe_capCannon_B_exit.asm
 0526:0130		SSP_Tiles/caps/exit_only/right_horizontal_pipe_capCannon_B_exit.asm
 ;;;;1-way exit passable caps
