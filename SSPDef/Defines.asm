@@ -149,7 +149,7 @@ endif
  !Setting_SSP_CarryAllowed	= 1
   ;^0 = In your entire hack, you never allowed carrying sprites through pipes.
   ; 1 = In your entire hack, there are at least 1 case that you can enter pipes while carrying sprites.
- !Setting_Minimal_StuntimerSprites	= $5A
+ !Setting_SSP_Minimal_StuntimerSprites	= $5A
   ;^When having !Setting_SSP_FreezeTime = 0, this is the minimum amount of "double-frames" (each value here is 2 frames) remaining allowed when sprites
   ; are carried through SSPs. What this mean is when the timer goes below this value, will be set to this value* so that they cannot unstun
   ; during pipe travels and waits until the player exits the pipe, afterwards, the timer will continue counting and then unstun.
@@ -168,6 +168,18 @@ endif
   ;
   ; Note: This will also apply even if !Setting_SSP_FreezeTime = 1, because again, the player could enter the pipe on the last double-frame and can unfairly get hurt
   ; on exit. The original SMW, when carrying stunned sprites into exit-enabled pipes causes them to remain stunned forever.
+ !Setting_SSP_VerticalCapsEnterableWidth	= $0008
+  ;^This is the number of pixels far from the center the player is allowed to enter vertical normal-sized pipe caps. The higher the value, the further away from the
+  ; center the player can enter them:
+  ; Tested via the left edge of the pipe:
+  ; $0008 is SMW's width.
+  ; $000B is the distance from the center to standing *ON* the edge; a position that Mario is hugging the wall placed to the side of the vertical pipe.
+  ; $0013 is *OVER* the edge (a pixel before falling off the edge).
+  ; $0014+ is off the pipe (can enter no matter how far off-centered you are, even at the edges).
+  ;
+  ; Having a bigger range of being able to enter the pipe is great for kaizo hacks if you want a bigger margin of error on how narrow the range the player
+  ; could enter. I wouldn't recommend higher than $000B as it is possible the player could snap to be centered at such a long distance may feel jerky and
+  ; could potentially result the screen jolting and revealing a layer 1 column of glitch graphics.
 ;Pipe travel speeds:
 ;Use only values $01-$7F (negative speeds already calculated).
  if !Setting_SSP_FuSoYaSpd == 0		;>Don't change this if statement.

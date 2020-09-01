@@ -1,5 +1,5 @@
 ;~@sa1
-;this is the right bottom-half cap of a horizontal 2-way pipe.
+;this is the right bottom-half cap cannon of a horizontal 2-way pipe.
 ;behaves $130
 
 incsrc "../../../../../SSPDef/Defines.asm"

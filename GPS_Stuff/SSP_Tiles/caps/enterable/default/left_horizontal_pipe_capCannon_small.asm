@@ -1,5 +1,5 @@
 ;~@sa1
-;this is the left cap of a horizontal 2-way pipe that is only
+;this is the left cap cannon of a horizontal 2-way pipe that is only
 ;enterable as small mario (yoshi always not allowed).
 ;behaves $130
 

@@ -735,9 +735,9 @@ DontUnstunInPipes:   ;>$JML from $0196A1
 	BCC .NoFreeze
 	
 	.FreezeTimerAtMinimum
-		LDA.b #($04+!Setting_Minimal_StuntimerSprites)	;\If #$04 is less than timer (or timer >= #$04),
-		CMP !1540,x					;|don't set it to be 1 frame before unstun.
-		BCC ..NotDecrementPast				;/
+		LDA.b #($04+!Setting_SSP_Minimal_StuntimerSprites)	;\If #$04 is less than timer (or timer >= #$04),
+		CMP !1540,x						;|don't set it to be 1 frame before unstun.
+		BCC ..NotDecrementPast					;/
 		
 		..DecrementPast
 			STA !1540,x

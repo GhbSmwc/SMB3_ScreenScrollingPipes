@@ -1,5 +1,5 @@
 ;~@sa1
-;This is the top cap of a vertical 1-way pipe that
+;This is the top cap cannon of a vertical 1-way pipe that
 ;is exit only for small mario.
 ;behaves $25 or $130
 

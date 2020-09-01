@@ -1,5 +1,5 @@
 ;~@sa1
-;This is the top cap of a vertical two-way pipe that is only
+;This is the top cap of a vertical two-way pipe cannon that is only
 ;enterable as small mario (note that yoshi isn't allowed).
 ;behaves $130
 

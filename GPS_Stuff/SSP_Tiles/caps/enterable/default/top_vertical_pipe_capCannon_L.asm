@@ -1,5 +1,5 @@
 ;~@sa1
-;This is the top left-half cap of a vertical two-way pipe.
+;This is the top left-half cap cannon of a vertical two-way pipe.
 ;behaves $130
 
 incsrc "../../../../../SSPDef/Defines.asm"

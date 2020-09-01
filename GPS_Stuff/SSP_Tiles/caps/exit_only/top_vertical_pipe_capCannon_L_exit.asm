@@ -1,5 +1,5 @@
 ;~@sa1
-;This is the top left-half cap of a vertical 1-way pipe.
+;This is the top left-half cap cannon of a vertical 1-way pipe.
 ;(this cap is exit only)
 ;behaves $25 or $130
 

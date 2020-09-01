@@ -2,7 +2,10 @@
 ;This is the stem part of the pipe that makes Mario
 ;goes in “drag mode”. For normal-sized pipes, it is
 ;the left side of vertical pipes or bottom for
-;horizontal stems.
+;horizontal stems. Small pipes, should be obvious.
+;
+;To edit the warp destinations, it is located in
+;BlockRoutines/SSPDragMarioMode.asm.
 ;Behaves $25 or $130
 
 incsrc "../../SSPDef/Defines.asm"
@@ -33,10 +36,16 @@ SSPWarpmode:
 		STX $1693|!addr			;/
 	;Failsafe
 		CMP #$09			;\Just in case for some reason you managed to interact with this block
-		BCS Done			;/while in drag mode, so this is a failsafe.
+		;BCS Done			;/while in drag mode (for 1-frame), so this is a failsafe.
+		BCC +
+		RTL
+		+
 	;Check if the player's position point at his feet is “mostly in this block”.
 		JSR DistanceFromDragModeBlockCheck
-		BCC Done
+		;BCC Done
+		BCS +
+		RTL
+		+
 	;Check directions to determine a XY position threshold the player goes to state $09:
 		LDA !Freeram_SSP_PipeDir	;\Pipe state
 		AND.b #%00001111		;/
@@ -73,7 +82,7 @@ SSPWarpmode:
 			SBC YoshiYPositionThresholdOffset,x	;/
 			CMP $96					;>Compare with player's Y position
 			SEP #$20
-			BPL .EnterState9			;>If block Y pos is >= player's (or playerY is <= BlockY), enter state 9
+			BPL .VertEnterState9			;>If block Y pos is >= player's (or playerY is <= BlockY), enter state 9
 			RTL
 		.Right
 			REP #$20
@@ -81,8 +90,8 @@ SSPWarpmode:
 			AND #$FFF0				;/
 			CMP $94					;>Compare with Player's X
 			SEP #$20
-			BEQ .EnterState9
-			BMI .EnterState9			;>If block X =< Player X (or Player X >= Block X), state 9.
+			BEQ .HorizEnterState9
+			BMI .HorizEnterState9			;>If block X =< Player X (or Player X >= Block X), state 9.
 			RTL
 		.Down
 			LDA $187A|!addr
@@ -95,8 +104,8 @@ SSPWarpmode:
 			SBC YoshiYPositionThresholdOffset,x	;/
 			CMP $96					;>Compare with player's Y position
 			SEP #$20
-			BEQ .EnterState9
-			BMI .EnterState9			;>If block Y pos is <= player's (or playerY is >= BlockY), enter state 9
+			BEQ .VertEnterState9
+			BMI .VertEnterState9			;>If block Y pos is <= player's (or playerY is >= BlockY), enter state 9
 			RTL
 		.Left
 			REP #$20
@@ -104,10 +113,34 @@ SSPWarpmode:
 			AND #$FFF0				;/
 			CMP $94					;>Compare with Player's X
 			SEP #$20
-			BPL .EnterState9			;>If block X >= Player X (or Player X <= Block X), state 9.
+			BPL .HorizEnterState9			;>If block X >= Player X (or Player X <= Block X), state 9.
 			RTL
-		.EnterState9
-			%SSPDragMarioMode()
+		;These prevent the player potentially going past the block by a few pixel after entering warp mode.
+		;This is to prevent a potential bug in which non-SSP-related blocks placed next to this block
+		;can be interacted with. Note they do not center both X and Y, it only centers the player's X
+		;position when traveling horizontally and Y position when vertically to address that the player
+		;is not always centered-horizontally given that normal-sized vertical pipes is centered within
+		;2 blocks while small vertical pipes is within a single block.
+			.HorizEnterState9
+				%SSPDragMarioMode()
+				BCS Done
+				REP #$20
+				LDA $9A
+				AND #$FFF0
+				STA $94
+				SEP #$20
+				RTL
+			.VertEnterState9
+				%SSPDragMarioMode()
+				BCS Done
+				REP #$20
+				LDA $98
+				AND #$FFF0
+				SEC
+				SBC YoshiYPositionThresholdOffset,x
+				STA $96
+				SEP #$20
+				RTL
 SpriteV:
 SpriteH:
 MarioCape:

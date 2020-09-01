@@ -8,7 +8,10 @@ incsrc "../SSPDef/Defines.asm"
 ;;Each warp to a specific point is each index ID.
 ;;
 ;;Output:
-;;-Carry: Set if no warp index found.
+;;-Carry = Set if no warp index found. This is so that for
+;; 2-way warps, prevents the centering code from centering the
+;; player every frame and traps him inside a pipe when reaching
+;; warp destination.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	PHB							;>Preserve bank
 	PHK							;\Adjust bank for any $xxxx,y
@@ -81,15 +84,33 @@ incsrc "../SSPDef/Defines.asm"
 ;These are tables containing the warps (each warp is 1 entry, therefore 2-way takes 1 entry from point A to B
 ;and another from point B back to point A).
 ;
-;Due to signed 16-bit limitations, you can have up to 32768 ($8000 in hex, index numbers from $0000-$7FFF)
-;warp entries in your entire game. Highly unlikely you would even get close to that number.
+;When I mean “entry”, I mean the number of items, regardless of the value is 8 or 16-bit.
 ;
-;Also note that if you have a huge number of entries here, and you placed a [DragPlayer.asm] with no
-;matching ?StartPositionX and ?StartPositionY, the game will lag and this block will do nothing. Reason
-;of the lag is because this code checks every single entry in these tables. The game will also lag
-;if you have lots of entries but trigger this block in the wrong direction (such as hitting [DragPlayer.asm]
-;traveling rightwards when he supposed to travel downwards onto it).
-
+;Due to signed 16-bit limitations, you can have up to 32768 ($8000 in hex, index numbers from $0000-$7FFF)
+;warp entries in your entire game per this routine. Highly unlikely you would even get close to that number.
+;
+;Also note that if you have a huge number of entries here, and you trigger this routine that does not match
+;any of the entries here (match the direction to warp, level number, and XY start position), the game will lag.
+;Reason of the lag is because this code checks every single entry in these tables and all of them will fail.
+;
+;Technically, this should only lag for 1-frame execution (barely noticeable though) when it matches, especially
+;if the player triggering the warp mode block matches with the first entry on the list (the loop code above
+;starts at the last index and counts backwards until a match is found or when reaches a negative number).
+;
+;If you need a lot of warp entries and not have slowdown, here are ways to avoid it:
+;-Avoid making it possible for the player to trigger the [Dragplayer.asm] in the wrong direction, it will do
+; nothing by default as intended, but it still have to check a list of correct directions.
+;--For 2-way warps, don't place the warp destinations (or EndPositionX and Y) that would place the player
+;  touching the drag player block he's touching as he leaves that spot. Place him a tile away (such as
+;  above it in an upwards facing pipe).
+;-Divide the table into separate subroutines, and have it separate per version. Meaning have duplicates of
+; this routine and the block with name variations, including the function call [%SSPDragMarioMode()] itself
+; inside [DragPlayer.asm], with each of them having a smaller list. This will cut down the loop iterations
+; and limits to what group it should focus on.
+;--Example: Instead of having 100 items in the list, I would have:
+;---2 drag mario subroutine files, the original and [SSPDragMarioMode1.asm] (note the “1” appended to the file name before the extension)
+;---2 blocks to enter drag mode, the original and [DragPlayer1.asm] (duplicates should have [%SSPDragMarioMode1()])
+;---And have 50 in each of the subroutine files.
 	;These determine which warp the player will take:
 		;Direction to enter warp mode (traveling in other directions into
 		;the warp will do nothing). Only use values $01-$04:
@@ -98,12 +119,12 @@ incsrc "../SSPDef/Defines.asm"
 		;-$03 = Down
 		;-$04 = Left
 			?CorrectDirection
-				db $03			;>Index 0
-				db $03			;>Index 1
-				db $02
-				?.End			;>Keep this here, and make sure all numbers in the table are after label [?LevelNumberTable] and [?.End]!
-					;^This table uses math on the labels to assume how many entries on each table. Make sure all the number of entries matches!
-					; (I use the term “entries” to refer each number or unit as 1 entry, regardless if the value is 8 or 16-bit)
+				;Keep all your numbers in between the label [?CorrectDirection] and [?.End]. This is needed to determine
+				;during assembly on how may indexes, which determines what number the index will start at to count down.
+					db $03			;>Index 0
+					db $03			;>Index 1
+					db $02			;>Index 2
+					?.End			;>Keep this here!
 		;Level the start wrap points are in.
 			?LevelNumberTable
 				dw $0105		;>Index 0 (Index 0 * 2)
@@ -132,7 +153,7 @@ incsrc "../SSPDef/Defines.asm"
 	;	 normally do this for X position though).
 
 	;These positions are “feet” position of the player, rather than the head position.
-	;When riding on yoshi, it is the position of Yoshi's saddle part, not the player's.
+	;When riding on yoshi, it is the position of Yoshi's saddle part, not the player's feet.
 	;Therefore, to get the correct position in a pipe:
 	;
 	;-For Small horizontal pipes, it is the tile of the stem part, nuff said, same goes with vertical small pipe.
