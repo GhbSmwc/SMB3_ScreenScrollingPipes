@@ -42,6 +42,10 @@ enter:
 	REP #$20		;\Must be on the correct side to enter.
 	LDA $9A			;|
 	AND #$FFF0		;|
+	if !Setting_SSP_VerticalCapsEnterableWidth != $0008
+		CLC
+		ADC.w #!Setting_SSP_VerticalCapsEnterableWidth-$0008
+	endif
 	CMP $94			;|
 	SEP #$20		;|
 	BCS .MarioOnLeft	;/\Branch out of range.

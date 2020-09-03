@@ -42,6 +42,10 @@ enter:
 	REP #$20		;\Must be on the correct side to enter.
 	LDA $9A			;|
 	AND #$FFF0		;|
+	if !Setting_SSP_VerticalCapsEnterableWidth != $0008
+		SEC
+		SBC.w #!Setting_SSP_VerticalCapsEnterableWidth-$0008
+	endif
 	CMP $94			;|
 	SEP #$20		;|
 	BCC .MarioOnRight	;/\Branch out of range.
