@@ -168,11 +168,12 @@ endif
   ;
   ; Note: This will also apply even if !Setting_SSP_FreezeTime = 1, because again, the player could enter the pipe on the last double-frame and can unfairly get hurt
   ; on exit. The original SMW, when carrying stunned sprites into exit-enabled pipes causes them to remain stunned forever.
- !Setting_SSP_VerticalCapsEnterableWidth	= $0008
+ !Setting_SSP_VerticalCapsEnterableWidth	= $0005
   ;^This is the number of pixels far from the center the player is allowed to enter vertical normal-sized pipe caps. The higher the value, the further away from the
   ; center the player can enter them:
   ; Tested via the left edge of the pipe:
-  ; $0008 is SMW's width.
+  ; $0005 is SMW's vanilla vertical pipes.
+  ; $0008 is a full block width (half-block from the center on either side).
   ; $000B is the distance from the center to standing *ON* the edge; a position that Mario is hugging the wall placed to the side of the vertical pipe.
   ; $0013 is *OVER* the edge (a pixel before falling off the edge).
   ; $0014+ is off the pipe (can enter no matter how far off-centered you are, even at the edges).

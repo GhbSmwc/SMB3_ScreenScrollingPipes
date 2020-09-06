@@ -44,7 +44,7 @@ enter:
 	AND #$FFF0		;|
 	if !Setting_SSP_VerticalCapsEnterableWidth != $0008
 		CLC
-		ADC.w #!Setting_SSP_VerticalCapsEnterableWidth-$0008
+		ADC.w #!Setting_SSP_VerticalCapsEnterableWidth-($0008+1)
 	endif
 	CMP $94			;|
 	SEP #$20		;|
