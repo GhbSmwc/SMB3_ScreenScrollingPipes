@@ -4,23 +4,33 @@
 incsrc "../SSPDef/Defines.asm"
 
 SSPMaincode:
+	PHB					;\Setup banks
+	PHK					;|
+	PLB					;/
 	.DeathAnimationCheck
-		LDA $71					;\Prevent potential glitch that the player enters pipe and dies (often by level timer)
-		CMP #$09				;|during travel (if freezing enabled, at the same frame the players interacts a pipe cap).
-		BNE .PipeStateCheck			;|
-		RTL					;/
+		;If Mario is inside a pipe AND dying, reset all his status for 1 frame.
+		LDA !Freeram_SSP_PipeDir	;
+		AND.b #%00001111		;>After this, A register = Pipe state
+		BNE ..InPipe			;>If in pipe, execute (also check needed that if the player is already outside the pipe, not to run this code again, to ensure a execute-once for the reset when dying inside pipe).
+		JMP .PipeCodeReturn
+		
+		..InPipe
+		LDX $71					;\Prevent potential glitch that the player enters pipe and dies (often by level timer)
+		CPX #$09				;|during travel (if freezing enabled, at the same frame the players interacts a pipe cap).
+		BNE .PipeStateCheck			;/
+		..MarioDiedReset
+			LDA #$00				;\Reset all things.
+			STA !Freeram_SSP_PipeDir		;|>Reset pipe state to ensure that [ResetStatus] is executed only once as the check before this code will assume player out of pipe on the next game loop.
+			STA !Freeram_SSP_EntrExtFlg		;|
+			STA !Freeram_SSP_PipeTmr		;/
+			JMP .InPipeTraveling_ResetStatus	;>Bring mario back to the foreground, amoung other things.
 	
 	.PipeStateCheck
-		LDA !Freeram_SSP_PipeDir		;\don't do anything while outside the pipe.
-		AND.b #%00001111			;|(this also should prevent running the reset pipe state every frame when the pipe state == 0)
-		;ORA !Freeram_SSP_PipeTmr		;|
-		BNE .InPipeTraveling			;/
-		RTL
+		CMP #$00				;\>This is needed so it wouldn't use the processor flags from the CPX.
+		BNE .InPipeTraveling			;|
+		JMP .PipeCodeReturn			;/>If pipe state == 0, end.
 
 	.InPipeTraveling
-		PHB					;\Setup banks
-		PHK					;|
-		PLB					;/
 		..FreezeCheck
 			LDA $13D4|!addr				;>$13D4 - pause flag.
 			if !Setting_SSP_FreezeTime == 0
@@ -343,7 +353,13 @@ SSPMaincode:
 					STZ $9D			;>back in motion
 				endif
 				STZ $13F9|!addr			;>go in front
-				STZ $71				;>mario can move
+				....RestorePlayerStateIfNotDying
+					LDA $71				;\If player dying, don't restore his state
+					CMP #$09			;|of not in his dying phase.
+					BEQ .....NoRevive		;/
+					STZ $71				;>mario can move
+					
+					.....NoRevive
 				STZ $73				;>stop crouching (when going exiting down on yoshi)
 				STZ $140D|!addr			;>no spinjump out the pipe (possable if both enter and exit caps are bottoms)
 				LDA !Freeram_SSP_EntrExtFlg	;\Don't cancel speed if in firing mode.
