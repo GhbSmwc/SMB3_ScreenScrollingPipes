@@ -367,8 +367,14 @@ SSPMaincode:
 				BEQ ....FireOut			;/
 				
 				....CancelSpeed
-					STZ $7B				;\cancel speed
-					STZ $7D				;/
+					STZ $7B				;cancel speed
+					.....NoResetYSpeedDeath
+						LDA $71			;\Don't override the player's Y speed
+						CMP #$09		;|(the jump animation a few frames later)
+						BEQ ......Death		;/
+						STZ $7D
+						
+						......Death
 				....FireOut
 				
 				STZ $1419|!addr			;>revert yoshi
