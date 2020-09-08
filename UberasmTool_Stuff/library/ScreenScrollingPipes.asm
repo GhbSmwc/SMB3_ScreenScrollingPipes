@@ -354,8 +354,8 @@ SSPMaincode:
 				endif
 				STZ $13F9|!addr			;>go in front
 				....RestorePlayerStateIfNotDying
-					LDA $71				;\If player dying, don't restore his state
-					CMP #$09			;|of not in his dying phase.
+					LDX $71				;\If player dying, don't restore his state
+					CPX #$09			;|of not in his dying phase.
 					BEQ .....NoRevive		;/
 					STZ $71				;>mario can move
 					
@@ -369,9 +369,8 @@ SSPMaincode:
 				....CancelSpeed
 					STZ $7B				;cancel speed
 					.....NoResetYSpeedDeath
-						LDA $71			;\Don't override the player's Y speed
-						CMP #$09		;|(the jump animation a few frames later)
-						BEQ ......Death		;/
+						CPX #$09		;\Check mario animation again to see if dying to not zero out the Y speed
+						BEQ ......Death		;/(which disables the "jump" on his death animation).
 						STZ $7D
 						
 						......Death
