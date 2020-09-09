@@ -33,6 +33,11 @@
 ;	AND.b #%00001111
 ;	;^After the above, A will be nonzero should the player be inside the pipe. Use BEQ/BNE
 ;	; after this.
+;To make the sprites invisible when carried into the pipe:
+;	1) Make sure you have the defines folder (containing the defines file) located in the same
+;	   directory as sprite inserter tool (pixi.exe).
+;	2) Copy and paste all files inside the [Pixi_Routines] folder into Pixi's routines folder.
+;	3) Edit the sprites that can be carried by the player to skip the graphics code. See readme.
 ;
 ;NOTE: This will apply to ALL levels since the patch modifies code used in all levels. Therefore
 ;even if you don't have SSPs in any level and not have them run on uberasm tool on those levels,

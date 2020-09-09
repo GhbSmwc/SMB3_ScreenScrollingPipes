@@ -202,8 +202,13 @@ to 0, reinstall Fixes.asm, <b>and then</b> install the WJNB fix patch. And whate
 
 <li>Not much to say, simply install <kbd>Fixes.asm</kbd> via asar. This patch fixes various bugs relating with the pipes. Make sure you do not move the file, else you have to edit the
 <kbd>incsrc "&ltpath to the defines file&gt;"</kbd> to get it to work.</li><br>
+</ol><br>
+<li>Pixi (in <kbd>Pixi</kbd> folder). This mainly deals with making custom sprites be compatible with the SSPs. Mainly the fact that custom sprites may interact with the player in ways they shouldn't, and they should be rendered invisible
+with the player (by skipping the graphics code/routine) when dragged into the pipe.</li><br>
+<ol>
+<li>The first thing you want to do is similar to Uberasm tool and GPS-- Paste a copy of <kbd>SSPDef</kbd> in the same directory as <kbd>pixi.exe</kbd> is located.</li><br>
+<li>Paste <kbd>DetectSpriteCarriedInSSP.asm</kbd> in pixi's <kbd>routines</kbd> folder.</li><br>
 </ol>
-
 </ol>
 
 <li>Level usage</li>
@@ -324,7 +329,24 @@ SSPPriority:
 			;11 = Appear in front of everything, except Layer 3 tiles with priority setting 1 if the
 			;     "force above everything" bit is set
 	.Skip
-		STA !15F6,x</pre></td></tr></table></li><br>
+		STA !15F6,x</pre></td></tr></table>
+<ul><li>Also, this SSP package is intended to make both the player and the carried sprite invisible when he fully enters
+the pipe (when his entering animation timer hits 0) so that you can have non-physically-connected pipes without the
+carried sprite revealing the player's position. However, this only works with SMW's sprites handled by <kbd>Fixes.asm</kbd>.<br><br>
+
+To have this be applied to carryable custom sprites, I provided a small subroutine in <kbd>Pixi/routines/DetectSpriteCarriedInSSP.asm</kbd>, for use in PIXI's <kbd>routines</kbd>
+folder, and any carryable custom sprite used in your hack, on their graphics handler, do this (this is a template/example, most sprites uses different label names):
+<table><tr><td><pre>	CodeStart:
+		JSR GRAPHICS</pre></td></tr></table>
+turns into:
+<table><tr><td><pre>	CodeStart:
+		%DetectSpriteCarriedInSSP()
+		BCS SkipGFX
+		JSR GRAPHICS
+	SkipGFX:
+		</pre></td></tr></table>
+And that will cause the sprite to skip the entire graphics routines folder when carried fully into the pipe.</li></ul>
+</li><br>
 <li>If you enter a pipe, while yoshi exist, yoshi will also turn invisible (with some 8x8
  pieces still visible), I couldn't fix that.</li><br>
 
