@@ -185,9 +185,9 @@ SSPMaincode:
 					BRA ....StopPotentialIssues
 			
 			...DragWarpMode
-				;This has to run every frame as mario goes towards his warp destination
-				;as although it doesn't glitch out due to an overflow, an extreme distance
-				;between the player and "target" can cause imprecise direction and may miss.
+				....SetSeveralStatesForDragMode
+					LDA #$00			;\Prevent a minor glitch that causes carried sprites in pipe failing to turn invisible
+					STA !Freeram_SSP_PipeTmr	;/if the player enters a cap and immediately hits DragPlayer.asm before the timer hits 0.
 				....CheckIfMarioArrivedDestination
 					;Again, using the pseudo collision point, reason not to use the player's
 					;AABB-collision is because it has a risk of snapping the player XY pos from the
@@ -237,6 +237,9 @@ SSPMaincode:
 						BNE ..EnterExitTransition			;|
 						JMP ..ResetStatus				;/
 				....DragMarioXYSpeed
+					;This aiming code has to run every frame as mario goes towards his warp destination
+					;as although it doesn't glitch out due to an overflow, an extreme distance
+					;between the player and "target" can cause imprecise direction and may miss.
 					REP #$20
 					.....XPos
 						LDA $94
