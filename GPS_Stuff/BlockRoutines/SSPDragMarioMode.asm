@@ -111,6 +111,9 @@ incsrc "../SSPDef/Defines.asm"
 ;---2 drag mario subroutine files, the original and [SSPDragMarioMode1.asm] (note the “1” appended to the file name before the extension)
 ;---2 blocks to enter drag mode, the original and [DragPlayer1.asm] (duplicates should have [%SSPDragMarioMode1()])
 ;---And have 50 in each of the subroutine files.
+;
+;Remember, each nth item in the table is associated with another item from one another table also the nth item starting from the top, meaning
+;that the first item (topmost, index 0) means all the first items in each table, the second is second for all other tables and so on.
 	;These determine which warp the player will take:
 		;Direction to enter warp mode (traveling in other directions into
 		;the warp will do nothing). Only use values $01-$04:
