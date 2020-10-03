@@ -43,3 +43,31 @@
 053B:0025		SSP_Tiles/caps/exit_only/right_horizontal_pipe_capCannon_B_exit.asm
 ;;Drag mode (passable)
 R050C-051F:0025		SSP_Tiles/DragPlayer.asm
+;;Special turn corners controlled by switch
+;;;On/Off switch
+;;;;Solid objects
+R0540-0550:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1D.asm
+R0541-0551:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1U.asm
+R0542-0552:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1N.asm
+R0543-0553:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1N.asm
+R0544-0554:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1U.asm
+R0545-0555:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1D.asm
+0560-0561:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0L_1R.asm
+0562-0563:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1L.asm
+0564-0565:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0L_1N.asm
+0570-0571:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1N.asm
+0572-0573:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1L.asm
+0574-0575:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1R.asm
+;;;;Passable
+R0546-0556:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1D.asm
+R0547-0557:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1U.asm
+R0548-0558:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1N.asm
+R0549-0559:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1N.asm
+R054A-055A:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1U.asm
+R054B-055B:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1D.asm
+0566-0567:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0L_1R.asm
+0568-0569:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1L.asm
+056A-056B:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0L_1N.asm
+0576-0577:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1N.asm
+0578-0579:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1L.asm
+057A-057B:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1R.asm

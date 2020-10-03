@@ -65,6 +65,7 @@ endif
   ;
   ;-PPPP bits (the planned direction for "special turning corners"):
   ;--$00 = Keep going straight, don't change direction. If in drag mode, reverts the player into his out-of-pipe state upon reaching his destination.
+  ;  This is also known as "NULL" prep direction.
   ;--Values $01-$04:
   ;---$01-$04 (%0001-%0100) = travel up, right, down and left (in that order).
   ;   Note: When using warp mode, this will be the direction upon Mario reaches his war destination his DDDD bits to be set to.
