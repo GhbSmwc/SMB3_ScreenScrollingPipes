@@ -1,4 +1,4 @@
-;SSPs - page 6
+;SSPs - page 5
 ;;Cap cannons
 ;;;2-way caps
 ;;;;Regular sized-caps
@@ -45,7 +45,8 @@
 R050C-051F:0025		SSP_Tiles/DragPlayer.asm
 ;;Special turn corners controlled by switch
 ;;;On/Off switch
-;;;;Solid objects
+;;;;Normal-size
+;;;;;Solid objects
 R0540-0550:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1D.asm
 R0541-0551:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1U.asm
 R0542-0552:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1N.asm
@@ -58,7 +59,7 @@ R0545-0555:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1D.asm
 0570-0571:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1N.asm
 0572-0573:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1L.asm
 0574-0575:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1R.asm
-;;;;Passable
+;;;;;Passable
 R0546-0556:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1D.asm
 R0547-0557:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1U.asm
 R0548-0558:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1N.asm
@@ -71,3 +72,30 @@ R054B-055B:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1D.asm
 0576-0577:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1N.asm
 0578-0579:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1L.asm
 057A-057B:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1R.asm
+;;;;Small pipes
+;;;;;Solid
+054C:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1D.asm
+054D:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1U.asm
+054E:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1N.asm
+054F:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1N.asm
+055C:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1U.asm
+055D:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1D.asm
+055E:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0L_1R.asm
+055F:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1L.asm
+056C:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0L_1N.asm
+056D:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1N.asm
+056E:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1L.asm
+056F:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1R.asm
+;;;;;Passable
+057C:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1D.asm
+057D:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1U.asm
+057E:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1N.asm
+057F:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1N.asm
+058C:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1U.asm
+058D:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1D.asm
+058E:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0L_1R.asm
+058F:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1L.asm
+059C:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0L_1N.asm
+059D:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1N.asm
+059E:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1L.asm
+059F:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1R.asm
