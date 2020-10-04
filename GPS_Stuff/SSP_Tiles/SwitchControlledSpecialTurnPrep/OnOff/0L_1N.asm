@@ -32,18 +32,18 @@ HeadInside:
 		JSR DistanceFromTurnCornerCheck
 		BCC Return
 	;Set prep directions
+		LDX #$00
 		LDA !SSP_RamSwitch
-		BNE .Direction2
-		.Direction1
-			LDA !Freeram_SSP_PipeDir		;\Set planned direction to left.
-			AND.b #%00001111			;|
-			ORA.b #%01000000			;|
-			STA !Freeram_SSP_PipeDir		;/
-			RTL
+		BEQ .Direction1
+		
 		.Direction2
-			LDA !Freeram_SSP_PipeDir		;\Set planned direction to NULL.
-			AND.b #%00001111			;|
-			STA !Freeram_SSP_PipeDir		;/
+			INX
+		.Direction1
+		
+		LDA !Freeram_SSP_PipeDir		;\Set planned direction based on switches.
+		AND.b #%00001111			;|
+		ORA.l PrepTurnDirections,x		;|
+		STA !Freeram_SSP_PipeDir		;/
 
 WallFeet:
 WallBody:
@@ -98,6 +98,10 @@ Return:
 	RTS
 	FootDistanceYpos:
 	dw $0018, $0028, $0028
+	
+	PrepTurnDirections:
+	db %01000000
+	db %00000000
 if !Setting_SSP_Description != 0
 	print "Sets Mario's pipe prep direction to LEFT if", hex(!SSP_RamSwitch), "is zero, otherwise NULL instead."
 endif
