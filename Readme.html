@@ -472,7 +472,8 @@ in such cases such as the special turn corners that is 32x32 (2x2 full block) wh
 
 <li>If you're not using custom sprites, RAM address $7FAB10 ($400040 SA-1) aren't initialized, thus
 can cause issues like yoshi keeping his facing direction from when you enter after exiting a
-horizontal pipe.</li><br>
+horizontal pipe. This can be fixed by opening <kbd>SSPDef/Defines.asm</kbd>, and setting <kbd>!Setting_SSP_UsingCustomSprites</kbd> to <kbd>0</kbd>. This is due to the fact that this ASM package assumes
+you've installed spritetool/pixi.</li><br>
 
 <li>As if the time writing (9/3/2018), codes like <kbd>DistanceFromTurnCornerCheck</kbd> and some other routines are <b>not</b> moved to GPS's
 routines folder because it is using a version of Asar before 1.60, thus using labels can leak out with no convenient way around it.</li><br>
@@ -568,8 +569,4 @@ be cleared but his controllers still disabled until a frame later, causing the p
 
 <li>Although, you may not use the SSPs on certain levels at your own discretion, and that you could only have the SSP uberasm tool code run at specific levels, be warned that the <kbd>Fixes.asm</kbd>
 patch will apply to all levels, meaning that the freeram addresses the SSPs use are still used even if the uberasm tool code isn't running, which can cause glitches when being set to nonzero values.</li><br>
-
-<li>This ASM pack assume you have installed spritetool or pixi, meaning when handling which direction the player should be facing after exiting horizontal pipe caps on yoshi, checks <b>both</b> $9E ($3200 SA-1) and $7FAB10 ($400040 SA-1).
-Depending on what emulator you are using, this can cause a minor bug in which the player may exit the horizontal pipe caps facing the wrong way if you are not using custom sprites. To fix this, simply open the defines file, and set
-<kbd>!Setting_SSP_UsingCustomSprites</kbd> to 0.</li><br>
 </ul>
