@@ -182,6 +182,10 @@ endif
   ; Having a bigger range of being able to enter the pipe is great for kaizo hacks if you want a bigger margin of error on how narrow the range the player
   ; could enter. I wouldn't recommend higher than $000B as it is possible the player could snap to be centered at such a long distance may feel jerky and
   ; could potentially result the screen jolting and revealing a layer 1 column of glitch graphics.
+ !Setting_SSP_UsingCustomSprites = 1
+  ;^0 = only using vanilla sprites in your entire hack
+  ; 1 = using custom sprites.
+  ; This is only used during setting the player's facing direction upon exiting horizontal pipe caps while riding yoshi.
 ;Pipe travel speeds:
 ;Use only values $01-$7F (negative speeds already calculated).
  if !Setting_SSP_FuSoYaSpd == 0		;>Don't change this if statement.

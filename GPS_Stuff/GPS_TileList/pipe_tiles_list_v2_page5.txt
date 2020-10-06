@@ -99,3 +99,6 @@ R054B-055B:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1D.asm
 059D:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1N.asm
 059E:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1L.asm
 059F:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1R.asm
+;;Small vertical pipe caps that allows big mario.
+0580:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_cap_smallAllowBig.asm
+0590:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_smallAllowBig.asm
