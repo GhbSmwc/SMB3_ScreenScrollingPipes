@@ -100,9 +100,23 @@ R054B-055B:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1D.asm
 059E:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1L.asm
 059F:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1R.asm
 ;;Small vertical pipe caps that allows big mario.
+;;;Regular
 0580:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_cap_smallAllowBig.asm
 0590:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_smallAllowBig.asm
 0581:0130		SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_smallAllowBig_exit.asm
 0591:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_smallAllowBig.asm
 0582:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_cap_smallAllowBig.asm
 0592:0130		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_cap_smallAllowBig_exit.asm
+;;;;Passable
+0586:0025		SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_smallAllowBig_exit.asm
+0596:0025		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_cap_smallAllowBig_exit.asm
+;;;Cap cannons
+0583:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_capCannon_smallAllowBig.asm
+0593:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_capCannon_smallAllowBig.asm
+0584:0130		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_smallAllowBig_exit.asm
+0594:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_capCannon_smallAllowBig.asm
+0585:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_capCannon_smallAllowBig.asm
+0595:0130		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_smallAllowBig_exit.asm
+;;;;Passable
+0587:0025		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_smallAllowBig_exit.asm
+0597:0025		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_smallAllowBig_exit.asm
