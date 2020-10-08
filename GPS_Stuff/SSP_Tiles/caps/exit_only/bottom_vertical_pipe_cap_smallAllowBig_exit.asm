@@ -121,5 +121,5 @@ passable:
 	RTS
 
 if !Setting_SSP_Description != 0
-print "Bottom-left exit cap piece of a vertical pipe."
+	print "A bottom small pipe cap that Mario of any powerup can only exit out of."
 endif
