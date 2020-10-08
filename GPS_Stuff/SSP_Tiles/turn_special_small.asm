@@ -117,20 +117,26 @@ Return:
 	dw $0018, $0028, $0028
 
 	CenterAlignment:
-;	LDA $187A|!addr		;\Yoshi Y positioning
-;	ASL			;|
-;	TAX			;/
+	LDA $187A|!addr		;\Yoshi Y positioning indexed
+	ASL			;|
+	TAX			;/
 	REP #$20		;
 	LDA $9A			;\Center the player horizontally
 	AND #$FFF0		;|
 	STA $94			;/
-	LDA $98			;\Center the player vertically
+	REP #$20		;\center vertically
+	LDA $98			;|
 	AND #$FFF0		;|
 	SEC			;|
-	SBC #$0011		;|
-	STA $96			;/
-	SEP #$20
+	SBC YoshiYOffset,x	;|
+	STA $96			;|
+	SEP #$20		;/
 	RTS
+	
+	YoshiYOffset:
+	dw $0011
+	dw $0021
+	dw $0021
 
 	PastCornerDetection:
 	;Snap player to center when going past in a specified direction

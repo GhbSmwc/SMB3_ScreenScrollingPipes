@@ -78,18 +78,26 @@ down_to_right:
 	JSR corner_center		;>and snap player
 	RTL
 corner_center:
-	REP #$20		;\center player to pipe horizontally.
-	LDA $9A			;|
+	LDA $187A|!addr		;\Yoshi Y positioning indexed
+	ASL			;|
+	TAX			;/
+	REP #$20		;
+	LDA $9A			;\Center the player horizontally
 	AND #$FFF0		;|
-	STA $94			;|
-	SEP #$20		;/
+	STA $94			;/
 	REP #$20		;\center vertically
 	LDA $98			;|
 	AND #$FFF0		;|
-	SEC : SBC #$0011	;|
+	SEC			;|
+	SBC YoshiYOffset,x	;|
 	STA $96			;|
 	SEP #$20		;/
 	RTS
+	
+	YoshiYOffset:
+	dw $0011
+	dw $0021
+	dw $0021
 	
 	DistanceFromTurnCornerCheck:
 	;Prevents such glitches where as the player leaves a special turn corner
