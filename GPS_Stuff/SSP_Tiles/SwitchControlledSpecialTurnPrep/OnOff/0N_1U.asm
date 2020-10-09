@@ -102,5 +102,5 @@ Return:
 	db %00000000
 	db %00010000
 if !Setting_SSP_Description != 0
-	print "Sets Mario's pipe prep direction to NULL if", hex(!SSP_RamSwitch), "is zero, otherwise UP instead."
+	print "Sets Mario's pipe prep direction to NULL if $", hex(!SSP_RamSwitch), " is zero, otherwise UP instead."
 endif

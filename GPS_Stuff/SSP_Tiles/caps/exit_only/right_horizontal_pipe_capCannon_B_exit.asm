@@ -90,5 +90,5 @@ yoshi_center:
 	SEP #$20
 	RTS
 if !Setting_SSP_Description != 0
-print "Bottom-right/right cap exit piece of horizontal pipe."
+print "Bottom-right/right cap cannon exit piece of horizontal pipe."
 endif

@@ -227,5 +227,5 @@ if !Setting_SSP_YoshiAllowed != 0
 	db !SSP_PipeTimer_Enter_Upwards_OffYoshi,!SSP_PipeTimer_Enter_Upwards_OnYoshi,!SSP_PipeTimer_Enter_Upwards_OnYoshi	;>Timers: 1st one = on foot, 2nd and 3rd one = on yoshi
 endif
 if !Setting_SSP_Description != 0
-print "Bottom-left cap piece of vertical 2-way pipe."
+print "Bottom-left cap cannon piece of vertical 2-way pipe."
 endif

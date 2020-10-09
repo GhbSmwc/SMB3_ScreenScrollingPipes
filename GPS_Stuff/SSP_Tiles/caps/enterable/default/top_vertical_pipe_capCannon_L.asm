@@ -194,5 +194,5 @@ passable:
 		db !SSP_PipeTimer_Enter_Downwards_OffYoshi,!SSP_PipeTimer_Enter_Downwards_OnYoshi,!SSP_PipeTimer_Enter_Downwards_OnYoshi
 	endif
 if !Setting_SSP_Description != 0
-print "Top-left cap piece of vertical 2-way pipe."
+print "Top-left cap cannon piece of vertical 2-way pipe."
 endif

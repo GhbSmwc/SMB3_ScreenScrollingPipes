@@ -122,5 +122,5 @@ passable:
 	RTS
 
 if !Setting_SSP_Description != 0
-print "Bottom-left exit cap piece of a vertical pipe."
+print "Bottom-left exit cap cannon piece of a vertical pipe."
 endif

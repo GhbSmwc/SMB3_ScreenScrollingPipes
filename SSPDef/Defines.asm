@@ -201,7 +201,7 @@ endif
   !SSP_VerticalSpd		= $40 ;|
   !SSP_HorizontalSpdPipeCap	= $40 ;|
   !SSP_VerticalSpdPipeCap	= $40 ;/
-  !SSP_DragSpd			= $40 ;>Speed mario travels when using warp mode.
+  !SSP_DragSpd			= $40 ;>Speed mario travels when using warp mode. Remember, high speeds and the player could overshoot and softlock oscillating around his target position!
  endif
  ;Cannon launcher speeds (special pipe caps that fire the player out of the caps with momentum):
   !SSP_Cannon_HorizontalSpd	= $40		;>Use only $01-$7F, this covers both left and right speeds

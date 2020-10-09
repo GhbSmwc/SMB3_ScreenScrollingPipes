@@ -143,5 +143,5 @@ center_vert:
 ;	SEP #$20
 ;	RTS
 if !Setting_SSP_Description != 0
-print "Right cap piece of horizontal pipe for small mario."
+print "Right cap cannon piece of horizontal pipe for small mario."
 endif

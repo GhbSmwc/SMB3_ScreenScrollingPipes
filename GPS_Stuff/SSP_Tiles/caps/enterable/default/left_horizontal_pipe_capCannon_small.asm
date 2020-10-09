@@ -141,5 +141,5 @@ yoshi_center:
 	SEP #$20
 	RTS
 if !Setting_SSP_Description != 0
-print "Left cap piece of horizontal 2-way pipe for small mario."
+print "Left cap cannon piece of horizontal 2-way pipe for small mario."
 endif

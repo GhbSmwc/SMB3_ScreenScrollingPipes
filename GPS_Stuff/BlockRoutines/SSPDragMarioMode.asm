@@ -124,7 +124,7 @@ incsrc "../SSPDef/Defines.asm"
 			?CorrectDirection
 				;Keep all your numbers in between the label [?CorrectDirection] and [?.End]. This is needed to determine
 				;during assembly on how may indexes, which determines what number the index will start at to count down.
-					db $03			;>Index 0
+					db $01			;>Index 0
 					db $03			;>Index 1
 					db $02			;>Index 2
 					?.End			;>Keep this here!
@@ -137,13 +137,13 @@ incsrc "../SSPDef/Defines.asm"
 		;These is the current block position (block coordinates, in units of 16x16, not pixels)
 		;where Mario comes from.
 			?StartPositionX
-				dw $00A2		;>Index 0 (Index 0 * 2)
-				dw $0094		;>Index 2 (Index 1 * 2)
-				dw $00A9		;>Index 4 (Index 2 * 2)
+				dw $0003		;>Index 0 (Index 0 * 2)
+				dw $009A		;>Index 2 (Index 1 * 2)
+				dw $009A		;>Index 4 (Index 2 * 2)
 			?StartPositionY
-				dw $0007		;>Index 0 (Index 0 * 2)
-				dw $0015		;>Index 2 (Index 1 * 2)
-				dw $0020		;>Index 4 (Index 2 * 2)
+				dw $0013		;>Index 0 (Index 0 * 2)
+				dw $0022		;>Index 2 (Index 1 * 2)
+				dw $0022		;>Index 4 (Index 2 * 2)
 	;These are the destination positions, in pixels (why not block positions, then LSR #4?,
 	;well, because it is possible that the player must be centered horizontally between 2 blocks
 	;than 16x16 grid-aligned as in the case with traveling through normal-sized vertical pipes).
@@ -166,12 +166,12 @@ incsrc "../SSPDef/Defines.asm"
 
 
 		?EndPositionX
-			dw ($0094*$10)+$08	;>Index 0 (Index 0 * 2)
-			dw ($00A2*$10)+$08	;>Index 2 (Index 1 * 2)
+			dw ($009A*$10)+$08	;>Index 0 (Index 0 * 2)
+			dw ($0003*$10)+$08	;>Index 2 (Index 1 * 2)
 			dw ($00AC*$10)+$00	;>Index 4 (Index 2 * 2)
 		?EndPositionY
-			dw ($0015*$10)		;>Index 0 (Index 0 * 2)
-			dw ($0007*$10)		;>Index 2 (Index 1 * 2)
+			dw ($0022*$10)		;>Index 0 (Index 0 * 2)
+			dw ($0013*$10)		;>Index 2 (Index 1 * 2)
 			dw ($0019*$10)		;>Index 4 (Index 2 * 2)
 	;This is the prep direction to set to that the player will start moving in that direction
 	;upon reaching his destination.
@@ -183,5 +183,5 @@ incsrc "../SSPDef/Defines.asm"
 	;-$40 = left
 		?DestinationDirection
 			db $10			;>Index 0
-			db $10			;>Index 1
+			db $30			;>Index 1
 			db $20			;>Index 2
