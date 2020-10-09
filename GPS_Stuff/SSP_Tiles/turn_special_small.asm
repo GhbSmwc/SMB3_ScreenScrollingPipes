@@ -170,7 +170,7 @@ Return:
 	LDA $98				;|
 	AND #$FFF0			;|
 	SEC				;|
-	SBC #$0010			;|
+	SBC YoshiPositioningUpwards,x	;|
 	CMP $96				;|
 	SEP #$20			;|
 	BPL +				;|
@@ -179,6 +179,9 @@ Return:
 	+
 	SEC
 	RTS
+	
+	YoshiPositioningUpwards:
+	dw $0010,$0020,$0020
 	
 	Rightwards:
 	REP #$20		;\Don't center and change direction until the player is centered close enough (about to go past it).
@@ -198,7 +201,7 @@ Return:
 	LDA $98				;|
 	AND #$FFF0			;|
 	SEC				;|
-	SBC #$0010			;|
+	SBC YoshiPositioningDownwards,x	;|
 	CMP $96				;|
 	SEP #$20			;|
 	BMI +				;|
@@ -207,6 +210,8 @@ Return:
 	+
 	SEC
 	RTS
+	YoshiPositioningDownwards:
+	dw $0010,$0028,$0028
 	
 	Leftwards:
 	REP #$20		;\Don't center and change direction until the player is centered close enough (about to go past it).

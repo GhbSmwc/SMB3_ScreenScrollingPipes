@@ -51,7 +51,7 @@ down_to_left:
 	LDA $98			;|
 	AND #$FFF0		;|
 	SEC			;|
-	SBC #$0010		;|
+	SBC YoshiPositioning,x	;|
 	CMP $96			;|
 	SEP #$20		;|
 	BMI +			;|
@@ -63,6 +63,14 @@ down_to_left:
 	STA !Freeram_SSP_PipeDir	;/
 	JSR corner_center
 	RTL
+	
+	YoshiPositioning:
+	dw $0010,$0028,$0028
+	;^You might've noticed that this is different compared to all other turn pipes.
+	; this is because there is a problem with yoshi's collision points when big
+	; mario is on yoshi traveling downwards on this block when there is a solid
+	; platform below it to not  trigger this block (which causes the player to get
+	; stuck trying to head downwards before turning).
 right_to_up:
 	REP #$20		;\Don't center and change direction until the player is centered close enough (about to go past it).
 	LDA $9A			;|

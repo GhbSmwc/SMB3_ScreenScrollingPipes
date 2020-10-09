@@ -65,7 +65,7 @@ down_to_right:
 	LDA $98			;|
 	AND #$FFF0		;|
 	SEC			;|
-	SBC #$0010		;|
+	SBC YoshiPositioning,x	;|
 	CMP $96			;|
 	SEP #$20		;|
 	BMI +			;|
@@ -77,6 +77,9 @@ down_to_right:
 	STA !Freeram_SSP_PipeDir	;/
 	JSR corner_center		;>and snap player
 	RTL
+	
+	YoshiPositioning:
+	dw $0010,$0020,$0020
 corner_center:
 	LDA $187A|!addr		;\Yoshi Y positioning indexed
 	ASL			;|
