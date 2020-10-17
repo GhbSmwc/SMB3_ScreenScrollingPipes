@@ -127,12 +127,16 @@ incsrc "../SSPDef/Defines.asm"
 					db $01			;>Index 0
 					db $03			;>Index 1
 					db $02			;>Index 2
+					db $03			;>Index 3
+					db $03			;>Index 4
 					?.End			;>Keep this here!
 		;Level the start wrap points are in.
 			?LevelNumberTable
 				dw $0105		;>Index 0 (Index 0 * 2)
 				dw $0105		;>Index 2 (Index 1 * 2)
 				dw $0105		;>Index 4 (Index 2 * 2)
+				dw $0105		;>Index 6 (Index 3 * 2)
+				dw $0105		;>Index 8 (Index 4 * 2)
 		
 		;These is the current block position (block coordinates, in units of 16x16, not pixels)
 		;where Mario comes from.
@@ -140,10 +144,14 @@ incsrc "../SSPDef/Defines.asm"
 				dw $0003		;>Index 0 (Index 0 * 2)
 				dw $009A		;>Index 2 (Index 1 * 2)
 				dw $009A		;>Index 4 (Index 2 * 2)
+				dw $00B9		;>Index 6 (Index 3 * 2)
+				dw $00AF
 			?StartPositionY
 				dw $0013		;>Index 0 (Index 0 * 2)
 				dw $0022		;>Index 2 (Index 1 * 2)
 				dw $0022		;>Index 4 (Index 2 * 2)
+				dw $001E		;>Index 6 (Index 3 * 2)
+				dw $0008		;>Index 8 (Index 4 * 2)
 	;These are the destination positions, in pixels (why not block positions, then LSR #4?,
 	;well, because it is possible that the player must be centered horizontally between 2 blocks
 	;than 16x16 grid-aligned as in the case with traveling through normal-sized vertical pipes).
@@ -169,10 +177,14 @@ incsrc "../SSPDef/Defines.asm"
 			dw ($009A*$10)+$08	;>Index 0 (Index 0 * 2)
 			dw ($0003*$10)+$08	;>Index 2 (Index 1 * 2)
 			dw ($00AC*$10)+$00	;>Index 4 (Index 2 * 2)
+			dw ($00AF*$10)+$08	;>Index 6 (Index 3 * 2)
+			dw ($00B9*$10)+$08	;>Index 8 (Index 4 * 2)
 		?EndPositionY
 			dw ($0022*$10)		;>Index 0 (Index 0 * 2)
 			dw ($0013*$10)		;>Index 2 (Index 1 * 2)
 			dw ($0019*$10)		;>Index 4 (Index 2 * 2)
+			dw ($0008*$10)		;>Index 6 (Index 3 * 2)
+			dw ($001E*$10)		;>Index 8 (Index 4 * 2)
 	;This is the prep direction to set to that the player will start moving in that direction
 	;upon reaching his destination.
 	;Only use these values
@@ -185,3 +197,5 @@ incsrc "../SSPDef/Defines.asm"
 			db $10			;>Index 0
 			db $30			;>Index 1
 			db $20			;>Index 2
+			db $10			;>Index 3
+			db $10			;>Index 4

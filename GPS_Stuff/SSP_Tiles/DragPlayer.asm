@@ -79,7 +79,7 @@ SSPWarpmode:
 			LDA $98					;\Block Y position
 			AND #$FFF0				;/
 			SEC					;\1 or 2 blocks up
-			SBC YoshiYPositionThresholdOffset,x	;/
+			SBC.l YoshiYPositionThresholdOffset,x	;/
 			CMP $96					;>Compare with player's Y position
 			SEP #$20
 			BPL .VertEnterState9			;>If block Y pos is >= player's (or playerY is <= BlockY), enter state 9
@@ -101,7 +101,7 @@ SSPWarpmode:
 			LDA $98					;\Block Y position
 			AND #$FFF0				;/
 			SEC					;\1 or 2 blocks up
-			SBC YoshiYPositionThresholdOffset,x	;/
+			SBC.l YoshiYPositionThresholdOffset,x	;/
 			CMP $96					;>Compare with player's Y position
 			SEP #$20
 			BEQ .VertEnterState9
@@ -131,13 +131,15 @@ SSPWarpmode:
 				SEP #$20
 				RTL
 			.VertEnterState9
+				PHX
 				%SSPDragMarioMode()
+				PLX
 				BCS Done
 				REP #$20
 				LDA $98
 				AND #$FFF0
 				SEC
-				SBC YoshiYPositionThresholdOffset,x
+				SBC.l YoshiYPositionThresholdOffset,x
 				STA $96
 				SEP #$20
 				RTL
