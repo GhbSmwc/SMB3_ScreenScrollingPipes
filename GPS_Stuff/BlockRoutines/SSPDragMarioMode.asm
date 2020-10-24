@@ -86,8 +86,9 @@ incsrc "../SSPDef/Defines.asm"
 ;
 ;When I mean “entry”, I mean the number of items, regardless of the value is 8 or 16-bit.
 ;
-;Due to signed 16-bit limitations, you can have up to 32768 ($8000 in hex, index numbers from $0000-$7FFF)
-;warp entries in your entire game per this routine. Highly unlikely you would even get close to that number.
+;Due to signed 16-bit limitations, you can have up to 32768 ($8000 in hex, index numbers from $0000-$7FFF
+;(0-32767)) warp entries in your entire game per this routine. Highly unlikely you would even get close to
+;that number.
 ;
 ;Also note that if you have a huge number of entries here, and you trigger this routine that does not match
 ;any of the entries here (match the direction to warp, level number, and XY start position), the game will lag.
@@ -114,6 +115,13 @@ incsrc "../SSPDef/Defines.asm"
 ;
 ;Remember, each nth item in the table is associated with another item from one another table also the nth item starting from the top, meaning
 ;that the first item (topmost, index 0) means all the first items in each table, the second is second for all other tables and so on.
+;
+;I recommend using comments, and labeling each item in the table with their index number so that you can track, and debug if anything goes wrong.
+;You can make use of Notepad++ ( https://notepad-plus-plus.org/downloads/ )'s column select (alt + shift + click elsewhere), then on the menubar:
+;Edit -> Column Editor, on that window, have [number to insert] be checked, and:
+;Inital number: 0
+;Increase by: 1 or 2 (1 for db table, 2 for dw table)
+;Format: Hex or Dec.
 	;These determine which warp the player will take:
 		;Direction to enter warp mode (traveling in other directions into
 		;the warp will do nothing). Only use values $01-$04:
