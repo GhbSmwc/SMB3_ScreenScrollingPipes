@@ -314,6 +314,10 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	  that aren't connected to another, but traveling through them drags the player (in any direction,
 	  including diagonal) to the other end. This enables you not being required to have pipe-related
 	  blocks in between the two terminals and design the level a lot more freely.
+	--Sprites carried into pipes now turn invisible with the player. This is useful for designing
+	  remote pipes, two ends that don't appear to be connected but will send the player to the other end
+	  anyway without spoiling the illusion of a carried sprite being visible.
+	--Added switchable special turn corners (mainly on-off controlled).
 	-Bug fixes:
 	--Fixed a bug that turn block bridges can block the player's horizontal movement
 	--Fixed an issue with the turn block bridge (sprite $59)'s bug that cause the player to not rise up
