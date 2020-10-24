@@ -58,7 +58,7 @@ screen-fading to the next level, the player will move through the pipes (along w
 
 <h2><a href="#TOC_Introduction" id="Introduction">^</a>Introduction</h2>
 The primary purpose of this release was because FuSoYa's SMB3 screen scrolling pipes are incompatible with the custom block
-insertion tool; <i>Gopher Popcorn Stew</i> (GPS). <a href="https://www.smwcentral.net/?p=section&a=details&id=19984">it was updated to work with GPS</a> on 05/30/2019 but other glitches remain:
+insertion tool; <i>Gopher Popcorn Stew</i> (GPS). Although <a href="https://www.smwcentral.net/?p=section&a=details&id=19984">it was updated to work with GPS</a> on 05/30/2019, glitches remain due to being a mere port to the new block inserter tool:
 
 <ul>
 <li>The player will be teleported to the last pipe exited if the player hits the bottom of any horizontal
@@ -74,8 +74,11 @@ will be clipped into the cap part of the pipe:<br>
 </li><br>
 
 <li>Prior to the release of this package, old screen scrolling pipes (FuSoYa isn't the only one, MikeyK made his)
-require an exit tile (air or water) in front of their caps, thus, making the placements of blocks around it more
-inconvenient (requires an extra space of tiles)).</li><br>
+require an exit tile (air or water) in front of their caps, thus making the placements of blocks around it more
+inconvenient (requires an extra space of tiles)). FuSoYa, is even worse, given that each direction uses their own exit tile rather than shared, you couldn't place the pipes like this without glitches:<br>
+<img src="Readme_files/FuSoYaBulkyExitTiles.png"><br>
+You wouldn't want these in your hack:<br>
+<img src="Readme_files/FuSoYaTopCapGlitch.gif"><img src="Readme_files/FuSoYaTopCapGlitch1.gif"></li><br>
 
 <li>If you try to enter the top of a small vertical pipe cap and slip off the right edge, Mario can &ldquo;escape&rdquo;
 the exit tile placed on top of it, causing mario to be in his pipe state without entering the pipe:<br>
@@ -457,7 +460,7 @@ with the player traveling:
 </pre></td></tr></table></li><br>
 
 <li><a name="SpeedClipping">To add to the note above, be careful with setting the travel speeds to make the player travel very fast, he may phase through
-the interaction fields of the turn corners and pipe caps (he'll pass through without triggering them). This is because SMW handles
+the interaction fields of the turn corners and pipe caps (he'll pass through without triggering them). This is because SMW (and pretty much most video games, even in 3D) handles
 movement as movement broken up into &ldquo;individual step of positions&rdquo; each frame (movement isn't continuous). Each position
 movement handles collision, but not in between these points, thus the faster the player moves, the more wider-apart these interactable positions are, and the more
 likely he'll phase through them should the next position the player moves ends up on the other side of the interaction field:<br>
