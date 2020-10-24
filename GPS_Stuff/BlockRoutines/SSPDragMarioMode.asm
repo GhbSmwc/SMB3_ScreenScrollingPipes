@@ -117,7 +117,8 @@ incsrc "../SSPDef/Defines.asm"
 ;that the first item (topmost, index 0) means all the first items in each table, the second is second for all other tables and so on.
 ;
 ;I recommend using comments, and labeling each item in the table with their index number so that you can track, and debug if anything goes wrong.
-;You can make use of Notepad++ ( https://notepad-plus-plus.org/downloads/ )'s column select (alt + shift + click elsewhere), then on the menubar:
+;You can automate this by making use of Notepad++ ( https://notepad-plus-plus.org/downloads/ )'s column select (alt + shift + click elsewhere),
+;then on the menubar:
 ;Edit -> Column Editor, on that window, have [number to insert] be checked, and:
 ;Inital number: 0
 ;Increase by: 1 or 2 (1 for db table, 2 for dw table)
