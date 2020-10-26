@@ -21,6 +21,7 @@ Navigation:
 	<li><a href="#TOC_BlockPlacements" id="TOC_BlockPlacementsBack">Block Placements (basic)</a></li>
 	<li><a href="#TOC_BackgroundPipeTiles" id="TOC_BackgroundPipeTilesBack">Background pipe tiles</a></li>
 	<li><a href="#TOC_WarpMode" id="TOC_WarpModeBack">Warp mode usage</a></li>
+	<li><a href="#TOC_SwitchedPrepDirection" id="TOC_SwitchedPrepDirectionBack">Switchable prep turn direction</li>
 </ol>
 <hr>
 <h1><a href="#TOC_GeneralBlockPartsBack" id="TOC_GeneralBlockParts">^</a>General block parts</h1>
@@ -187,3 +188,24 @@ cannot see him because the SSP system is designed to make the player invisible t
 than warped. To make fixing or discovering what happens, go to <kbd>SSPDef/Defines.asm</kbd>, and set <kbd>!Setting_SSP_PipeDebug</kbd>
 to <kbd>1</kbd> and reinsert. Don't forget to set this back to <kbd>0</kbd> once you finish your hack.
 <center><a href="../Readme.html#UseBlocksInLevel2">Back</a><br></center>
+
+<h1><a href="#TOC_SwitchedPrepDirectionBack" id="TOC_SwitchedPrepDirection">^</a>Switchable prep turn directions</h1>
+I also made pipe parts that switches the player's direction prior hitting a turn-special depending on a given RAM (by default, it is the on/off switch).
+Those green blocks with arrows on them seen here:</a>
+<img src="Map16_Page_5_info.png"><br>
+They will set Mario's prep direction to one of the 2 out of the 5 possible settings:
+<ul>
+	<li>U = Up</li>
+	<li>R = Right</li>
+	<li>D = Down</li>
+	<li>L = Left</li>
+	<li>N = Null (Mario will keep going straight, ideal for 3 or 4-way intersections if the player should not change directions)</li>
+</ul><br>
+
+They are named <kbd>0X_1X.asm</kbd> (check out <kbd>SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff</kbd>), where the X's are any of the 5 settings. The 0s and 1s
+indicate the two states of the given RAM switch. For example, <kbd>0U_1D.asm</kbd> means if the RAM is 0 (on/off switch = ON), would set Mario's special prep direction to
+&ldquo;up&rdquo; and if 1 (or nonzero in general, on/off switch = OFF), would set his prep direction to &ldquo;down&rdquo;. Just like the normal turn special prep
+direction blocks, they too will check the player's &ldquo;bottom half&rdquo; to interact with the block.<br><br>
+
+The animated graphics should be obvious. If the arrows on them are &ldquo;lit up&rdquo;, that means that direction will be used. If there is only one, and isn't lit up,
+would mean the player goes straight.

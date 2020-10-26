@@ -131,7 +131,10 @@ endif
   ; Make sure you avoid doing this: set to 1, patch Fixes.asm, and then patch WJNB fix afterwards, because the WJNB fix will merely overwrite
   ; $00EA16-$00EA21 (which overwrites Fixes.asm's $00EA18 hijack), but not clean out the old freespace code, which may have a freespace leak.
  !Setting_SSP_PipeDebug		= 0
-  ;^This will make mario visible and in front of objects when enabled, set to 1 if you encounter issues and need to know where is Mario.
+  ;^0 = off
+  ; 1 = on
+  ; This will make mario visible and in front of objects when enabled, set to 1 if you encounter issues and need to know where is Mario. NOTE:
+  ; Mario INTERACTS with sprites in his path (causes them to face his direction and take damage, for example) when turned on.
   
  ;SFX stuff for yoshi prohibited from entering pipes (only for normal-sized pipes, since you cannot enter small pipes on yoshi even as small Mario):
   !Setting_SSP_YoshiProhibitSFXNum	= $20
