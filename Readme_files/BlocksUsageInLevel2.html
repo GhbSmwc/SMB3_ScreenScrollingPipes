@@ -185,7 +185,7 @@ And the tables should be like this:<br>
 </pre></td></tr></table>
 One thing to note is that you may make a mistake and have the player go in directions in an unintended way (and softlock), and you
 cannot see him because the SSP system is designed to make the player invisible to hide the illusion the player was dragged rather
-than warped. To make fixing or discovering what happens, go to <kbd>SSPDef/Defines.asm</kbd>, and set <kbd>!Setting_SSP_PipeDebug</kbd>
+than warped. To assist on fixing or discovering what or how that happens, go to <kbd>SSPDef/Defines.asm</kbd>, and set <kbd>!Setting_SSP_PipeDebug</kbd>
 to <kbd>1</kbd> and reinsert. Don't forget to set this back to <kbd>0</kbd> once you finish your hack.
 <center><a href="../Readme.html#UseBlocksInLevel2">Back</a><br></center>
 
@@ -205,7 +205,8 @@ They will set Mario's prep direction to one of the 2 out of the 5 possible setti
 They are named <kbd>0X_1X.asm</kbd> (check out <kbd>SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff</kbd>), where the X's are any of the 5 settings. The 0s and 1s
 indicate the two states of the given RAM switch. For example, <kbd>0U_1D.asm</kbd> means if the RAM is 0 (on/off switch = ON), would set Mario's special prep direction to
 &ldquo;up&rdquo; and if 1 (or nonzero in general, on/off switch = OFF), would set his prep direction to &ldquo;down&rdquo;. Just like the normal turn special prep
-direction blocks, they too will check the player's &ldquo;bottom half&rdquo; to interact with the block.<br><br>
+direction blocks, they too will check the player's &ldquo;bottom half&rdquo; to interact with the block, and they should be used with the <kbd>turn_Special</kbd> blocks<br>
+to apply its effects.<br>
 
 The animated graphics should be obvious. If the arrows on them are &ldquo;lit up&rdquo;, that means that direction will be used. If there is only one, and isn't lit up,
-would mean the player goes straight.
+would mean the player goes straight. The level file should explain using all directions states.
