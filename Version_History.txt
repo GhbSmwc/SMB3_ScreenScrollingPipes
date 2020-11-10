@@ -308,8 +308,9 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	--Feature a new map16 block format (both GPS list and .map16 file) that have no duplicates and is
 	  overall a lot cleaner.
 	--Several files are now rearranged for cleaner organized format.
-	--Introduced the cannon caps that would fire the player out of pipes with momentum. When combined
-	  with background pipes, is useful for kaizo hacks.
+	--Introduced the cannon caps that would fire the player out of pipes with momentum (inspired from
+	  “Hackers Dreams : Pipe Dream”: https://www.smwcentral.net/?p=section&a=details&id=17741 ). When
+	  combined with background pipes, is useful for kaizo hacks with the lack of a solid platform.
 	--Introduced a new feature: “Screen scrolling *warp* pipes”, a new pipe mode that lets you have pipes
 	  that aren't connected to another, but traveling through them drags the player (in any direction,
 	  including diagonal) to the other end. This enables you not being required to have pipe-related
@@ -317,12 +318,13 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	--Sprites carried into pipes now turn invisible with the player. This is useful for designing
 	  remote pipes, two ends that don't appear to be connected but will send the player to the other end
 	  anyway without spoiling the illusion of a carried sprite being visible.
-	--Added switchable special turn corners (mainly on-off controlled).
+	--Added switchable special turn corners (mainly on-off controlled, you can create a copy of them by
+	  copying the folder and changing the define if you want it for other switches).
 	--You can now modify the width that the player can enter vertical normal-sized pipes.
 	-Bug fixes:
 	--Fixed a bug that turn block bridges can block the player's horizontal movement
 	--Fixed an issue with the turn block bridge (sprite $59)'s bug that cause the player to not rise up
-	  with the sprite when expanding vertically due to a faulty restore code (also it merely zeroes the
+	  with the sprite when expanding vertically due to a faulty restore code (also it merely zeroed the
 	  Y speed without aligning him to the platform vertically when outside of pipes).
 	--Fix a rather minor bug that downwards-facing small pipe cap may not center the player correctly
 	  if he enters them by hitting them on the bottom corners at an angle (often would position Mario
