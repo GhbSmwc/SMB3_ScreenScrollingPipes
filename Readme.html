@@ -417,9 +417,10 @@ be aware that some sprites still do interact with the player:</li><br>
 
 <li>All smw's solid sprites (mainly platforms) that sets the player character's position when standing on them
 are hijacked to prevent misaligned entering horizontal pipes. But not some <b>custom</b> sprites (depending how
-$9D was handled if it should still interact with the player). To fix that, simply look for a code that writes
-(STA) to an address $94-$97 (first two bytes is x pos, last two are Y), and add this to skip over setting the
-player's coordinates, and also writing $1471:
+$9D was handled if it should still interact with the player, when <kbd>!Setting_SSP_FreezeTime</kbd> not enabled by the SSP settings).
+To fix that, simply look for a code that writes (STA) to an address $94-$97 (these are the player's XY position
+in the level, $94-$95 = X position, $96-$97 = Y position), and add this to skip over setting the player's
+coordinates, and also writing $1471:
 
 <table><tr><td><pre>incsrc "../SSPDef/Defines.asm"
 ;^This at the top, and must be up to date (as in match) with all of them used by blocks, patch and uberasm tool.
