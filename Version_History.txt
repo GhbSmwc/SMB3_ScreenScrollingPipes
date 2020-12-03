@@ -315,9 +315,10 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	  that aren't connected to another, but traveling through them drags the player (in any direction,
 	  including diagonal) to the other end. This enables you not being required to have pipe-related
 	  blocks in between the two terminals and design the level a lot more freely.
-	--Sprites carried into pipes now turn invisible with the player. This is useful for designing
-	  remote pipes, two ends that don't appear to be connected but will send the player to the other end
-	  anyway without spoiling the illusion of a carried sprite being visible.
+	--Sprites carried into pipes now will not interact with other sprites and will turn invisible with
+	  the player. This is useful for designing remote pipes, two ends that don't appear to be connected
+	  in between but will send the player to the other end anyway without spoiling the illusion of a
+	  carried sprite being visible.
 	--Added switchable special turn corners (mainly on-off controlled, you can create a copy of them by
 	  copying the folder and changing the define if you want it for other switches).
 	--You can now modify the width that the player can enter vertical normal-sized pipes.
