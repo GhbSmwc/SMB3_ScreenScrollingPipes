@@ -68,7 +68,7 @@ endif
   ;  This is also known as "NULL" prep direction.
   ;--Values $01-$04:
   ;---$01-$04 (%0001-%0100) = travel up, right, down and left (in that order).
-  ;   Note: When using warp mode, this will be the direction upon Mario reaches his war destination his DDDD bits to be set to.
+  ;   Note: When using warp mode, this will be the direction upon Mario reaches his warp destination his DDDD bits to be set to.
 
  if !sa1 == 0
   !Freeram_SSP_PipeTmr		= $7E0061
