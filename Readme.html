@@ -184,6 +184,23 @@ files used for the same gamemode number.)</li><br>
 
 <table><tr><td><pre>14 GM14.asm</pre></td></tr></table></li><br>
 
+
+<ul><li>Title screen note</li>
+<ol>
+<li>If you are planning to have this also apply on the title screen, create another entry for <kbd>list.txt</kbd>:
+<table><tr><td><pre>7 GM07.asm</pre></td></tr></table></li>
+
+<li>Create an ASM file (it is a text file with an <kbd>.asm</kbd> extension), <kbd>GM07.asm</kbd> inside &ldquo;gamemode&rdquo;. Inside the file, have this code:
+<table><tr><td><pre>;gamemode 7 (title screen).
+main:
+	;You can have codes (including JSL to library codes, just like the one below here) between the main label (above) and the code below here, if you want
+	;third-party stuff here.
+	JSL ScreenScrollingPipes_SSPMaincode
+	;...or codes here before the RTL.
+	RTL</pre></td></tr></table>
+It is pretty much the same as gamemode 14.</li>
+</ol>
+</ul>
 <li>Now insert the code by running uberasm tool.</li>
 </ol>
 
@@ -367,7 +384,7 @@ beyond that), it also means you can have SSPs setups like this:<br>
 <img src="Readme_files/DisconnectedStraightPipe.png"><br>
 Just remember that the player will keep going in whatever last sets his direction state, and that unlike dragmode, you <b>have to</b>
 worry about placing blocks in that path (either add a code on all blocks in his path to do nothing and behave $0025 if
-he's in pipe state, or use the dragmode state).</li><br>
+he's in pipe state, or use the dragmode state). Just be warned that 3rd-party resources like custom sprites may be needed to be edited to ignore the player inside pipes.</li><br>
 
 <li>If you enter a pipe, while yoshi exist, yoshi will also turn invisible (with some 8x8
  pieces still visible), I couldn't fix that.</li><br>
