@@ -37,6 +37,7 @@ SSPMaincode:
 				ORA $9D				;>Prevent glitches in which !Freeram_SSP_PipeTmr still decrements during freezes like baby yoshi growing when the user disable pipe freezing.
 			endif
 			ORA $1426|!addr				;>Don't lock controls on message boxes.
+			ORA $13FB|!addr				;>Player frozen (such as yoshi growing animation).
 			;ORA <address>				;>Other RAM to disable running pipe code.
 			BEQ ..HandleCarryingSprites
 			JMP ..pose				;>While the pipe-related code should stop running during a freeze, the pose should still be running (during freeze, he reverts to his normal pose).
