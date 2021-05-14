@@ -333,3 +333,15 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	--Fixed a minor and potential bug that placing keys on top of small horizontal pipes may push the
 	  player, this is noticeable when placed above turn_right-down and turn_up-right corners when the
 	  key is placed above them, which de-centers the player when going horizontal to downwards.
+05/17/2021 4.0.1 - Frozen player fix
+	--Fixed a minor bug that if the “player frozen” flag $13FB is set (this is used, say, when yoshi
+	  does the transformation animation from baby to adult, and potentially some ASM stuff utilizing
+	  it, such as my upcoming scroll limits patch) during entering/exiting pipe transition, causes the
+	  player to NOT move while the timer “!Freeram_SSP_PipeTmr” CONTINUES to decrement. If this happens
+	  during an exiting animation, and $13FB “stalls” the player as he exits, it is possible the player
+	  reverts to his out-of-pipe state before he fully exits out of the pipe, causing him to clip inside the
+	  block and possibly die.
+	  
+	  Normally $13FB is usually SET along with $9D, so everything will be frozen (assuming you have define
+	  “!Setting_SSP_FreezeTime” set to 1). This is just in case some future bug happens that are either
+	  undiscovered from the original SMW or caused by some ASM stuff.
