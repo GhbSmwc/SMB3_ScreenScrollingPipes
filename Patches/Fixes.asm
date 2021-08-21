@@ -241,7 +241,7 @@ incsrc "../SSPDef/Defines.asm"
 		autoclean JSL MakeMechaKoopaInvisible	;>Mechakoopa
 	org $01A14D
 		autoclean JML MakeGoombaInvisible
-		nop #2
+		nop
 		
 	org $01A1EC
 		autoclean JSL MakeBobOmbInvisible
