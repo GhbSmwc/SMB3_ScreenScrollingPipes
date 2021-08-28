@@ -92,7 +92,7 @@ only need 1 connector in between the parallel pipes), you can do this in a more 
 </ul>
 <h1><a href="#TOC_BackgroundPipeTilesBack" id="TOC_BackgroundPipeTiles">^</a>Background pipe tiles</h1>
 You may be wondering what is up with the darken pipe tiles in the map16 editor? Well these are &ldquo;background pipes&rdquo;. They're just background objects (not layer 2 background, I mean a
-non-interactable scenery, like SMW's bushes) the player can past right through them, but when in pipe mode, are interactable. This is useful if you want two parts in your level connected via a pipe
+non-interactable scenery, like SMW's bushes) the player can pass right through them, but when in pipe mode, are interactable. This is useful if you want two parts in your level connected via a pipe
 but not act as a solid wall separating the level. Do note that most of these tiles are not actually custom blocks but a mere tile that acts $0025 (mainly a contrast to <kbd>pass_if_in_pipe.asm</kbd> which
 is solid when outside a pipe and passible when inside pipe mode, does nothing other than that), since this SSP package relies on a state-based mechanism in which nothing happens to the player, means the player
 keeps going straight in one direction in pipe mode. Therefore, you don't even need those tiles (besides the turn corners and pipe caps) to make sure the player keeps going in the same direction.<br><br>
