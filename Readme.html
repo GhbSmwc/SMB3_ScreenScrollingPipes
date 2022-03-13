@@ -593,10 +593,12 @@ print "<description>"
 
 </li><br>
 
-<li>Note that if RAM address <kbd>$7E1419</kbd> (this is the RAM that handles when the player enters an exit enabled pipe, it also affects yoshi pose, even when not mounted,
-this even happens in the original game with the exit-enabled pipes) is a nonzero value, will force the player to hold the sprite, regardless the dash button is held down,
-disabled (clears the controller bit every frame) or not pressed at all. Once the player exits the pipe, the frame the player exits the pipe completely will have <kbd>$7E1419</kbd>
-be cleared but his controllers still disabled until a frame later, causing the player to let go the sprite.</li><br><br>
+<li>Note that RAM address <kbd>$7E1419</kbd> (this handles when the player enters a pipe, including handling yoshi pose, and carrying sprites) is a nonzero value, it will force
+the player to continue holding the carried sprite, regardless if the dash button is held down, disabled (clears the controller bit every frame) or not pressed at all. Once the player exits the pipe,
+the frame the player exits the pipe completely will have <kbd>$7E1419</kbd> be cleared but his controllers still disabled until a frame later, causing the player to let go the sprite,
+which is why this uberasm code must handle that not just the frame of entering the pipes, but also <i>every</i> frame during travel as well to prevent accidental let-go of the sprite. There is also a bug in the original game as well as this ASM
+resource that if you enter a pipe, reguardless if you are on yoshi or not, yoshi will always show his pipe animation. <a href="https://www.smwcentral.net/?p=section&a=details&id=30127">This patch</a>
+fixes the yoshi issue so that it does not show its pipe animation when the player is off yoshi traveling through pipes (and it should also apply on this ASM resource as well.).</li><br><br>
 
 <li>Although, you may not use the SSPs on certain levels at your own discretion, and that you could only have the SSP uberasm tool code run at specific levels, be warned that the <kbd>Fixes.asm</kbd>
 patch will apply to all levels, meaning that the freeram addresses the SSPs use are still used even if the uberasm tool code isn't running, which can cause glitches when being set to nonzero values.</li><br>

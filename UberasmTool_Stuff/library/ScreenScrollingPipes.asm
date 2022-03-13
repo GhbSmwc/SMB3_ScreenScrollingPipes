@@ -98,7 +98,7 @@ SSPMaincode:
 			...NoHide
 		..YoshiImage
 			LDA $187A|!addr		;\if on yoshi, then use yoshi poses
-			BNE ...OnYoshi		;/
+			BNE ...OnYoshi		;/NOTE: $1419 must still be written in any case of entering pipes to prevent accidental item dropping.
 			
 			...OffYoshi
 				STZ $73			;>so mario cannot remain ducking (unless on yoshi) as he exits.
