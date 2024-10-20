@@ -417,7 +417,7 @@ this runs every frame when $7E0071 = #$00. I'll keep the store #$0B to $7E0071 i
 uberasm could not disable the controls properly just in case. It's also needed to prevent
 player controls during pipe movement.</li><br>
 
-<li>For some reasons, SSP_Tiles $40D-$411, $413, $16, $417, $41C, $41E, $41F, $423, $425-$428,
+<li><s>For some reasons, SSP_Tiles $40D-$411, $413, $16, $417, $41C, $41E, $41F, $423, $425-$428,
 $42B-$42F, $436, $437, $43B-$43E, $440, $44B-$44F, $45E, $45F, $46F, $47E, $47F, and
 $48E uses the wrong discriptions of another block when viewed on LM, even though the
 discriptions in the asm blocks are correct, it might be a glitch with LM viewing or
@@ -425,7 +425,8 @@ GPS's discription, I can't really fix that, so if this bothers you, simply disab
 in the definition file, that way, it will only show up its name correctly without any
 errors. Hopefully this gets fixed, if it was, please PM me or update the file (by
 editing the files (like the if statement containing the print commands) in this package
-and removing this notice). In the future, they may be fixed due to the bugs happening in the tool itself.</li><br>
+and removing this notice). In the future, they may be fixed due to the bugs happening in the tool itself.</s>
+EDIT: It's fixed. This is due to using a backslash character or other reserved characters.</li><br>
 
 
 <li id="MarioInPipeInteractWithCustomSprites">While most sprites don't interact with the player in any way when the player is traveling through pipes,
