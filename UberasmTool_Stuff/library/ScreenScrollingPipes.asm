@@ -135,7 +135,7 @@ SSPMaincode:
 				STA $71			;/
 				STA $9D			;>Freeze time
 			endif
-			LDA #$02			;\Some sprites ignore the $13F9, such as boo ring.
+			LDA #$03			;\Some sprites ignore the $13F9, such as boo ring.
 			STA $1497|!addr			;/
 			LDA #$01			;\allow vertical scroll up.
 			STA $1404|!addr			;/
