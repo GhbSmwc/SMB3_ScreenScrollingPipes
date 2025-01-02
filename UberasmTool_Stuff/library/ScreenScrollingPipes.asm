@@ -135,6 +135,8 @@ SSPMaincode:
 				STA $71			;/
 				STA $9D			;>Freeze time
 			endif
+			LDA #$02			;\Some sprites ignore the $13F9, such as boo ring.
+			STA $1497|!addr			;/
 			LDA #$01			;\allow vertical scroll up.
 			STA $1404|!addr			;/
 			STZ $14A6|!addr			;>no spinning.
@@ -356,6 +358,7 @@ SSPMaincode:
 				if !Setting_SSP_FreezeTime != 0
 					STZ $9D			;>back in motion
 				endif
+				STZ $1497|!addr		;>make vulnerable
 				STZ $13F9|!addr			;>go in front
 				....RestorePlayerStateIfNotDying
 					LDX $71				;\If player dying, don't restore his state

@@ -349,3 +349,6 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	-fixed a bug that SimFan96 (https://www.smwcentral.net/?p=profile&id=34677 ) reported that a hijack
 	 $01A14D that I had one extra NOP (which breaks the LDA at $01A152), breaking mechakoopas when they're
 	 stunned.
+01-01-2025 4.0.3
+	-Fixed an oversight where some sprites still interacts with the player while inside a pipe, such as
+	 a boo ring. Give thanks to AmperSam for reporting on it.
