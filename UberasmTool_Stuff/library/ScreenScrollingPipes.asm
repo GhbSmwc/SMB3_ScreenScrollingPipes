@@ -313,7 +313,7 @@ SSPMaincode:
 						STA !Freeram_SSP_PipeDir	;>And set pipe direction from cap to stem speed with the same direction.
 		
 						......StemSpeedDone
-							BRA ..pose
+							JMP ..pose
 	
 				....ExitingPipe			;
 					LDA !Freeram_SSP_PipeTmr	;\if timer already = 0, then skip the reset (so it does it once).
