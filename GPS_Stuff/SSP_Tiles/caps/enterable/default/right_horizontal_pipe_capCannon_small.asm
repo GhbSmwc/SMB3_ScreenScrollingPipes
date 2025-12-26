@@ -68,7 +68,12 @@ not_carry:
 	STA !Freeram_SSP_PipeDir	;/
 	LDA #$01		;\set flag to "entering"
 	STA !Freeram_SSP_EntrExtFlg	;/
-	JSR center_vert
+	%Set_Player_YPosition_LowerHalf()
+	REP #$20
+	LDA $96
+	DEC
+	STA $96
+	SEP #$20
 	JSR passable
 	RTL
 TopCorner:
@@ -103,7 +108,12 @@ exit:
 	AND #$FFF0			;|incorrectly.
 	STA $94				;|
 	SEP #$20			;/
-	JSR center_vert			;>Center vertically as exiting horizontal pipe cap
+	%Set_Player_YPosition_LowerHalf()			;>Center vertically as exiting horizontal pipe cap
+	REP #$20
+	LDA $96
+	DEC
+	STA $96
+	SEP #$20
 	LDA.b #!SSP_PipeTimer_CannonExit_Rightwards	;\set exit the pipe timer (same as smw's $7E0088)
 	STA !Freeram_SSP_PipeTmr		;/
 	JSR passable		;>become passable
@@ -124,24 +134,6 @@ passable:
 	STA $1693|!addr		;/
 solid_out:
 	RTS
-center_vert:
-;	LDA $187A|!addr
-;	BNE yoshi_center
-	REP #$20
-	LDA $98
-	AND #$FFF0
-	SEC : SBC #$0011
-	STA $96
-	SEP #$20
-	RTS
-;yoshi_center:
-;	REP #$20
-;	LDA $98
-;	AND #$FFF0
-;	SEC : SBC #$0021
-;	STA $96
-;	SEP #$20
-;	RTS
 if !Setting_SSP_Description != 0
 print "Right cap cannon piece of horizontal pipe for small mario."
 endif

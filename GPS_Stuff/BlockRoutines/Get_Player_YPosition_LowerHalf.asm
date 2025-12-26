@@ -18,7 +18,7 @@
 	TAX
 	LDA $96
 	CLC
-	ADC ?.YoshiOffset,x
+	ADC.l ?.YoshiOffset,x
 	SEP #$20
 	RTL
 	

@@ -18,7 +18,7 @@
 	LDA $98
 	AND #$FFF0		;>Clear out the low nybble (low 4 bits), effectively rounding down to nearest 16 units, this is now the block position in pixels.
 	SEC			;\Subtract upwards from the block to where Mario's origin should be
-	SBC ?.YoshiOffsetY,x	;/
+	SBC.l ?.YoshiOffsetY,x	;/
 	STA $96			;>And set to there
 	SEP #$20
 	RTL

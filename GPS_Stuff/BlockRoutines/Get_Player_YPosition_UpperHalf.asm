@@ -21,7 +21,7 @@
 	TAX
 	LDA $96
 	CLC
-	ADC ?.PowerupOffset,x
+	ADC.l ?.PowerupOffset,x
 	SEP #$30
 	RTL
 	?.RidingYoshi

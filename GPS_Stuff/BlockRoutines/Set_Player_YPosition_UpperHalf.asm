@@ -20,7 +20,7 @@
 	LDA $98
 	AND #$FFF0		;>Clear out the low nybble (low 4 bits), effectively rounding down to nearest 16 units, this is now the block position in pixels.
 	CLC
-	ADC ?.PowerupOffset,x
+	ADC.l ?.PowerupOffset,x
 	STA $96
 	SEP #$30
 	RTL

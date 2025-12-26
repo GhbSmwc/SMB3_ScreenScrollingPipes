@@ -79,7 +79,12 @@ enter:
 	STA !Freeram_SSP_PipeDir	;/
 	LDA #$01		;\set flag to "entering"
 	STA !Freeram_SSP_EntrExtFlg	;/
-	JSR center_vert
+	%Set_Player_YPosition_LowerHalf()
+	REP #$20
+	LDA $96
+	DEC A
+	STA $96
+	SEP #$20
 within_pipe:
 	JSR passable
 return:
@@ -115,7 +120,12 @@ exit:
 	AND #$FFF0			;|incorrectly.
 	STA $94				;|
 	SEP #$20			;/
-	JSR center_vert			;>Center vertically as exiting horizontal pipe cap
+	%Set_Player_YPosition_LowerHalf()			;>Center vertically as exiting horizontal pipe cap
+	REP #$20
+	LDA $96
+	DEC A
+	STA $96
+	SEP #$20
 	LDA.b #!SSP_PipeTimer_CannonExit_Rightwards	;\set exit the pipe timer (same as smw's $7E0088)
 	STA !Freeram_SSP_PipeTmr			;/
 	JSR passable		;>become passable
@@ -133,28 +143,6 @@ passable:
 	LDA #$25		;|
 	STA $1693|!addr		;/
 	RTS
-center_vert:
-	if !Setting_SSP_YoshiAllowed != 0
-		LDA $187A|!addr
-		BNE yoshi_center
-	endif
-	REP #$20
-	LDA $98
-	AND #$FFF0
-	SEC : SBC #$0011
-	STA $96
-	SEP #$20
-	RTS
-	if !Setting_SSP_YoshiAllowed != 0
-		yoshi_center:
-		REP #$20
-		LDA $98
-		AND #$FFF0
-		SEC : SBC #$0021
-		STA $96
-		SEP #$20
-		RTS
-	endif
 if !Setting_SSP_Description != 0
 print "Bottom-right cap cannon piece of horizontal 2-way pipe."
 endif
