@@ -197,6 +197,8 @@ endif
   ;^Fractional amount to set $13DA. It's format is $X0, where X is a value from 0 to F, representing X/16 fraction. Not used if !Setting_SSP_SetXYFractionBits == 0
  !Setting_SSP_YPositionFractionSetTo = $00
   ;^Same as above but for $13DC.
+ !Setting_SSP_YPositionOffset = $FFFF
+  ;^Y position offset after centering vertically, note that $0000 and higher values means interacting with tiles below pipes.
 ;Pipe travel speeds:
 ;Use only values $01-$7F (negative speeds already calculated).
  if !Setting_SSP_FuSoYaSpd == 0		;>Don't change this if statement.

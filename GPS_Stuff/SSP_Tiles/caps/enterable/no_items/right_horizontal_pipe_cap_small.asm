@@ -66,14 +66,21 @@ not_carry:
 	AND.b #%11110000		;|>Force low nibble clear
 	ORA.b #%00001000		;|>Force low nibble set
 	STA !Freeram_SSP_PipeDir	;/
-	LDA #$01		;\set flag to "entering"
+	LDA #$01			;\set flag to "entering"
 	STA !Freeram_SSP_EntrExtFlg	;/
 	%Set_Player_YPosition_LowerHalf()
-	REP #$20
-	LDA $96
-	DEC A
-	STA $96
-	SEP #$20
+	if !Setting_SSP_YPositionOffset != 0
+		REP #$20
+		LDA $96
+		CLC
+		ADC.w #!Setting_SSP_YPositionOffset
+		STA $96
+		SEP #$20
+	endif
+	if !Setting_SSP_SetXYFractionBits
+		LDA #!Setting_SSP_YPositionFractionSetTo
+		STA $13DC
+	endif
 	JSR passable
 	RTL
 TopCorner:
@@ -109,11 +116,18 @@ exit:
 	STA $94				;|
 	SEP #$20			;/
 	%Set_Player_YPosition_LowerHalf()
-	REP #$20
-	LDA $96
-	DEC A
-	STA $96
-	SEP #$20
+	if !Setting_SSP_YPositionOffset != 0
+		REP #$20
+		LDA $96
+		CLC
+		ADC.w #!Setting_SSP_YPositionOffset
+		STA $96
+		SEP #$20
+	endif
+	if !Setting_SSP_SetXYFractionBits
+		LDA #!Setting_SSP_YPositionFractionSetTo
+		STA $13DC
+	endif
 	LDA.b #!SSP_PipeTimer_Exit_Rightwards	;\set exit the pipe timer (same as smw's $7E0088)
 	STA !Freeram_SSP_PipeTmr		;/
 	JSR passable		;>become passable
