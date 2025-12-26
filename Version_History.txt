@@ -352,3 +352,8 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 01-01-2025 4.0.3
 	-Fixed an oversight where some sprites still interacts with the player while inside a pipe, such as
 	 a boo ring. Give thanks to AmperSam for reporting on it.
+12/26/2025 4.0.4
+	-Centering codes now also sets the player's XY subpixel position, thus movement no longer have a 1
+	 pixel variance of the player's XY position upon exiting pipe caps.
+	-Vertical centering code (accounting for whether or not riding yoshi or powerup states) now moved
+	 to subroutines to save some space.
