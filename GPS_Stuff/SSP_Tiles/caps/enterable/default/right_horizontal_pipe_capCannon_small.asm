@@ -79,7 +79,7 @@ not_carry:
 	endif
 	if !Setting_SSP_SetXYFractionBits
 		LDA #!Setting_SSP_YPositionFractionSetTo
-		STA $13DC
+		STA $13DC|!addr
 	endif
 TopCorner:
 MarioAbove:
@@ -124,7 +124,7 @@ exit:
 	endif
 	if !Setting_SSP_SetXYFractionBits
 		LDA #!Setting_SSP_YPositionFractionSetTo
-		STA $13DC
+		STA $13DC|!addr
 	endif
 	LDA.b #!SSP_PipeTimer_CannonExit_Rightwards	;\set exit the pipe timer (same as smw's $7E0088)
 	STA !Freeram_SSP_PipeTmr		;/

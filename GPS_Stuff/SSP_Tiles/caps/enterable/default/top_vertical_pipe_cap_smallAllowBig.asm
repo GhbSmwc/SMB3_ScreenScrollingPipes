@@ -169,6 +169,10 @@ center_horiz:
 	AND #$FFF0		;|
 	STA $94			;|
 	SEP #$20		;/
+	if !Setting_SSP_SetXYFractionBits
+		LDA.b #!Setting_SSP_XPositionFractionSetTo
+		STA $13DA|!addr
+	endif
 	RTS
 passable:
 	LDY #$00		;\mario passes through the block
