@@ -2,8 +2,8 @@
 	<head>
 		<style>
 			html {
-			background-color: #000207;
-			color: white;
+			background-color: #101010;
+			color: rgb(221, 221, 221);
 			font-family: sans-serif;
 			}
 			
@@ -12,14 +12,46 @@
 			border-collapse: collapse;
 			}
 			
-			u.DottedUnderline {
-			border-bottom: 1px dashed #999;
-			text-decoration: none; 
+			abbr{cursor: help;}
+			img.img-hor {
+				-moz-transform: scaleX(-1);
+				-o-transform: scaleX(-1);
+				-webkit-transform: scaleX(-1);
+				transform: scaleX(-1);
+				filter: FlipH;
+				-ms-filter: "FlipH";
+			}
+			div.CodeBlock {
+				overflow: auto;
+				width: 1000px;
+				height: 500px;
+				border: 1px solid white;
+				resize: both;
+				background-color: #101010;
+			}
+			pre {
+				margin: 0px;
+			}
+			*.FixedWidth {
+				font-family: monospace;
 			}
 			
+			*.NoLineBreak {
+				font-family: monospace;
+				white-space: pre;
+			}
+			*.Center {
+				text-align: center;
+			}
+			li {
+				padding: 5px;
+			}
+			tr.RedBackground {
+				background-color: #400000;
+			}
 		</style>
 	</head>
-<body>
+<body style="max-width: 1000px; margin: auto; padding: 15px">
 
 <center><h1>Screen Scrolling Pipes</h1></center>
 <center><h2>By GreenHammerBro.</h2></center>
@@ -182,22 +214,22 @@ files used for the same gamemode number.)</li><br>
 
 <li>On Uberasm tool's <kbd>list.txt</kbd>, under gamemode, just put this:
 
-<table><tr><td><pre>14 GM14.asm</pre></td></tr></table></li><br>
+<div class="CodeBlock" style="width: 97px; height: 18px;"><pre>14 GM14.asm</pre></div></li><br>
 
 
 <ul><li>Title screen note</li>
 <ol>
 <li>If you are planning to have this also apply on the title screen, create another entry for <kbd>list.txt</kbd>:
-<table><tr><td><pre>7 GM07.asm</pre></td></tr></table></li>
+<div class="CodeBlock" style="width: 97px; height: 18px;"><pre>7 GM07.asm</pre></div></li>
 
 <li>Create an ASM file (it is a text file with an <kbd>.asm</kbd> extension), <kbd>GM07.asm</kbd> inside &ldquo;gamemode&rdquo;. Inside the file, have this code:
-<table><tr><td><pre>;gamemode 7 (title screen).
+<div class="CodeBlock" style="width: 944px; height: 125px;"><pre>;gamemode 7 (title screen).
 main:
 	;You can have codes (including JSL to library codes, just like the one below here) between the main label (above) and the code below here, if you want
 	;third-party stuff here.
 	JSL ScreenScrollingPipes_SSPMaincode
 	;...or codes here before the RTL.
-	RTL</pre></td></tr></table>
+	RTL</pre></div>
 It is pretty much the same as gamemode 14.</li>
 </ol>
 </ul>
@@ -336,7 +368,7 @@ corners and exit caps without interacting them, causing the player to continue i
  appearing superimpose of the pipe as mario is being behind the layer. Unless you can
  make it change the yxppccct using this code to be used in a custom sprite's code:
  
- <table><tr><td><pre>
+ <div class="CodeBlock" style="width: 969px; height: 369px;"><pre>
 SSPPriority:
 	LDA $14C8,x	;\If sprite not carried, go in front
 	CMP #$0B		;|
@@ -360,22 +392,21 @@ SSPPriority:
 			;11 = Appear in front of everything, except Layer 3 tiles with priority setting 1 if the
 			;     "force above everything" bit is set
 	.Skip
-		STA !15F6,x</pre></td></tr></table>
+		STA !15F6,x</pre></div>
 <ul><li>Also, this SSP package is intended to make both the player and the carried sprite invisible when he fully enters
 the pipe (when his entering animation timer hits 0) so that you can have non-physically-connected pipes without the
 carried sprite revealing the player's position. However, this only works with SMW's sprites handled by <kbd>Fixes.asm</kbd>.<br><br>
 
 To have this be applied to carryable custom sprites, I provided a small subroutine in <kbd>Pixi/routines/DetectSpriteCarriedInSSP.asm</kbd>, for use in PIXI's <kbd>routines</kbd>
 folder, and any carryable custom sprite used in your hack, on their graphics handler, do this (this is a template/example, most sprites uses different label names):
-<table><tr><td><pre>	CodeStart:
-		JSR GRAPHICS</pre></td></tr></table>
+<div class="CodeBlock" style="width: 247px; height: 35px;"><pre>	CodeStart:
+		JSR GRAPHICS</pre></div>
 turns into:
-<table><tr><td><pre>	CodeStart:
+<div class="CodeBlock" style="width: 362px; height: 80px;"><pre>	CodeStart:
 		%DetectSpriteCarriedInSSP()
 		BCS SkipGFX
 		JSR GRAPHICS
-	SkipGFX:
-		</pre></td></tr></table>
+	SkipGFX:</pre></div>
 And that will cause the sprite to skip the entire graphics routines folder when carried fully into the pipe.</li></ul>
 </li><br>
 <li>When the player enters the pipe, he ignores most sprites and any carried sprites with him will also ignore them too,
@@ -441,7 +472,7 @@ To fix that, simply look for a code that writes (STA) to an address $94-$97 (the
 in the level, $94-$95 = X position, $96-$97 = Y position), and add this to skip over setting the player's
 coordinates, and also writing $1471:
 
-<table><tr><td><pre>incsrc "../SSPDef/Defines.asm"
+<div class="CodeBlock" style="width: 963px; height: 201px;"><pre>incsrc "../SSPDef/Defines.asm"
 ;^This at the top, and must be up to date (as in match) with all of them used by blocks, patch and uberasm tool.
 ; You may have to fiddle around with the [../] (pearent directory) in case for future tools. Then make sure you
 ; copy and paste the folder containing the definitions where the sprite tool's exe is at.
@@ -453,7 +484,7 @@ coordinates, and also writing $1471:
 	;*code that uses, lets say sprite position ($D8, $E4, $14D4, and $14E0), displaces the
 	;number from it, and writes to $94-$97, and writing to $1471*
 
-	.DontSetPos			;>Must skip ALL position-related code</pre></td></tr></table>
+	.DontSetPos			;>Must skip ALL position-related code</pre></div>
 
 <ul><li>Also, in case other codes that sets the player's X and Y speed or positions ($7A-$7B, $7D $13DA, $13DC
 $94-$95, and $96-$97), make sure you don't write them during pipe movement. Otherwise it will override
@@ -477,10 +508,10 @@ issue, a simple code mentioned earlier will solve this.</li></ul></li><br>
 <li>When traveling downwards and hits a corner that changes the player's direction to horizontal (left or right), the blocks below the turn corner
 may be interacted. Be careful not to put instant kill, teleport, or any other such blocks there, unless you add a check to not interfere
 with the player traveling:
-<table><tr><td><pre>	LDA !Freeram_SSP_PipeDir		;\If inside a pipe, return.
+<div class="CodeBlock" style="height: 49px; width: 983px;"><pre>	LDA !Freeram_SSP_PipeDir		;\If inside a pipe, return.
 	AND.b #%00001111			;|
 	BNE InsidePipe				;/>Don't do anything as the player travel through pipes
-</pre></td></tr></table></li><br>
+</pre></div></li><br>
 
 <li><a name="SpeedClipping">To add to the note above, be careful with setting the travel speeds to make the player travel very fast, he may phase through
 the interaction fields of the turn corners and pipe caps (he'll pass through without triggering them). This is because SMW (and pretty much most video games, even in 3D) handles
@@ -549,7 +580,7 @@ is before the controller gets disabled by the code handling pipe traveling from 
 
 <li>If you want blocks to be passable while the player is in his pipe state (such as a pipe that goes into a solid object for scenery), I provided you this code (see below)
 Make sure all offsets must be passable during pipe travel.
-<table><tr><td><pre>
+<div class="CodeBlock"><pre>
 
 incsrc "../SSPDef/Defines.asm"
 ;^I assume you would have this placed in the main directory of the blocks folder and not in any subfolders.
@@ -591,7 +622,7 @@ MarioFireball:			;&gt;If you disable freezing (locking $9D), having this run the
 RTL
 
 print "<description>"
-</pre></td></tr></table>
+</pre></div>
 
 </li><br>
 
@@ -614,3 +645,34 @@ patch will apply to all levels, meaning that the freeram addresses the SSPs use 
 under uberasm tool to drag the player during warp mode.</li>
 <li><a href="https://benhollis.net/"> Benjamin Hollis</a>, for letting me compress my images (via PNGGauntlet) so I can fit this package into SMWC's block section's 1MIB (1048.58KB) size limit</li>
 </ul>
+<script>
+//These makes all <pre>...</pre> have an effect that double-clicking will select all the text
+//in it, to make it easy to copy code and paste it in your ASM stuff.
+//
+//Credit:
+// https://keestalkstech.com/2014/04/click-to-select-all-on-the-pre-element/
+// https://www.sanwebe.com/2014/04/select-all-text-in-element-on-click
+document.addEventListener('dblclick', e => {
+  let pre = getClosest(e.target, "PRE");
+  if (pre && e.ctrlKey) {
+    let range = new Range();
+    range.selectNodeContents(pre);
+    document.getSelection().removeAllRanges();
+    document.getSelection().addRange(range);
+  }
+});
+
+function getClosest(el, tagName) {
+  tagName = tagName && tagName.toUpperCase();
+
+  if (!tagName || !el)
+    return null;
+
+  do
+    if (el.nodeName === tagName)
+      return el;
+  while (el = el.parentNode);
+
+  return null;
+}
+</script>
