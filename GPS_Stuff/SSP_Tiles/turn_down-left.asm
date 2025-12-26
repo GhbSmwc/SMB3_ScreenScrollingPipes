@@ -80,30 +80,29 @@ right_to_up:
 	JSR corner_center		;>and snap player
 	RTL
 corner_center:
-	REP #$20		;\center player to pipe horizontally.
-	LDA $9A			;|
-	AND #$FFF0		;|
-	SEC : SBC #$0008	;|
-	STA $94			;|
-	SEP #$20		;/
-	LDA $187A|!addr		;\center differently if on yoshi
-	BNE yoshi_center	;/
-	REP #$20		;\center vertically as no yoshi
-	LDA $98			;|
-	AND #$FFF0		;|
-	SEC : SBC #$0011	;|
-	STA $96			;|
-	SEP #$20		;/
-	RTS
-yoshi_center:
-	REP #$20		;\center vertically as on yoshi
-	LDA $98			;|
-	AND #$FFF0		;|
-	SEC : SBC #$0021	;|
-	STA $96			;|
-	SEP #$20		;/
-	RTS
-solid_out:
+	REP #$20						;\center horizontally.
+	LDA $9A							;|
+	AND #$FFF0						;|
+	SEC : SBC #$0008					;|
+	STA $94							;|
+	SEP #$20						;|
+	if !Setting_SSP_SetXYFractionBits			;|
+		LDA.b #!Setting_SSP_XPositionFractionSetTo	;|
+		STA $13DA|!addr					;|
+	endif							;/
+	%Set_Player_YPosition_LowerHalf()			;\Center vertically.
+	if !Setting_SSP_YPositionOffset != 0			;|
+		REP #$20					;|
+		LDA $96						;|
+		CLC						;|
+		ADC.w #!Setting_SSP_YPositionOffset		;|
+		STA $96						;|
+		SEP #$20					;|
+	endif							;|
+	if !Setting_SSP_SetXYFractionBits			;|
+		LDA #!Setting_SSP_YPositionFractionSetTo	;|
+		STA $13DC|!addr					;|
+	endif							;/
 	RTS
 	
 YoshiPositioning:

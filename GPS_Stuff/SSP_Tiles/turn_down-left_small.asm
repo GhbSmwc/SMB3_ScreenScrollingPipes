@@ -87,26 +87,28 @@ right_to_up:
 	JSR corner_center		;>and snap player
 	RTL
 corner_center:
-	LDA $187A|!addr		;\Yoshi Y positioning indexed
-	ASL			;|
-	TAX			;/
-	REP #$20		;
-	LDA $9A			;\Center the player horizontally
-	AND #$FFF0		;|
-	STA $94			;/
-	REP #$20		;\center vertically
-	LDA $98			;|
-	AND #$FFF0		;|
-	SEC			;|
-	SBC YoshiYOffset,x	;|
-	STA $96			;|
-	SEP #$20		;/
-	RTS
-	
-	YoshiYOffset:
-	dw $0011
-	dw $0021
-	dw $0021
+	REP #$20						;\center horizontally.
+	LDA $9A							;|
+	AND #$FFF0						;|
+	STA $94							;|
+	SEP #$20						;|
+	if !Setting_SSP_SetXYFractionBits			;|
+		LDA.b #!Setting_SSP_XPositionFractionSetTo	;|
+		STA $13DA|!addr					;|
+	endif							;/
+	%Set_Player_YPosition_LowerHalf()			;\Center vertically.
+	if !Setting_SSP_YPositionOffset != 0			;|
+		REP #$20					;|
+		LDA $96						;|
+		CLC						;|
+		ADC.w #!Setting_SSP_YPositionOffset		;|
+		STA $96						;|
+		SEP #$20					;|
+	endif							;|
+	if !Setting_SSP_SetXYFractionBits			;|
+		LDA #!Setting_SSP_YPositionFractionSetTo	;|
+		STA $13DC|!addr					;|
+	endif							;/
 	
 	DistanceFromTurnCornerCheck:
 	;Prevents such glitches where as the player leaves a special turn corner
