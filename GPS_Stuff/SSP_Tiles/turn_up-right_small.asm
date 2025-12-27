@@ -15,20 +15,20 @@ MarioSide:
 HeadInside:
 MarioBelow:
 BodyInside:
-	;Check pipe state
-		LDA !Freeram_SSP_PipeDir	;\If not in pipe mode, Return as being a solid block
-		AND.b #%00001111		;|
-		BEQ Return			;/
-	;Render passable
-		LDY #$00			;\Become passable when in pipe.
-		LDX #$25			;|
-		STX $1693|!addr			;/
-	;Check if the block should be merely passable.
-		CMP #$09			;\If traveling in any direction, do nothing except be passable.
-		BCS Return			;/
-	;Adjust player pipe travel direction and centering
-		JSR DistanceFromTurnCornerCheck
-		BCC Return
+	LDA !Freeram_SSP_PipeDir	;\If not in pipe mode, Return as being a solid block
+	AND.b #%00001111		;|
+	BEQ Return			;/
+	LDY #$00			;\Become passable when in pipe.
+	LDX #$25			;|
+	STX $1693|!addr			;/
+	CMP #$09			;\If traveling in any direction, do nothing except be passable.
+	BCS Return			;/
+	REP #$20					;\Check if player is lined up with the block
+	STZ $00						;|
+	STZ $02						;|
+	SEP #$20					;|
+	%CheckIfPlayerBottom16x16CenterIsInBlock()	;|
+	BCC Return					;/
 
 	LDA !Freeram_SSP_PipeDir	;\Get current direction
 	AND.b #%00001111		;/
@@ -43,115 +43,20 @@ BodyInside:
 Return:
 	RTL
 up_to_right:
-	REP #$20
-	LDA $98
-	AND #$FFF0
-	if !Setting_SSP_YPositionOffset != 0
-		CLC
-		ADC.w #!Setting_SSP_YPositionOffset
-	endif
-	STA $00						;>$00~$01: Block Y position (pixel coordinate), offsetted.
-	SEP #$20
-	%Get_Player_YPosition_LowerHalf()
-	REP #$20
-	CMP $00
-	SEP #$20
-	BEQ +
-	BPL .NotFarEnough
-	+
-	LDA !Freeram_SSP_PipeDir	;\Set direction
-	AND.b #%11110000		;|
-	ORA.b #%00000010		;|
-	STA !Freeram_SSP_PipeDir	;/
-	JSR corner_center		;>and snap player
-	.NotFarEnough
+	LDA #$04
+	STA $00
+	LDA #$02
+	STA $01
+	%SSPChangeDirection()
 	RTL
-	
 left_to_down:
-	REP #$20		;\Don't center and change direction until the player is centered close enough (about to go past it).
-	LDA $9A			;|
-	AND #$FFF0		;|
-	CMP $94			;|
-	SEP #$20		;|
-	BPL +			;|
-	RTL			;/
-	+
-	LDA !Freeram_SSP_PipeDir	;\Set direction
-	AND.b #%11110000		;|
-	ORA.b #%00000011		;|
-	STA !Freeram_SSP_PipeDir	;/
-	JSR corner_center		;>and snap player
+	LDA #$04
+	STA $00
+	LDA #$03
+	STA $01
+	%SSPChangeDirection()
 	RTL
-corner_center:
-	REP #$20						;\center horizontally.
-	LDA $9A							;|
-	AND #$FFF0						;|
-	STA $94							;|
-	SEP #$20						;|
-	if !Setting_SSP_SetXYFractionBits			;|
-		LDA.b #!Setting_SSP_XPositionFractionSetTo	;|
-		STA $13DA|!addr					;|
-	endif							;/
-	%Set_Player_YPosition_LowerHalf()			;\Center vertically.
-	if !Setting_SSP_YPositionOffset != 0			;|
-		REP #$20					;|
-		LDA $96						;|
-		CLC						;|
-		ADC.w #!Setting_SSP_YPositionOffset		;|
-		STA $96						;|
-		SEP #$20					;|
-	endif							;|
-	if !Setting_SSP_SetXYFractionBits			;|
-		LDA #!Setting_SSP_YPositionFractionSetTo	;|
-		STA $13DC|!addr					;|
-	endif							;/
-	RTS
 	
-	DistanceFromTurnCornerCheck:
-	;Prevents such glitches where as the player leaves a special turn corner
-	;and activates a special direction block while touching the previous corner
-	;would cause the player to travel in the wrong direction.
-	;
-	;$00-$03 holds the position "point" on Mario/yoshi's feet:
-	;$00-$01 is the X position in units of block
-	;$02-$03 is Y position in units of block
-	;
-	;AND #$FFF0 rounds DOWN to the nearest #$0010 value
-	;Carry is set if the player's position point is inside the block and clear if outside.
-	
-	LDA $187A|!addr		;\Yoshi Y positioning
-	ASL			;|
-	TAX			;/
-	
-	REP #$20
-	LDA $94				;\Get X position
-	CLC				;|
-	ADC #$0008			;|
-	AND #$FFF0			;|
-	STA $00				;/
-	LDA $96				;\Get Y position
-	CLC				;|
-	ADC FootDistanceYpos,x		;|
-	AND #$FFF0			;|
-	STA $02				;/
-	
-	LDA $9A				;\if X position point is within this block
-	AND #$FFF0			;|
-	CMP $00				;|
-	BNE +				;/
-	LDA $98				;\if Y position point is within this block
-	AND #$FFF0			;|
-	CMP $02				;|
-	BNE +				;/
-	SEC
-	SEP #$20
-	RTS
-	+
-	CLC
-	SEP #$20
-	RTS
-	FootDistanceYpos:
-	dw $0018, $0028, $0028
 if !Setting_SSP_Description != 0
-print "Changes the pipe direction from up to right or left to down."
+	print "Changes the pipe direction from up to right or left to down."
 endif
