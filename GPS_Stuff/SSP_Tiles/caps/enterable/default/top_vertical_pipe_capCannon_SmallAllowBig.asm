@@ -106,7 +106,8 @@ MarioBelow:
 	BRA within_pipe
 exit:
 	JSR passable
-	STZ $02
+	LDA #$04
+	STA $02
 	LDA #$03
 	STA $03
 	%SSPExitUpwardsPipe()
