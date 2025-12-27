@@ -288,7 +288,7 @@ endif
 			!SSP_PipeTimer_Exit_Leftwards			= $04
 			!SSP_PipeTimer_Exit_Rightwards			= $04
 			!SSP_PipeTimer_Exit_Upwards_OffYoshi			= $09
-			!SSP_PipeTimer_Exit_Upwards_OnYoshi			= $0A
+			!SSP_PipeTimer_Exit_Upwards_OnYoshi			= $09
 			!SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario	= $06
 			!SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario	= $08
 			!SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario	= $07
