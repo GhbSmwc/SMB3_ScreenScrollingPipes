@@ -5,9 +5,10 @@ incsrc "../SSPDef/Defines.asm"
 ;Input:
 ; - $02 (1 byte): Centering. #$00 = 8 pixel to the right (left half cap), #$02 = 8 pixel to the left (right half cap),
 ;   #$04 = block-centered (for small pipe caps)
+; - $03 (1 byte): Exit mode. #$02 = regular exit, #$03 = Cannon exit.
 ?SSPExitUpwardsPipe:
 	LDA !Freeram_SSP_EntrExtFlg
-	CMP #$02
+	CMP $03
 	BEQ ?.AlreadyExiting
 	REP #$20
 	LDA $98
@@ -22,7 +23,7 @@ incsrc "../SSPDef/Defines.asm"
 	SEP #$20
 	BPL ?.Return				;If mario is not far enough into the cap, return
 	
-	LDA #$02
+	LDA $03
 	STA !Freeram_SSP_EntrExtFlg
 	LDX $02							;\Center Horizontally
 	REP #$20						;|

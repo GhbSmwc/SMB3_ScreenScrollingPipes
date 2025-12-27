@@ -31,6 +31,8 @@ exit:
 	JSR passable
 	LDA #$04
 	STA $02
+	LDA #$03
+	STA $03
 	%SSPExitUpwardsPipe()
 return:
 	RTL

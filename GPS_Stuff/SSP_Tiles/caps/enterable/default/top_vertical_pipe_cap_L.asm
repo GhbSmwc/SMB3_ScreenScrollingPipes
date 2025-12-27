@@ -119,6 +119,8 @@ MarioBelow:
 exit:
 	JSR passable
 	STZ $02
+	LDA #$02
+	STA $03
 	%SSPExitUpwardsPipe()
 return:
 	RTL

@@ -357,3 +357,5 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	 pixel variance of the player's XY position upon exiting pipe caps.
 	-Vertical centering code (accounting for whether or not riding yoshi or powerup states) now moved
 	 to subroutines to save some space.
+	-Fixed an oversight in the defines file that I forgot to mention that !Freeram_SSP_EntrExtFlg with
+	 a value of $03 is a cannon-exit.

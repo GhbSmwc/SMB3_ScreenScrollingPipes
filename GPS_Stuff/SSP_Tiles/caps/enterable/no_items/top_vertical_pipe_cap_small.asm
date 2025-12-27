@@ -72,6 +72,8 @@ MarioBelow:
 exit:
 	LDA #$04
 	STA $02
+	LDA #$02
+	STA $03
 	%SSPExitUpwardsPipe()
 	RTL
 center_horiz:

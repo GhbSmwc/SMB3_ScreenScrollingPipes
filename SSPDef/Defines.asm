@@ -91,6 +91,7 @@ endif
 		; #$00 = outside the pipe
 		; #$01 = entering (including during the entire pipe trip between pipe caps).
 		; #$02 = exiting
+		; #$03 = exiting (cannon)
 		
 	if !sa1 == 0
 		!Freeram_SSP_CarrySpr		= $7E0063
@@ -220,7 +221,7 @@ endif
 	endif
 	;Cannon launcher speeds (special pipe caps that fire the player out of the caps with momentum):
 		!SSP_Cannon_HorizontalSpd	= $40		;>Use only $01-$7F, this covers both left and right speeds
-		!SSP_Cannon_UpwardsSpd	= $B0		;>Use only $80-$FF, fires the player upwards
+		!SSP_Cannon_UpwardsSpd		= $B0		;>Use only $80-$FF, fires the player upwards
 		!SSP_Cannon_DownwardsSpd	= $40		;>Use only $01-$7F, fires the player downwards.
 			;^Note: The downwards speed, once initially exiting the cap and returning to normal state, you'll lose your additional speed,
 			; and will revert to your normal maximum downwards Y speed. If you don't want this, install “Same Fall Acceleration Speed”
