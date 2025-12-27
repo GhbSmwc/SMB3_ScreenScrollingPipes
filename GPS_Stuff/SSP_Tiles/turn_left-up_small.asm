@@ -58,28 +58,28 @@ left_to_up:
 	JSR corner_center		;>and snap player
 	RTL
 down_to_right:
-	LDA $187A|!addr		;\Only snap the player should the player's feet or yoshi touches the bottom of the turning left part.
-	ASL			;|
-	TAX			;|
-	REP #$20		;|
-	LDA $98			;|
-	AND #$FFF0		;|
-	SEC			;|
-	SBC YoshiPositioning,x	;|
-	CMP $96			;|
-	SEP #$20		;|
-	BMI +			;|
-	RTL			;/
-	+
+	REP #$20
+	LDA $98
+	AND #$FFF0
+	if !Setting_SSP_YPositionOffset != 0
+		CLC
+		ADC.w #!Setting_SSP_YPositionOffset
+	endif
+	STA $00						;>$00~$01: Block Y position (pixel coordinate), offsetted.
+	SEP #$20
+	%Get_Player_YPosition_LowerHalf()
+	REP #$20
+	CMP $00
+	SEP #$20
+	BMI .NotFarEnough
 	LDA !Freeram_SSP_PipeDir	;\Set direction
 	AND.b #%11110000		;|
 	ORA.b #%00000010		;|
 	STA !Freeram_SSP_PipeDir	;/
 	JSR corner_center		;>and snap player
+	.NotFarEnough
 	RTL
 	
-	YoshiPositioning:
-	dw $0010,$0020,$0020
 corner_center:
 	REP #$20						;\center horizontally.
 	LDA $9A							;|

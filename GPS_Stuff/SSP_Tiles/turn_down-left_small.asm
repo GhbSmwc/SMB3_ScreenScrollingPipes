@@ -44,33 +44,28 @@ Return:
 	RTL
 
 down_to_left:
-	LDA $187A|!addr		;\Only snap the player should the player's feet or yoshi touches the bottom of the turning left part.
-	ASL			;|
-	TAX			;|
-	REP #$20		;|
-	LDA $98			;|
-	AND #$FFF0		;|
-	SEC			;|
-	SBC YoshiPositioning,x	;|
-	CMP $96			;|
-	SEP #$20		;|
-	BMI +			;|
-	RTL			;/
-	+
+	REP #$20
+	LDA $98
+	AND #$FFF0
+	if !Setting_SSP_YPositionOffset != 0
+		CLC
+		ADC.w #!Setting_SSP_YPositionOffset
+	endif
+	STA $00						;>$00~$01: Block Y position (pixel coordinate), offsetted.
+	SEP #$20
+	%Get_Player_YPosition_LowerHalf()
+	REP #$20
+	CMP $00
+	SEP #$20
+	BMI .NotFarEnough
 	LDA !Freeram_SSP_PipeDir	;\Set direction
 	AND.b #%11110000		;|
 	ORA.b #%00000100		;|
 	STA !Freeram_SSP_PipeDir	;/
 	JSR corner_center
+	.NotFarEnough
 	RTL
 	
-	YoshiPositioning:
-	dw $0010,$0028,$0028
-	;^You might've noticed that this is different compared to all other turn pipes.
-	; this is because there is a problem with yoshi's collision points when big
-	; mario is on yoshi traveling downwards on this block when there is a solid
-	; platform below it to not  trigger this block (which causes the player to get
-	; stuck trying to head downwards before turning).
 right_to_up:
 	REP #$20		;\Don't center and change direction until the player is centered close enough (about to go past it).
 	LDA $9A			;|

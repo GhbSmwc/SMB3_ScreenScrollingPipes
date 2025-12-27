@@ -43,24 +43,28 @@ BodyInside:
 Return:
 	RTL
 up_to_right:
-	LDA $187A|!addr		;\Only snap the player should the player's feet or yoshi touches the bottom of the turning left part.
-	ASL			;|
-	TAX			;|
-	REP #$20		;|
-	LDA $98			;|
-	AND #$FFF0		;|
-	SEC			;|
-	SBC YoshiPositioning,x	;|
-	CMP $96			;|
-	SEP #$20		;|
-	BPL +			;|
-	RTL			;/
+	REP #$20
+	LDA $98
+	AND #$FFF0
+	if !Setting_SSP_YPositionOffset != 0
+		CLC
+		ADC.w #!Setting_SSP_YPositionOffset
+	endif
+	STA $00						;>$00~$01: Block Y position (pixel coordinate), offsetted.
+	SEP #$20
+	%Get_Player_YPosition_LowerHalf()
+	REP #$20
+	CMP $00
+	SEP #$20
+	BEQ +
+	BPL .NotFarEnough
 	+
 	LDA !Freeram_SSP_PipeDir	;\Set direction
 	AND.b #%11110000		;|
 	ORA.b #%00000010		;|
 	STA !Freeram_SSP_PipeDir	;/
 	JSR corner_center		;>and snap player
+	.NotFarEnough
 	RTL
 left_to_down:
 	REP #$20		;\Don't center and change direction until the player is centered close enough (about to go past it).
@@ -80,20 +84,29 @@ left_to_down:
 	JSR corner_center		;>and snap player
 	RTL
 corner_center:
-	REP #$20		;\center player to pipe horizontally.
-	LDA $9A			;|
-	AND #$FFF0		;|
-	CLC : ADC #$0008	;|
-	STA $94			;|
-	SEP #$20		;/
-	LDA $187A|!addr		;\center differently if on yoshi
-	BNE yoshi_center	;/
-	REP #$20		;\center vertically as no yoshi
-	LDA $98			;|
-	AND #$FFF0		;|
-	SEC : SBC #$0011	;|
-	STA $96			;|
-	SEP #$20		;/
+	REP #$20						;\center horizontally.
+	LDA $9A							;|
+	AND #$FFF0						;|
+	CLC : ADC #$0008					;|
+	STA $94							;|
+	SEP #$20						;|
+	if !Setting_SSP_SetXYFractionBits			;|
+		LDA.b #!Setting_SSP_XPositionFractionSetTo	;|
+		STA $13DA|!addr					;|
+	endif							;/
+	%Set_Player_YPosition_LowerHalf()			;\Center vertically.
+	if !Setting_SSP_YPositionOffset != 0			;|
+		REP #$20					;|
+		LDA $96						;|
+		CLC						;|
+		ADC.w #!Setting_SSP_YPositionOffset		;|
+		STA $96						;|
+		SEP #$20					;|
+	endif							;|
+	if !Setting_SSP_SetXYFractionBits			;|
+		LDA #!Setting_SSP_YPositionFractionSetTo	;|
+		STA $13DC|!addr					;|
+	endif							;/
 	RTS
 yoshi_center:
 	REP #$20		;\center vertically as on yoshi
@@ -103,9 +116,6 @@ yoshi_center:
 	STA $96			;|
 	SEP #$20		;/
 	RTS
-	
-YoshiPositioning:
-	dw $0010,$0020,$0020
 
 	DistanceFromTurnCornerCheck:
 	;Prevents such glitches where as the player leaves a special turn corner
