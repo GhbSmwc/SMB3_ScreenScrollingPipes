@@ -359,4 +359,5 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	 to subroutines to save some space.
 	-Fixed an oversight in the defines file comment that I forgot to mention that !Freeram_SSP_EntrExtFlg
 	 with a value of $03 is a cannon-exit.
-	-Majority of the code handling exiting vertical pipe caps now moved to a block subroutine.
+	-Majority of the code handling exiting vertical pipe caps and turn corners now moved to block
+	 subroutines (which saves a lot of space).
