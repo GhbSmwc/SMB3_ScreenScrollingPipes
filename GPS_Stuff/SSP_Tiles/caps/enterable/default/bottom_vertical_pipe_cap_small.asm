@@ -70,34 +70,12 @@ BodyInside:
 	BEQ exit			;/
 	BRA within_pipe
 exit:
-	REP #$20		;\Don't snap from very far away.
-	LDA $98			;|
-	AND #$FFF0		;|
-	SEC : SBC #$00010	;|
-	CMP $96			;|
-	SEP #$20		;|
-	BCS within_pipe		;/
-
-	LDA !Freeram_SSP_EntrExtFlg	;\do nothing if already exiting pipe
-	CMP #$02
-	BEQ within_pipe		;/
-	LDA #$02		;\set exiting flag
-	STA !Freeram_SSP_EntrExtFlg	;/
-	JSR passable		;>become passable while exiting
-	LDA.b #!SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario	;\Set timer.
-	STA !Freeram_SSP_PipeTmr					;/
-	LDA #$04		;\pipe sound
-	STA $1DF9|!addr		;/
-	STZ $7B			;\Prevent centering, and then displaced by xy speeds.
-	STZ $7D			;/
-	JSR center_horiz	;>center the player horizontally
-
-	REP #$20		;\center vertically
-	LDA $98			;|so it doesn't glitch if the bottom
-	AND #$FFF0		;|and top caps are touching each other.
-	SEC : SBC #$0010	;|
-	STA $96			;|
-	SEP #$20		;/
+	JSR passable
+	LDA #$04
+	STA $02
+	LDA #$02
+	STA $03
+	%SSPExitDownwardsPipe()
 	RTL
 center_horiz:
 	REP #$20		;\center player to pipe horizontally.
@@ -116,5 +94,5 @@ passable:
 	STA $1693|!addr		;/
 	RTS
 if !Setting_SSP_Description != 0
-print "Bottom cap of 2-way pipe for small mario."
+	print "Bottom cap of 2-way pipe for small mario."
 endif

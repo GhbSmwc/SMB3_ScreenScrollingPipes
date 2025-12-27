@@ -119,96 +119,13 @@ BodyInside:
 	BEQ exit			;/
 	BRA within_pipe
 exit:
-	if !Setting_SSP_YoshiAllowed != 0
-		LDA $187A|!addr		;\If riding yoshi, do further snap
-		BNE .FurtherSnap 	;/
-	endif
-	REP #$20		;\Don't snap from very far away.
-	LDA $98			;|
-	AND #$FFF0		;|
-	SEC : SBC #$00010	;|
-	CMP $96			;|
-	SEP #$20		;|
-	BCS within_pipe		;/
-	
-	if !Setting_SSP_YoshiAllowed != 0
-		BRA .SkipFurtherSnap
-		.FurtherSnap
-		REP #$20		;\Don't snap from very far away, yoshi edition.
-		LDA $98			;|
-		AND #$FFF0		;|
-		SEC : SBC #$0020	;|
-		CMP $96			;|
-		SEP #$20		;|
-		BCS within_pipe		;/
-	endif
-.SkipFurtherSnap
-	LDA !Freeram_SSP_EntrExtFlg	;\do nothing if already exiting pipe
-	CMP #$02
-	BEQ within_pipe		;/
-	LDA #$02		;\set exiting flag
-	STA !Freeram_SSP_EntrExtFlg	;/
-	JSR passable		;>become passable while exiting
-
-;offset notes:
-;timer = 0E if small mario
-;timer = 1B if super
-;timer = 18 if small on yoshi 
-;timer = 25 if super on yoshi
-
-	if !Setting_SSP_YoshiAllowed != 0
-		LDA $187A|!addr		;\Riding yoshi
-		BNE .YoshiExit		;/
-	endif
-	LDA $19			;\Powerup
-	BNE .BigMario		;/
-
-	LDA.b #!SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario	;\Small mario's timer
-	BRA .StoreTimer							;/
-.BigMario
-	LDA.b #!SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario		;\Big mario's timer
-	if !Setting_SSP_YoshiAllowed != 0
-		BRA .StoreTimer							;/
-		
-		.YoshiExit
-		LDA $19			;\powerup
-		BNE .BigMarioYoshi	;/
-
-		LDA.b #!SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario		;\Small on yoshi's timer
-		BRA .StoreTimer							;/
-		
-		.BigMarioYoshi
-		LDA.b #!SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario		;>big on yoshi's timer
-	endif
-.StoreTimer
-	STA !Freeram_SSP_PipeTmr	;>set timer
-	LDA #$04		;\pipe sound
-	STA $1DF9|!addr		;/
-	STZ $7B			;\Prevent centering, and then displaced by xy speeds.
-	STZ $7D			;/
-	JSR center_horiz	;>center the player horizontally
-	if !Setting_SSP_YoshiAllowed != 0
-		LDA $187A|!addr
-		BNE yoshi_exit
-	endif
-	REP #$20		;\center vertically
-	LDA $98			;|so it doesn't glitch if the bottom
-	AND #$FFF0		;|and top caps are touching each other.
-	SEC : SBC #$0010	;|
-	STA $96			;|
-	SEP #$20		;/
+	JSR passable
+	STZ $02
+	LDA #$02
+	STA $03
+	%SSPExitDownwardsPipe()
 return:
 	RTL
-	if !Setting_SSP_YoshiAllowed != 0
-		yoshi_exit:
-		REP #$20
-		LDA $98
-		AND #$FFF0
-		SEC : SBC #$0020
-		STA $96
-		SEP #$20
-		RTL
-	endif
 center_horiz:
 	REP #$20		;\center player to pipe horizontally.
 	LDA $9A			;|
@@ -231,5 +148,5 @@ if !Setting_SSP_YoshiAllowed != 0
 	db !SSP_PipeTimer_Enter_Upwards_OffYoshi,!SSP_PipeTimer_Enter_Upwards_OnYoshi,!SSP_PipeTimer_Enter_Upwards_OnYoshi	;>Timers: 1st one = on foot, 2nd and 3rd one = on yoshi
 endif
 if !Setting_SSP_Description != 0
-print "Bottom-left cap piece of vertical 2-way pipe."
+	print "Bottom-left cap piece of vertical 2-way pipe."
 endif
