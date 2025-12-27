@@ -191,7 +191,7 @@ endif
 		; This is only used during setting the player's facing direction upon exiting horizontal pipe caps while riding yoshi.
 	!Setting_SSP_SetXYFractionBits = 1
 		;^0 = no
-		; 1 = yes (this writes to the factional components of the player's XY position used for RAM $7B and $7D's speed to change position, RAM $13DA and
+		; 1 = yes (this writes to the factional/subpixel components of the player's XY position used for RAM $7B and $7D's speed to change position, RAM $13DA and
 		;     $13DC). With this option, you'll have consistent positioning (rather than sometimes 1 pixel off) for things like exiting pipes.
 	!Setting_SSP_XPositionFractionSetTo = $00
 		;^Fractional amount to set $13DA. It's format is $X0, where X is a value from 0 to F, representing X/16 fraction. Not used if !Setting_SSP_SetXYFractionBits == 0

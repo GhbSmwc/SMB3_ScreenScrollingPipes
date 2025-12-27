@@ -70,24 +70,10 @@ MarioBelow:
 	BEQ exit			;/
 	BRA within_pipe
 exit:
-	LDA !Freeram_SSP_EntrExtFlg	;\do nothing if already exiting pipe
-	CMP #$02
-	BEQ within_pipe		;/
-	LDA #$02		;\set exiting flag
-	STA !Freeram_SSP_EntrExtFlg	;/
-	JSR center_horiz	;>center the player horizontally
-	JSR passable		;>be passable while exiting
-	LDA.b #!SSP_PipeTimer_Exit_Upwards_OffYoshi	;\Set timer.
-	STA !Freeram_SSP_PipeTmr			;/
-	LDA #$04		;\pipe sound
-	STA $1DF9|!addr		;/
-	STZ $7B			;\Prevent centering, and then displaced by xy speeds.
-	STZ $7D			;/
-	REP #$20		;\center vertically (for small/yoshi)
-	LDA $98			;|so it doesn't glitch if the bottom
-	AND #$FFF0		;|and top caps are touching each other.
-	STA $96			;|
-	SEP #$20		;/
+	JSR passable
+	LDA #$04
+	STA $02
+	%SSPExitUpwardsPipe()
 	RTL
 center_horiz:
 	REP #$20		;\center player to pipe horizontally.
