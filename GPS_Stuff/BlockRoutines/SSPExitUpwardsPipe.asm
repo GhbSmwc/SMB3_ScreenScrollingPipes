@@ -31,7 +31,11 @@ incsrc "../SSPDef/Defines.asm"
 	AND #$FFF0						;|
 	CLC							;|
 	ADC.l ?.CenterHorizontalOffset,x			;|
-	STA $94							;/
+	STA $94							;|
+	if !Setting_SSP_SetXYFractionBits			;|
+		LDA !Setting_SSP_XPositionFractionSetTo		;|
+		STA $13DA|!addr					;|
+	endif							;/
 	%Set_Player_YPosition_LowerHalf()			;\Center Vertically
 	REP #$20						;|
 	LDA $96							;|
