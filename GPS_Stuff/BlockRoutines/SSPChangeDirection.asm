@@ -113,7 +113,6 @@ incsrc "../SSPDef/Defines.asm"
 		SEP #$20
 		BEQ ?.SwitchDirection
 		BMI ?.SwitchDirection
-		SEP #$20
 		RTL
 
 	?.SwitchDirection

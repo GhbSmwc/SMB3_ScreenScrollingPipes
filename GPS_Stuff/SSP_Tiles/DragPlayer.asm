@@ -23,34 +23,29 @@ TopCorner:
 BodyInside:
 HeadInside:
 SSPWarpmode:
-	;Check
-		LDA !Freeram_SSP_PipeDir	;\Pipe state
-		AND.b #%00001111		;/
-		BNE +
-		;BEQ Done			;>If outside the pipe, do nothing
-		RTL
-		+
-	;Render passable
-		LDY #$00			;\Become passable when in pipe.
-		LDX #$25			;|
-		STX $1693|!addr			;/
-	;Failsafe
-		CMP #$09			;\Just in case for some reason you managed to interact with this block
-		;BCS Done			;/while in drag mode (for 1-frame), so this is a failsafe.
-		BCC +
-		RTL
-		+
-	;Check if the player's position point at his feet is “mostly in this block”.
-		REP #$20
-		LDA #$FFFE
-		STA $00
-		STZ $02
-		SEP #$20
-		%CheckIfPlayerBottom16x16CenterIsInBlock()
-		;BCC Done
-		BCS +
-		RTL
-		+
+	LDA !Freeram_SSP_PipeDir	;\Pipe state
+	AND.b #%00001111		;/
+	BNE +
+	;BEQ Done			;>If outside the pipe, do nothing
+	RTL
+	+
+	LDY #$00			;\Become passable when in pipe.
+	LDX #$25			;|
+	STX $1693|!addr			;/
+	CMP #$09			;\Just in case for some reason you managed to interact with this block
+	;BCS Done			;/while in drag mode (for 1-frame), so this is a failsafe.
+	BCC +
+	RTL
+	+
+	REP #$20
+	LDA #$FFFE
+	STA $00
+	STZ $02
+	SEP #$20
+	%CheckIfPlayerBottom16x16CenterIsInBlock()
+	BCS +
+	RTL
+	+
 	;Check directions to determine a XY position threshold the player goes to state $09:
 		LDA !Freeram_SSP_PipeDir	;\Pipe state
 		AND.b #%00001111		;/
