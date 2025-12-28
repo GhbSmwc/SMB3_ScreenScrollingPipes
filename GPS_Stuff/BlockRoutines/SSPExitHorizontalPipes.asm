@@ -1,3 +1,4 @@
+incsrc "../SSPDef/Defines.asm"
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;This handles exiting horizontal pipe caps for screen
 ;scrolling pipes.
@@ -35,7 +36,7 @@
 		STA !Freeram_SSP_EntrExtFlg	;/
 		LDA !Freeram_SSP_PipeDir	;\Set his direction (Will only force the low nibble (bits 0-3) to have the value 8)
 		AND.b #%11110000		;|>Force low nibble clear
-		ORA ?.ExitingDirection,x	;|>Force low nibble set
+		ORA ?.ExitingDirections,x	;|>Force low nibble set
 		STA !Freeram_SSP_PipeDir	;/
 		LDA ?.ExitTimers,x		;\Set exiting timer
 		STA !Freeram_SSP_PipeTmr	;/
@@ -82,7 +83,7 @@
 	?.OffsetRequiredToEnter
 		dw $0004
 		dw $FFFC
-	?.ExitingDirection
+	?.ExitingDirections
 		db %00001000
 		db %00000110
 	?.ExitTimers

@@ -59,39 +59,8 @@ enter:
 		RTL
 		+
 	endif
-	if !Setting_SSP_CarryAllowed != 0
-		LDA $1470|!addr			;\if mario not carrying anything
-		ORA $148F|!addr			;|then skip
-		BEQ .not_carry			;/
-		LDA #$01			;\set flag
-		STA !Freeram_SSP_CarrySpr	;/
-	endif
-.not_carry
-	LDA.b #!SSP_PipeTimer_Enter_Leftwards
-	STA !Freeram_SSP_PipeTmr
-	LDA #$04		;\pipe sound
-	STA $1DF9|!addr		;/
-	STZ $7B			;\Prevent centering, and then displaced by xy speeds.
-	STZ $7D			;/
-	LDA !Freeram_SSP_PipeDir	;\Set his direction (Will only force the low nibble (bits 0-3) to have the value 8)
-	AND.b #%11110000		;|>Force low nibble clear
-	ORA.b #%00001000		;|>Force low nibble set
-	STA !Freeram_SSP_PipeDir	;/
-	LDA #$01		;\set flag to "entering"
-	STA !Freeram_SSP_EntrExtFlg	;/
-	%Set_Player_YPosition_LowerHalf()
-	if !Setting_SSP_YPositionOffset != 0
-		REP #$20
-		LDA $96
-		CLC
-		ADC.w #!Setting_SSP_YPositionOffset
-		STA $96
-		SEP #$20
-	endif
-	if !Setting_SSP_SetXYFractionBits
-		LDA #!Setting_SSP_YPositionFractionSetTo
-		STA $13DC|!addr
-	endif
+	STZ $00
+	%SSPEnterHorizontalPipes()
 within_pipe:
 	JSR passable
 return:
