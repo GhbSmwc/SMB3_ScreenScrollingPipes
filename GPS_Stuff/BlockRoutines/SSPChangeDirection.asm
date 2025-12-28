@@ -16,6 +16,9 @@ incsrc "../SSPDef/Defines.asm"
 ;   have moved far enough to change direction.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ?SSPTravelRightThenUpOrDown:
+	LDA $01				;\If set to exit pipe, then no.
+	AND.b #%00001111		;|
+	BEQ ?.Done			;/
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ ?.Done			;>$00 = no
