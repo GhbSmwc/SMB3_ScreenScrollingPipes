@@ -46,7 +46,7 @@ incsrc "../SSPDef/Defines.asm"
 	STA $94							;|
 	SEP #$20						;|
 	if !Setting_SSP_SetXYFractionBits			;|
-		LDA #!Setting_SSP_XPositionFractionSetTo	;|
+		LDA.b #!Setting_SSP_XPositionFractionSetTo	;|
 		STA $13DA|!addr					;|
 	endif							;/
 	%Set_Player_YPosition_LowerHalf()			;\Center vertically
@@ -59,7 +59,7 @@ incsrc "../SSPDef/Defines.asm"
 		SEP #$20					;|
 	endif							;|
 	if !Setting_SSP_SetXYFractionBits			;|
-		LDA #!Setting_SSP_YPositionFractionSetTo	;|
+		LDA.b #!Setting_SSP_YPositionFractionSetTo	;|
 		STA $13DC|!addr					;|
 	endif							;/
 	?.Return

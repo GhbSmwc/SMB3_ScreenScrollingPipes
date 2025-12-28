@@ -31,12 +31,12 @@ incsrc "../SSPDef/Defines.asm"
 	ADC.l ?.CenterHorizontalOffset,x			;|
 	STA $94							;|
 	if !Setting_SSP_SetXYFractionBits			;|
-		LDA !Setting_SSP_XPositionFractionSetTo		;|
+		LDA.b #!Setting_SSP_XPositionFractionSetTo	;|
 		STA $13DA|!addr					;|
 	endif							;/
 	%Set_Player_YPosition_LowerHalf()			;\Center Vertically
 	if !Setting_SSP_SetXYFractionBits			;|
-		LDA !Setting_SSP_YPositionFractionSetTo		;|
+		LDA.b #!Setting_SSP_YPositionFractionSetTo	;|
 		STA $13DC|!addr					;|
 	endif							;/
 	LDA #$04						;\pipe sound
