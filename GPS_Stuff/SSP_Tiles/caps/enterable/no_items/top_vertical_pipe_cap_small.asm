@@ -52,6 +52,7 @@ MarioBelow:
 	BEQ exit			;/
 	BRA within_pipe
 exit:
+	JSR passable
 	LDA #$04
 	STA $02
 	LDA #$02

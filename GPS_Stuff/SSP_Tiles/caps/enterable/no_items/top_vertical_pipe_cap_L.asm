@@ -13,7 +13,7 @@ TopCorner:
 MarioAbove:			;>mario above only so he cannot enter edge and glitch
 	LDA !Freeram_SSP_PipeDir	;\if not in pipe
 	AND.b #%00001111		;/
-	BEQ enter		;/then enter
+	BEQ enter			;/then enter
 	if !Setting_SSP_CarryAllowed != 0
 		CMP #$01		;\exit if going up
 		BEQ exit		;|
@@ -89,36 +89,18 @@ MarioBelow:
 	BEQ exit			;/
 	BRA within_pipe
 exit:
+	JSR passable
 	STZ $02
 	LDA #$02
 	STA $03
 	%SSPExitUpwardsPipe()
 return:
 	RTL
-
-center_horiz:
-	REP #$20		;\center player to pipe horizontally.
-	LDA $9A			;|
-	AND #$FFF0		;|
-	CLC : ADC #$0008	;|
-	STA $94			;|
-	SEP #$20		;/
-	if !Setting_SSP_SetXYFractionBits
-		LDA.b #!Setting_SSP_XPositionFractionSetTo
-		STA $13DA|!addr
-	endif
-	RTS
 passable:
 	LDY #$00		;\mario passes through the block
 	LDA #$25		;|
 	STA $1693|!addr		;/
 	RTS
-	if !Setting_SSP_YoshiAllowed != 0
-		YoshiTimersExit:
-		db !SSP_PipeTimer_Exit_Upwards_OffYoshi,!SSP_PipeTimer_Exit_Upwards_OnYoshi,!SSP_PipeTimer_Exit_Upwards_OnYoshi		;>Timers: 1st one = on foot, 2nd and 3rd one = on yoshi
-		YoshiTimersEnter:
-		db !SSP_PipeTimer_Enter_Downwards_OffYoshi,!SSP_PipeTimer_Enter_Downwards_OnYoshi,!SSP_PipeTimer_Enter_Downwards_OnYoshi
-	endif
 if !Setting_SSP_Description != 0
-print "Top-left cap piece of vertical 2-way pipe."
+	print "Top-left cap piece of vertical 2-way pipe."
 endif
