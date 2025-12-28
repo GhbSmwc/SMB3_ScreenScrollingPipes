@@ -9,9 +9,9 @@ incsrc "../SSPDef/Defines.asm"
 ; - $00 (1 byte): Centering. #$00 = 8 pixel to the right (left half cap), #$02 = 8 pixel to the left (right half cap),
 ;   #$04 = block-centered (for small pipe caps)
 ?SSPEnterUpwardsPipe:
-	LDA !Freeram_SSP_EntrExtFlg	;\Failsafe
-	CMP #$01			;|
-	BEQ ?.Done			;/
+	LDA !Freeram_SSP_EntrExtFlg		;\If already entering, done
+	CMP #$01				;|
+	BEQ ?.Done				;/
 	if !Setting_SSP_CarryAllowed != 0
 		LDA $1470|!addr			;\if mario not carrying anything
 		ORA $148F|!addr			;|then skip
@@ -27,29 +27,39 @@ incsrc "../SSPDef/Defines.asm"
 		LDA.b #!SSP_PipeTimer_Enter_Downwards_OffYoshi
 	endif
 	STA !Freeram_SSP_PipeTmr
-	LDA #$04			;\pipe sound
-	STA $1DF9|!addr			;/
-	STZ $7B				;\Prevent centering, and then displaced by xy speeds.
-	STZ $7D				;/
-	LDA !Freeram_SSP_PipeDir	;\Set his direction (Will only force the low nibble (bits 0-3) to have the value 7)
-	AND.b #%11110000		;|>Force low nibble clear
-	ORA.b #%00000111		;|>Force low nibble set
-	STA !Freeram_SSP_PipeDir	;/
-	LDA #$01			;\set flag to "entering"
-	STA !Freeram_SSP_EntrExtFlg	;/
-	?.Center
-		LDX $00
-		REP #$20
-		LDA $9A
-		AND #$FFF0
-		CLC
-		ADC.l ?.CenterHorizontalOffset,x
-		STA $94
-		SEP #$20
-		if !Setting_SSP_SetXYFractionBits
-			LDA.b #!Setting_SSP_XPositionFractionSetTo
-			STA $13DA|!addr
-		endif
+	LDA #$04						;\pipe sound
+	STA $1DF9|!addr						;/
+	STZ $7B							;\Prevent centering, and then displaced by xy speeds.
+	STZ $7D							;/
+	LDA !Freeram_SSP_PipeDir				;\Set his direction (Will only force the low nibble (bits 0-3) to have the value 7)
+	AND.b #%11110000					;|>Force low nibble clear
+	ORA.b #%00000111					;|>Force low nibble set
+	STA !Freeram_SSP_PipeDir				;/
+	LDA #$01						;\set flag to "entering"
+	STA !Freeram_SSP_EntrExtFlg				;/
+	LDX $00							;\Center horizontally
+	REP #$20						;|
+	LDA $9A							;|
+	AND #$FFF0						;|
+	CLC							;|
+	ADC.l ?.CenterHorizontalOffset,x			;|
+	STA $94							;|
+	SEP #$20						;|
+	if !Setting_SSP_SetXYFractionBits			;|
+		LDA.b #!Setting_SSP_XPositionFractionSetTo	;|
+		STA $13DA|!addr					;|
+	endif							;/
+	%Set_Player_YPosition_LowerHalf()			;\Set Y position (in case player is moved vertically by a solid sprite or layer 2)
+	REP #$20						;|
+	LDA $96							;|
+	SEC							;|
+	SBC #$0010						;|
+	STA $96							;|
+	SEP #$20						;|
+	if !Setting_SSP_SetXYFractionBits			;|
+		LDA.b #!Setting_SSP_YPositionFractionSetTo	;|
+		STA $13DC|!addr					;|
+	endif							;/
 	?.Done
 	RTL
 
