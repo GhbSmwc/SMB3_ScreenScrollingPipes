@@ -143,7 +143,7 @@ incsrc "../SSPDef/Defines.asm"
 			SEP #$20					;|
 		endif							;|
 		if !Setting_SSP_SetXYFractionBits			;|
-			LDA #!Setting_SSP_YPositionFractionSetTo	;|
+			LDA.b #!Setting_SSP_YPositionFractionSetTo	;|
 			STA $13DC|!addr					;|
 		endif							;/
 		RTL
