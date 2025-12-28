@@ -92,53 +92,11 @@ within_pipe:
 Return0:
 	RTL
 exit:
-	REP #$20
-	LDA $9A			;\If mario is touching only the
-	AND #$FFF0		;|right side of cap, then don't do...
-	CLC			;\(this moves the boundary leftwards, due
-	ADC #$0004		;/to a bug with $9A doesn't update as fast as $94)
-	CMP $94			;|...anything except become passable.
-	SEP #$20		;|(So it doesn't snap mario about #$10 pixels)
-	BMI within_pipe		;/
-	LDA !Freeram_SSP_EntrExtFlg	;\do nothing if already exiting pipe
-	CMP #$02			;|
-	BEQ within_pipe			;/
-	LDA #$02			;\set exiting flag
-	STA !Freeram_SSP_EntrExtFlg	;/
-	LDA !Freeram_SSP_PipeDir	;\Set his direction (Will only force the low nibble (bits 0-3) to have the value 8)
-	AND.b #%11110000		;|>Force low nibble clear
-	ORA.b #%00001000		;|>Force low nibble set
-	STA !Freeram_SSP_PipeDir	;/
-	REP #$20			;\center horizontally so if left and right
-	LDA $9A				;|caps are touching each other won't exit
-	AND #$FFF0			;|incorrectly.
-	STA $94				;|
-	SEP #$20			;/
-	if !Setting_SSP_SetXYFractionBits
-		LDA.b #!Setting_SSP_XPositionFractionSetTo
-		STA $13DA|!addr
-	endif
-	%Set_Player_YPosition_LowerHalf()			;>Center vertically as exiting horizontal pipe cap
-	if !Setting_SSP_YPositionOffset != 0
-		REP #$20
-		LDA $96
-		CLC
-		ADC.w #!Setting_SSP_YPositionOffset
-		STA $96
-		SEP #$20
-	endif
-	if !Setting_SSP_SetXYFractionBits
-		LDA #!Setting_SSP_YPositionFractionSetTo
-		STA $13DC|!addr
-	endif
-	LDA.b #!SSP_PipeTimer_Exit_Leftwards	;\set exit the pipe timer (same as smw's $7E0088)
-	STA !Freeram_SSP_PipeTmr		;/
-	JSR passable		;>become passable
-	LDA #$04		;\pipe sound
-	STA $1DF9|!addr		;/
-	STZ $7B			;\Prevent centering, and then displaced by xy speeds.
-	STZ $7D			;/
-	STZ $76			;>don't exit backwards.
+	JSR passable
+	STZ $00
+	LDA #$02
+	STA $01
+	%SSPExitHorizontalPipes()
 return:
 	RTL
 passable:
@@ -151,5 +109,5 @@ passable:
 solid_out:
 	RTS
 if !Setting_SSP_Description != 0
-print "Left cap piece of horizontal 2-way pipe for small mario."
+	print "Left cap piece of horizontal 2-way pipe for small mario."
 endif

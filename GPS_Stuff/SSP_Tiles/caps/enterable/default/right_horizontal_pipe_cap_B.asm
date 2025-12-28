@@ -32,7 +32,6 @@ enter:
 		ORA $148F|!addr		;|
 		BNE return		;/
 	endif
-
 	LDA $187A|!addr		;\do not enter pipe/SFX when turning
 	CMP #$02		;|around on yoshi.
 	BEQ return		;/
@@ -105,51 +104,12 @@ HeadInside:
 	BEQ return			;/
 	BRA within_pipe
 exit:
-	REP #$20
-	LDA $9A			;\If mario is touching only the
-	AND #$FFF0		;|right side of cap, then don't do...
-	SEC			;\(this moves the boundary leftwards, due
-	SBC #$0004		;/to a bug with $9A doesn't update as fast as $94)
-	CMP $94			;|...anything except becomme passable.
-	SEP #$20		;|(So it doesn't snap mario about #$10 pixels)
-	BPL within_pipe		;/
-	LDA !Freeram_SSP_EntrExtFlg	;\do nothing if already exiting pipe
-	CMP #$02			;|
-	BEQ within_pipe			;/
-	LDA #$02			;\set exiting flag
-	STA !Freeram_SSP_EntrExtFlg	;/
-	LDA !Freeram_SSP_PipeDir	;\Set his direction (Will only force the low nibble (bits 0-3) to have the value 6)
-	AND.b #%11110000		;|
-	ORA.b #%00000110		;|
-	STA !Freeram_SSP_PipeDir	;/
-	REP #$20			;\center horizontally so if left and right
-	LDA $9A				;|caps are touching each other won't exit
-	AND #$FFF0			;|incorrectly.
-	STA $94				;|
-	SEP #$20			;/
-	%Set_Player_YPosition_LowerHalf()			;>Center vertically as exiting horizontal pipe cap
-	if !Setting_SSP_YPositionOffset != 0
-		REP #$20
-		LDA $96
-		CLC
-		ADC.w #!Setting_SSP_YPositionOffset
-		STA $96
-		SEP #$20
-	endif
-	if !Setting_SSP_SetXYFractionBits
-		LDA #!Setting_SSP_YPositionFractionSetTo
-		STA $13DC|!addr
-	endif
-	LDA.b #!SSP_PipeTimer_Exit_Rightwards	;\set exit the pipe timer (same as smw's $7E0088)
-	STA !Freeram_SSP_PipeTmr		;/
-	JSR passable		;>become passable
-	LDA #$04		;\pipe sound
-	STA $1DF9|!addr		;/
-	STZ $7B			;\Prevent centering, and then displaced by xy speeds.
-	STZ $7D			;/
-	LDA #$01		;\mario faces right
-	STA $76			;/
-	%FaceYoshi()
+	JSR passable
+	LDA #$02
+	STA $00
+	LDA #$02
+	STA $01
+	%SSPExitHorizontalPipes()
 return1:
 	RTL
 passable:
@@ -158,5 +118,5 @@ passable:
 	STA $1693|!addr		;/
 	RTS
 if !Setting_SSP_Description != 0
-print "Bottom-right cap piece of horizontal 2-way pipe."
+	print "Bottom-right cap piece of horizontal 2-way pipe."
 endif
