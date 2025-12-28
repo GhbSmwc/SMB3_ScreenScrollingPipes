@@ -112,13 +112,17 @@ incsrc "../SSPDef/Defines.asm"
 		ORA $01						;|
 		STA !Freeram_SSP_PipeDir			;/
 		REP #$20
-		LDX $00						;\Center horizontally
-		LDA $9A						;|
-		AND #$FFF0					;|
-		CLC						;|
-		ADC.l ?.XPositionToChangeDirection,x		;|
-		STA $94						;/
-		SEP #$20					;
+		LDX $00							;\Center horizontally
+		LDA $9A							;|
+		AND #$FFF0						;|
+		CLC							;|
+		ADC.l ?.XPositionToChangeDirection,x			;|
+		STA $94							;|
+		SEP #$20						;|
+		if !Setting_SSP_SetXYFractionBits			;|
+			LDA.b #!Setting_SSP_XPositionFractionSetTo	;|
+			STA $13DA|!addr					;|
+		endif							;/
 		%Set_Player_YPosition_LowerHalf()			;\Center vertically
 		if !Setting_SSP_YPositionOffset != 0			;|
 			REP #$20					;|
