@@ -2,23 +2,62 @@
 	<head>
 		<style>
 			html {
-			background-color: #000207;
-			color: white;
+			background-color: #101010;
+			color: rgb(221, 221, 221);
 			font-family: sans-serif;
 			}
+			
 			table, th, td {
 			border: 1px solid white;
 			border-collapse: collapse;
 			}
+			
+			abbr{cursor: help;}
+			img.img-hor {
+				-moz-transform: scaleX(-1);
+				-o-transform: scaleX(-1);
+				-webkit-transform: scaleX(-1);
+				transform: scaleX(-1);
+				filter: FlipH;
+				-ms-filter: "FlipH";
+			}
+			div.CodeBlock {
+				overflow: auto;
+				width: 1000px;
+				height: 500px;
+				border: 1px solid white;
+				resize: both;
+				background-color: #101010;
+			}
+			pre {
+				margin: 0px;
+			}
+			*.FixedWidth {
+				font-family: monospace;
+			}
+			
+			*.NoLineBreak {
+				font-family: monospace;
+				white-space: pre;
+			}
+			*.Center {
+				text-align: center;
+			}
+			li {
+				padding: 5px;
+			}
+			tr.RedBackground {
+				background-color: #400000;
+			}
 		</style>
 	</head>
-<body>
+<body style="max-width: 1000px; margin: auto; padding: 15px">
 <a href="../Readme.html#UseBlocksInLevel2">Back</a><br>
 <hr>
 Navigation:
 <ol>
 	<li><a href="#TOC_GeneralBlockParts" id="TOC_GeneralBlockPartsBack">General block parts</a></li>
-	<li><a href="#TOC_BlockPlacements" id="TOC_BlockPlacementsBack">Block Placements (basic)</a></li>
+	<li><a href="#TOC_BlockPlacements" id="TOC_BlockPlacementsBack">Block Placements</a></li>
 	<li><a href="#TOC_BackgroundPipeTiles" id="TOC_BackgroundPipeTilesBack">Background pipe tiles</a></li>
 	<li><a href="#TOC_WarpMode" id="TOC_WarpModeBack">Warp mode usage</a></li>
 	<li><a href="#TOC_SwitchedPrepDirection" id="TOC_SwitchedPrepDirectionBack">Switchable prep turn direction</li>
@@ -31,68 +70,84 @@ This is the summary of the map16 blocks on what they do:<br>
 <ul>
 
 <li>Custom block pipe parts:
-<table><tr><td><img src="PipeParts.png"></td></tr></table>
-<table><tr><td><img src="PipeParts1.png"></td></tr></table>
+	<table><tr><td><img src="PipeParts.png"></td></tr></table>
+	<table><tr><td><img src="PipeParts1.png"></td></tr></table>
 
 </li><br>
 
 <li>Pipe directions:<br>
 
-<table><tr><td><img src="Map16_pipeDirections2.png"><br></td></tr></table>
-Keep in mind that the pipe stems and turn corners (they yellow 32x32 and 16x16 for small pipes) <b>aren't 1-way themselves</b>, the only blocks
-that makes them 1-way are the pipe caps being &ldquo;exit only&rdquo;.</li><br>
-<table><tr><td><img src="Map16_Page_5_info.png"></td></tr></table>
+	<table><tr><td><img src="Map16_pipeDirections2.png"><br></td></tr></table>
+	Keep in mind that the pipe stems and turn corners (they yellow 32x32 and 16x16 for small pipes) <b>aren't 1-way themselves</b>, the only blocks
+	that makes them 1-way are the pipe caps being &ldquo;exit only&rdquo;.
+	<table><tr><td><img src="Map16_Page_5_info.png"></td></tr></table>
+</li><br>
 
 <li>Things you should avoid placing and what you can do:</li>
 <ul>
-<li>I don't recommend using the pipes on layer 2, as the position can glitch around.</li><br>
-<li>While using the pipes on layer 1 in a layer 2 level, be careful not to place solid blocks above the space in front of the small pipe caps, as
-they would teleport/clip the player through the floor:
-<table><tr><td><img src="DontPlaceLikeThis.png"></td></tr></table></li><br>
+	<li>I don't recommend using the pipes on layer 2, as the position can glitch around.</li><br>
+	<li>
+		While using the pipes on layer 1 in a layer 2 level, be careful not to place solid blocks above the space in front of the small pipe caps, as
+		they would teleport/clip the player through the floor:
+		<table><tr><td><img src="DontPlaceLikeThis.png"></td></tr></table>
+	</li><br>
+	<li>
+		3-way (T-shaped) intersections using turn pipe corners are possible. If the player enters the (normal) turn corners from the
+		&ldquo;outer&rdquo; edges that are not directly connected, the player will maintain his current direction:<br>
+		<table><tr><td><img src="3WayIntersectionWithNormalCorners.png"></td></tr></table>
+	</li><br>
 
-<li>3-way (T-shaped) intersections using turn pipe corners are possible. If the player enters the (normal) turn corners from the
-&ldquo;outer&rdquo; edges that are not directly connected, the player will maintain his current direction:<br>
-<table><tr><td><img src="3WayIntersectionWithNormalCorners.png"></td></tr></table></li><br>
+	<li>
+		With the new update with special turn corner parts:
+		<ul>
+			<li>
+				You can have different connections based on where the player enters them on the same turn corner
+				(A&rarr;B, B&rarr;C, C&rarr;D, D&rarr;A):<br>
+				<table><tr><td><img src="SpecialTurnCornersDemonstration.png"></td></tr></table>
+			</li>
+			<li>
+				How about A&harr;B, C&harr;D? (note that I use &harr; and not &rarr; to indicate a 2-way between points). Now you can have 2 &ldquo;opposite&rdquo; corners
+				on the same area.
+				<table><tr><td><img src="SpecialTurnCornersDemonstration1.png"></td></tr></table><br>
+				
+				Just remember that if the player hits any <kbd>turn_special_prep_&lt;direction&gt;.asm</kbd>, they will set the <i>prep-direction</i> that
+				Mario will turn to that direction when he hits a special turn corner (<kbd>turn_special_L.asm</kbd>, <kbd>turn_special_R.asm</kbd>, and <kbd>turn_special_small.asm</kbd>).
+				This allows &ldquo;roundabout&rdquo; and &ldquo;U-turn&rdquo;-type intersections and much more.<br><br>
+			</li>
+		</ul>
+	</li>
 
-<li>With the new update with special turn corner parts, you can have different connections based on where the player enters them on the same turn corner
-(A&rarr;B, B&rarr;C, C&rarr;D, D&rarr;A):<br>
-<table><tr><td><img src="SpecialTurnCornersDemonstration.png"></td></tr></table></li><br>
+	<li>
+		You may be wondering, why did I have both types of corners if I can just have special turn corners? Well, here is my answer: Regular turn corners
+		don't require any prep-turns. With this, you can have two regular turn corners touching each other without the need to have a turn setup in between,
+		allowing compact pipe placements. Special turn corners, on the other hand, always have to have a setup direction if the next special turn corner needs
+		a different direction. Things to note about the corners:<br><br>
 
-How about A&harr;B, C&harr;D? (note that I use &harr; and not &rarr; to indicate a 2-way between points). Now you can have 2 &ldquo;opposite&rdquo; corners
-on the same area.
-<table><tr><td><img src="SpecialTurnCornersDemonstration1.png"></td></tr></table></li><br>
+		<ul>
+			<li>
+				ALL turn corners, regular and special, themselves do not change the prep-direction, instead, it will keep its direction until
+				<kbd>turn_special_prep_&lt;direction&gt;.asm</kbd> have been triggered again, thus you can do something like this where the second
+				and later in the sequence special turn corners no longer need a prep-turn:
+				<table><tr><td><img src="MaintainedTurnCorners.png"></td></tr></table>
+				Note the red circles means that no turn-preps.<br><br>
 
-Just remember that if the player hits any <tt>turn_special_prep_&lt;direction&gt;.asm</tt>, they will set the <i>prep-direction</i> that
-Mario will turn to that direction when he hits a special turn corner (<tt>turn_special_L.asm</tt>, <tt>turn_special_R.asm</tt>, and <tt>turn_special_small.asm</tt>).
-This allows &ldquo;roundabout&rdquo; and &ldquo;U-turn&rdquo;-type intersections and much more.<br><br>
+				And even when you wanted parallel pipes that switch places without having them to re-straighten them out (this is a 2-way pipe demonstration, if 1-way, you
+				only need 1 connector in between the parallel pipes), you can do this in a more compact way:
 
-<li>You may be wondering, why did I have both types of corners if I can just have special turn corners? Well, here is my answer: Regular turn corners
-don't require any prep-turns. With this, you can have two regular turn corners touching each other without the need to have a turn setup in between,
-allowing compact pipe placements. Special turn corners, on the other hand, always have to have a setup direction if the next special turn corner needs
-a different direction. Things to note about the corners:<br><br>
-
-<ul>
-<li>ALL turn corners, regular and special, themselves do not change the prep-direction, instead, it will keep its direction until
-<tt>turn_special_prep_&lt;direction&gt;.asm</tt> have been triggered again, thus you can do something like this where the second
-and later in the sequence special turn corners no longer need a prep-turn:
-
-<table><tr><td><img src="MaintainedTurnCorners.png"></td></tr></table>
-Note the red circles means that no turn-preps.<br><br>
-
-And even when you wanted parallel pipes that switch places without having them to re-straighten them out (this is a 2-way pipe demonstration, if 1-way, you
-only need 1 connector in between the parallel pipes), you can do this in a more compact way:
-
-<table><tr><td><img src="ParallelPipeSwap.png"></td></tr></table></li>
-
-</ul></li>
-
-
+				<table><tr><td><img src="ParallelPipeSwap.png"></td></tr></table>
+			</li>
+		</ul>
+	</li>
+	<li>
+		The regular-sized pipe caps do check if the player currently traveling is centered enough to trigger its exit, thus you can have
+		setups like this (A1&harr;A2, B1&harr;B2, C1&harr;C2): <table><tr><td><img src="VerticalExitCapsRequirePlayerCenteredHorizontally.png"></td></tr></table>
+	</li>
 </ul>
 
 </ul>
 <h1><a href="#TOC_BackgroundPipeTilesBack" id="TOC_BackgroundPipeTiles">^</a>Background pipe tiles</h1>
 You may be wondering what is up with the darken pipe tiles in the map16 editor? Well these are &ldquo;background pipes&rdquo;. They're just background objects (not layer 2 background, I mean a
-non-interactable scenery, like SMW's bushes) the player can pass right through them, but when in pipe mode, are interactable. This is useful if you want two parts in your level connected via a pipe
+non-interactable scenery, like SMW's bushes) the player, outside of pipe mode, can pass right through them, but when in pipe mode, are interactable. This is useful if you want two parts in your level connected via a pipe
 but not act as a solid wall separating the level. Do note that most of these tiles are not actually custom blocks but a mere tile that acts $0025 (mainly a contrast to <kbd>pass_if_in_pipe.asm</kbd> which
 is solid when outside a pipe and passible when inside pipe mode, does nothing other than that), since this SSP package relies on a state-based mechanism in which nothing happens to the player, means the player
 keeps going straight in one direction in pipe mode. Therefore, you don't even need those tiles (besides the turn corners and pipe caps) to make sure the player keeps going in the same direction.<br><br>
@@ -125,7 +180,7 @@ Here is an example, tested in level $105:<br>
 	<li>A warp from the top-right to the bottom left is warp ID = 1 (for 16-bit array, it is index 2)</li>
 </ul>
 And the tables should be like this:<br>
-<table><tr><td><pre>			?CorrectDirection
+<div class="CodeBlock"><pre>			?CorrectDirection
 				db $03			;&gt;Index 0
 				db $03			;&gt;Index 1
 				?.End			;&gt;Keep this here, and make sure all numbers in the table are after label [?LevelNumberTable] and [?.End]!
@@ -146,31 +201,34 @@ And the tables should be like this:<br>
 				dw $000F		;&gt;Index 2 (Index 1 * 2)
 	;These are the destination positions, in pixels (why not block positions, then LSR #4?,
 	;well, because it is possible that the player must be centered horizontally between 2 blocks
-	;than 16x16 grid-aligned as in the case with traveling through normal-sized vertical pipes).
+	;rather than 16x16 grid-aligned as in the case with traveling through normal-sized vertical
+	;pipes).
 	;
 	;You can easily convert them into pixel coordinate via this formula:
-	;	dw (BlockPos*$10)+HalfBlock
+	;	dw (BlockXPos*$10)+HalfBlock
 	;	
-	;	-BlockPos = the X or Y position, in units of 16x16 (the coordinates of the block seen in Lunar Magic).
+	;	-BlockPos = the X position, in units of 16x16 (the coordinates of the block seen in Lunar Magic).
 	;	-HalfBlock = $00 (16x16 aligned) or $08 (half-block aligned, with vertical normal-sized pipes, you
 	;	 normally do this for X position though).
-
+	;
+	;Y position is similar, except must be:
+	;
+	;	dw (BlockYPos*$10)+!Setting_SSP_YPositionOffset
+	;
 	;These positions are “feet” position of the player, rather than the head position.
-	;When riding on yoshi, it is the position of Yoshi's saddle part, not the player's.
+	;When riding on yoshi, it is the position of Yoshi's saddle part, not the player's feet.
 	;Therefore, to get the correct position in a pipe:
 	;
-	;-For Small horizontal pipes, it is the tile of the stem part, nuff said, same goes with vertical small pipe.
+	;-For Small horizontal pipes, it is the tile of the stem part, enough said, same goes with vertical small pipe.
 	;-For regular sized horizontal pipes, it is the bottom half of the stem.
 	;-For regular sized vertical pipes, it is the bottom-left tile of the 2x2 16x16 block space the player is at least
 	; touching, assuming you are using the [(BlockPos*$10)+HalfBlock] formula.
-
-
 		?EndPositionX
 			dw ($0014*$10)+$08	;&gt;Index 0 (Index 0 * 2)
 			dw ($0005*$10)+$08	;&gt;Index 2 (Index 1 * 2)
 		?EndPositionY
-			dw ($000F*$10)		;&gt;Index 0 (Index 0 * 2)
-			dw ($0018*$10)		;&gt;Index 2 (Index 1 * 2)
+			dw ($000F*$10)+!Setting_SSP_YPositionOffset	;&gt;Index 0 (Index 0 * 2)
+			dw ($0018*$10)+!Setting_SSP_YPositionOffset	;&gt;Index 2 (Index 1 * 2)
 	;This is the prep direction to set to that the player will start moving in that direction
 	;upon reaching his destination.
 	;Only use these values
@@ -182,7 +240,7 @@ And the tables should be like this:<br>
 		?DestinationDirection
 			db $10			;&gt;Index 0
 			db $10			;&gt;Index 1
-</pre></td></tr></table>
+</pre></div>
 One thing to note is that you may make a mistake and have the player go in directions in an unintended way (and softlock), and you
 cannot see him because the SSP system is designed to make the player invisible to hide the illusion the player was dragged rather
 than warped. To assist on fixing or discovering what or how that happens, go to <kbd>SSPDef/Defines.asm</kbd>, and set <kbd>!Setting_SSP_PipeDebug</kbd>

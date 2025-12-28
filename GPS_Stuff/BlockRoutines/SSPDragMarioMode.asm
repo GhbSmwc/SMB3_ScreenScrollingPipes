@@ -171,25 +171,28 @@ incsrc "../SSPDef/Defines.asm"
 				dw $0022		;>Index 12 (Index 6 * 2)
 	;These are the destination positions, in pixels (why not block positions, then LSR #4?,
 	;well, because it is possible that the player must be centered horizontally between 2 blocks
-	;than 16x16 grid-aligned as in the case with traveling through normal-sized vertical pipes).
+	;rather than 16x16 grid-aligned as in the case with traveling through normal-sized vertical
+	;pipes).
 	;
 	;You can easily convert them into pixel coordinate via this formula:
-	;	dw (BlockPos*$10)+HalfBlock
+	;	dw (BlockXPos*$10)+HalfBlock
 	;	
-	;	-BlockPos = the X or Y position, in units of 16x16 (the coordinates of the block seen in Lunar Magic).
+	;	-BlockPos = the X position, in units of 16x16 (the coordinates of the block seen in Lunar Magic).
 	;	-HalfBlock = $00 (16x16 aligned) or $08 (half-block aligned, with vertical normal-sized pipes, you
 	;	 normally do this for X position though).
-
+	;
+	;Y position is similar, except must be:
+	;
+	;	dw (BlockYPos*$10)+!Setting_SSP_YPositionOffset
+	;
 	;These positions are “feet” position of the player, rather than the head position.
 	;When riding on yoshi, it is the position of Yoshi's saddle part, not the player's feet.
 	;Therefore, to get the correct position in a pipe:
 	;
-	;-For Small horizontal pipes, it is the tile of the stem part, nuff said, same goes with vertical small pipe.
+	;-For Small horizontal pipes, it is the tile of the stem part, enough said, same goes with vertical small pipe.
 	;-For regular sized horizontal pipes, it is the bottom half of the stem.
 	;-For regular sized vertical pipes, it is the bottom-left tile of the 2x2 16x16 block space the player is at least
 	; touching, assuming you are using the [(BlockPos*$10)+HalfBlock] formula.
-
-
 		?EndPositionX
 			dw ($009A*$10)+$08	;>Index 0 (Index 0 * 2)
 			dw ($0003*$10)+$08	;>Index 2 (Index 1 * 2)
@@ -199,13 +202,13 @@ incsrc "../SSPDef/Defines.asm"
 			dw ($00D4*$10)+$08	;>Index 10 (Index 5 * 2)
 			dw ($00C2*$10)+$00	;>Index 12 (Index 6 * 2)
 		?EndPositionY
-			dw ($0022*$10)		;>Index 0 (Index 0 * 2)
-			dw ($0013*$10)		;>Index 2 (Index 1 * 2)
-			dw ($0019*$10)		;>Index 4 (Index 2 * 2)
-			dw ($0008*$10)		;>Index 6 (Index 3 * 2)
-			dw ($001E*$10)		;>Index 8 (Index 4 * 2)
-			dw ($0022*$10)		;>Index 10 (Index 5 * 2)
-			dw ($0014*$10)		;>Index 12 (Index 6 * 2)
+			dw ($0022*$10)+!Setting_SSP_YPositionOffset	;>Index 0 (Index 0 * 2)
+			dw ($0013*$10)+!Setting_SSP_YPositionOffset	;>Index 2 (Index 1 * 2)
+			dw ($0019*$10)+!Setting_SSP_YPositionOffset	;>Index 4 (Index 2 * 2)
+			dw ($0008*$10)+!Setting_SSP_YPositionOffset	;>Index 6 (Index 3 * 2)
+			dw ($001E*$10)+!Setting_SSP_YPositionOffset	;>Index 8 (Index 4 * 2)
+			dw ($0022*$10)+!Setting_SSP_YPositionOffset	;>Index 10 (Index 5 * 2)
+			dw ($0014*$10)+!Setting_SSP_YPositionOffset	;>Index 12 (Index 6 * 2)
 	;This is the prep direction to set to that the player will start moving in that direction
 	;upon reaching his destination.
 	;Only use these values

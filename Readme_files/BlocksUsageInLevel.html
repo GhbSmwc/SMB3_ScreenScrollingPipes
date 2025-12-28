@@ -2,17 +2,56 @@
 	<head>
 		<style>
 			html {
-			background-color: #000207;
-			color: white;
+			background-color: #101010;
+			color: rgb(221, 221, 221);
 			font-family: sans-serif;
 			}
+			
 			table, th, td {
 			border: 1px solid white;
 			border-collapse: collapse;
 			}
+			
+			abbr{cursor: help;}
+			img.img-hor {
+				-moz-transform: scaleX(-1);
+				-o-transform: scaleX(-1);
+				-webkit-transform: scaleX(-1);
+				transform: scaleX(-1);
+				filter: FlipH;
+				-ms-filter: "FlipH";
+			}
+			div.CodeBlock {
+				overflow: auto;
+				width: 1000px;
+				height: 500px;
+				border: 1px solid white;
+				resize: both;
+				background-color: #101010;
+			}
+			pre {
+				margin: 0px;
+			}
+			*.FixedWidth {
+				font-family: monospace;
+			}
+			
+			*.NoLineBreak {
+				font-family: monospace;
+				white-space: pre;
+			}
+			*.Center {
+				text-align: center;
+			}
+			li {
+				padding: 5px;
+			}
+			tr.RedBackground {
+				background-color: #400000;
+			}
 		</style>
 	</head>
-<body>
+<body style="max-width: 1000px; margin: auto; padding: 15px">
 <a href="../Readme.html#UseBlocksInLevel">Back</a><br>
 
 <h1><center>Block pipe placements</center></h1>

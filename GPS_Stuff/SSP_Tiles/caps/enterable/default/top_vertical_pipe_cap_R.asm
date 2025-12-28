@@ -91,6 +91,8 @@ MarioBelow:
 	BRA within_pipe
 exit:
 	JSR passable
+	%Get_Player_XPosition_RelativeToBlock()
+	BPL return				;>If mario is too far from center, don't exit
 	LDA #$02
 	STA $02
 	LDA #$02
@@ -103,10 +105,6 @@ passable:
 	LDA #$25		;|
 	STA $1693|!addr		;/
 	RTS
-	if !Setting_SSP_YoshiAllowed != 0
-		YoshiTimersEnter:
-		db !SSP_PipeTimer_Enter_Downwards_OffYoshi,!SSP_PipeTimer_Enter_Downwards_OnYoshi,!SSP_PipeTimer_Enter_Downwards_OnYoshi
-	endif
 if !Setting_SSP_Description != 0
 	print "Top-right cap piece of vertical 2-way pipe."
 endif

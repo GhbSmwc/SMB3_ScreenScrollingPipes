@@ -90,6 +90,8 @@ MarioBelow:
 	BRA within_pipe
 exit:
 	JSR passable
+	%Get_Player_XPosition_RelativeToBlock()
+	BMI return				;>If mario is to the left far from center, don't exit
 	STZ $02
 	LDA #$02
 	STA $03
