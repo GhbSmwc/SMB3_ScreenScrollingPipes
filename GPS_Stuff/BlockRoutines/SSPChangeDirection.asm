@@ -54,63 +54,21 @@ incsrc "../SSPDef/Defines.asm"
 		dw ?.Down
 		dw ?.Left
 	?.Up
-		REP #$20
-		LDA $98
-		AND #$FFF0
-		if !Setting_SSP_YPositionOffset != 0
-			CLC
-			ADC.w #!Setting_SSP_YPositionOffset
-		endif
-		STA $02
-		SEP #$20
-		%Get_Player_YPosition_LowerHalf()
-		REP #$20
-		CMP $02
-		SEP #$20
+		JSR ?.CompareYPositionToCheck
 		BEQ ?.SwitchDirection
 		BMI ?.SwitchDirection
 	?.Done
 		RTL
 	?.Right
-		LDX $00
-		REP #$20
-		LDA $9A
-		AND #$FFF0
-		CLC
-		ADC.l ?.XPositionToChangeDirection,x
-		STA $02
-		LDA $94
-		CMP $02
-		SEP #$20
+		JSR ?.CompareXPositionToCheck
 		BPL ?.SwitchDirection
 		RTL
 	?.Down
-		REP #$20
-		LDA $98
-		AND #$FFF0
-		if !Setting_SSP_YPositionOffset != 0
-			CLC
-			ADC.w #!Setting_SSP_YPositionOffset
-		endif
-		STA $02
-		SEP #$20
-		%Get_Player_YPosition_LowerHalf()
-		REP #$20
-		CMP $02
-		SEP #$20
+		JSR ?.CompareYPositionToCheck
 		BPL ?.SwitchDirection
 		RTL
 	?.Left
-		LDX $00
-		REP #$20
-		LDA $9A
-		AND #$FFF0
-		CLC
-		ADC.l ?.XPositionToChangeDirection,x
-		STA $02
-		LDA $94
-		CMP $02
-		SEP #$20
+		JSR ?.CompareXPositionToCheck
 		BEQ ?.SwitchDirection
 		BMI ?.SwitchDirection
 		RTL
@@ -146,7 +104,34 @@ incsrc "../SSPDef/Defines.asm"
 			STA $13DC|!addr					;|
 		endif							;/
 		RTL
-?.XPositionToChangeDirection
-	dw $0008
-	dw $FFF8
-	dw $0000
+	?.CompareXPositionToCheck
+		LDX $00
+		REP #$20
+		LDA $9A
+		AND #$FFF0
+		CLC
+		ADC.l ?.XPositionToChangeDirection,x
+		STA $02
+		LDA $94
+		CMP $02
+		SEP #$20
+		RTS
+	?.CompareYPositionToCheck
+		REP #$20
+		LDA $98
+		AND #$FFF0
+		if !Setting_SSP_YPositionOffset != 0
+			CLC
+			ADC.w #!Setting_SSP_YPositionOffset
+		endif
+		STA $02
+		SEP #$20
+		%Get_Player_YPosition_LowerHalf()
+		REP #$20
+		CMP $02
+		SEP #$20
+		RTS
+	?.XPositionToChangeDirection
+		dw $0008
+		dw $FFF8
+		dw $0000
