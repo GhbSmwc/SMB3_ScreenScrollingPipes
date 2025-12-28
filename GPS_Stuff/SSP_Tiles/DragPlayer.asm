@@ -41,6 +41,11 @@ SSPWarpmode:
 		RTL
 		+
 	;Check if the player's position point at his feet is “mostly in this block”.
+		REP #$20
+		LDA #$FFFE
+		STA $00
+		STZ $02
+		SEP #$20
 		%CheckIfPlayerBottom16x16CenterIsInBlock()
 		;BCC Done
 		BCS +
