@@ -123,6 +123,10 @@ exit:
 	AND #$FFF0			;|incorrectly.
 	STA $94				;|
 	SEP #$20			;/
+	if !Setting_SSP_SetXYFractionBits
+		LDA.b #!Setting_SSP_XPositionFractionSetTo
+		STA $13DA|!addr
+	endif
 	%Set_Player_YPosition_LowerHalf()
 	if !Setting_SSP_YPositionOffset != 0
 		REP #$20
