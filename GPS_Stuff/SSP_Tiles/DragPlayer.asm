@@ -41,7 +41,7 @@ SSPWarpmode:
 		RTL
 		+
 	;Check if the player's position point at his feet is “mostly in this block”.
-		JSR DistanceFromDragModeBlockCheck
+		%CheckIfPlayerBottom16x16CenterIsInBlock()
 		;BCC Done
 		BCS +
 		RTL
@@ -154,54 +154,6 @@ YoshiYPositionThresholdOffset:
 		dw $0011
 		dw $0021
 		dw $0021
-DistanceFromDragModeBlockCheck:
-	;Prevents such glitches that you can touch other triggers that would
-	;change the pipe state and hitting this block at the same time.
-	;
-	;An example is that for small pipes, Small Mario can interact with
-	;pipe parts above him.
-	;
-	;$00-$03 holds the position "point" on Mario/yoshi's feet:
-	;$00-$01 is the X position in units of block
-	;$02-$03 is Y position in units of block
-	;
-	;AND #$FFF0 rounds DOWN to the nearest #$0010 value
-	;Carry is set if the player's position point is inside the block and clear if outside.
-	LDA $187A|!addr		;\Yoshi Y positioning
-	ASL			;|
-	TAX			;/
-	
-	REP #$20
-	LDA $94				;\Get X position
-	CLC				;|
-	ADC #$0006			;|>2 pixels left from center to be able to trigger the left half of the blocks.
-	AND #$FFF0			;|
-	STA $00				;/
-	LDA $96				;\Get Y position
-	CLC				;|
-	ADC FootDistanceYPosPoint,x	;|
-	AND #$FFF0			;|
-	STA $02				;/
-	
-	LDA $9A				;\if X position point is within this block
-	AND #$FFF0			;|
-	CMP $00				;|
-	BNE +				;/
-	LDA $98				;\if Y position point is within this block
-	AND #$FFF0			;|
-	CMP $02				;|
-	BNE +				;/
-	SEC
-	SEP #$20
-	RTS
-	+
-	CLC
-	SEP #$20
-	RTS
-	FootDistanceYPosPoint:
-		dw $0018
-		dw $0028
-		dw $0028
 
 if !Setting_SSP_Description != 0
 	print "Causes the player to enter warp pipe mode and drags the player to his destination"

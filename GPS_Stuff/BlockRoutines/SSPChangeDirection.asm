@@ -1,7 +1,9 @@
 incsrc "../SSPDef/Defines.asm"
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Handles turns from horizontal to vertical for screen scrolling pipes (often for turn
-;corners).
+;corners). Also supports dragmode (direction == $09) as well. This also handles making
+;Mario needs to be far in the block deep enough to avoid noticiable snapping (sets XY if
+;player is on or past a point he needs to switch direction).
 ;
 ;Input:
 ; - $00: Position relative to the block to change direction: #$00 = 8 pixels to the right,
@@ -11,22 +13,31 @@ incsrc "../SSPDef/Defines.asm"
 ; -- #$02 = Right
 ; -- #$03 = Down
 ; -- #$04 = Left
+; -- #$05~#$08 = Same as above but cap speeds (you probably wouldn't want to use though)
+; -- #$09 = Warp drag mode
+;Output:
+; - Carry = Set if player is in the block far enough to switch states, clear otherwise
+;   (useful for warp drag mode by after this subroutine, check carry, if set, then run
+;   "%SSPDragMarioMode()")
+;
+;
 ;Destroyed:
 ; - $02~$03: Used for block's position to compare with the player's movement if the player
 ;   have moved far enough to change direction.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-?SSPTravelRightThenUpOrDown:
+?SSPChangeDirection:
 	LDA $01				;\If set to exit pipe, then no.
 	AND.b #%00001111		;|
 	BEQ ?.Done			;/
-	LDA !Freeram_SSP_PipeDir
-	AND.b #%00001111
+	LDA !Freeram_SSP_PipeDir	;\Get direction bits
+	AND.b #%00001111		;/
 	BEQ ?.Done			;>$00 = no
-	CMP #$09			;\$09+ = no
-	BCS ?.Done			;/
 	CMP #$05			;\$01~$04 = stem speeds
 	BCC ?.StemSpeeds		;/
-	
+	CMP #$09			;\$05~$08 = cap speeds
+	BCC ?.CapSpeeds			;/
+	;BEQ ?.Done			;>$09 = warp drag mode (do nothing)
+	BRA ?.Done			;>$0A+ = Failsafe (do nothing)
 	?.CapSpeeds
 		SEC			;\$05~$08 = cap speeds (to convert to stem speeds of the same direction)
 		SBC #$04		;/
@@ -36,7 +47,6 @@ incsrc "../SSPDef/Defines.asm"
 	ASL				;>Times 2 because each item in the table are 2 bytes long
 	TAX				;>Index
 	JMP (?.DirectionPointers-2,x)	;>Jump based on the index
-	
 	?.DirectionPointers
 		;Pointers based on Mario's current travel direction prior to changing.
 		dw ?.Up
