@@ -8,9 +8,11 @@ incsrc "../SSPDef/Defines.asm"
 ; -- #$02 = Down
 ; -- #$03 = Left
 ?SSPEnterDoor:
-	LDA $9A							;\Center horizontally
-	AND #$F0						;|
+	REP #$20						;\Center horizontally
+	LDA $9A							;|
+	AND #$FFF0						;|
 	STA $94							;|
+	SEP #$20						;|
 	if !Setting_SSP_SetXYFractionBits			;|
 		LDA.b #!Setting_SSP_XPositionFractionSetTo	;|
 		STA $13DA|!addr					;|
@@ -37,4 +39,8 @@ incsrc "../SSPDef/Defines.asm"
 	LDA #$01
 	STA !Freeram_SSP_PipeTmr				;>Set timer
 	STA !Freeram_SSP_EntrExtFlg				;>And entering mode
+	if !Setting_SSP_HideDuringPipeStemTravel == 0
+		LDA #$01					;\Make player invisible
+		STA !Freeram_SSP_InvisbleFlag			;/
+	endif
 	RTL

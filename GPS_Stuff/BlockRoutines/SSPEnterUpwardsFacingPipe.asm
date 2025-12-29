@@ -12,14 +12,6 @@ incsrc "../SSPDef/Defines.asm"
 	LDA !Freeram_SSP_EntrExtFlg		;\If already entering, done
 	CMP #$01				;|
 	BEQ ?.Done				;/
-	if !Setting_SSP_CarryAllowed != 0
-		LDA $1470|!addr			;\if mario not carrying anything
-		ORA $148F|!addr			;|then skip
-		BEQ ?.NotCarry			;/
-		LDA #$01			;\set carrying flag
-		STA !Freeram_SSP_CarrySpr	;/
-	endif
-	?.NotCarry
 	if !Setting_SSP_YoshiAllowed != 0
 		LDY $187A|!addr
 		LDA.l ?.YoshiTimersEnter,x
@@ -37,6 +29,10 @@ incsrc "../SSPDef/Defines.asm"
 	STA !Freeram_SSP_PipeDir				;/
 	LDA #$01						;\set flag to "entering"
 	STA !Freeram_SSP_EntrExtFlg				;/
+	if !Setting_SSP_HideDuringPipeStemTravel == 0
+		LDA #$00						;\Make player visible
+		STA !Freeram_SSP_InvisbleFlag				;/
+	endif
 	LDX $00							;\Center horizontally
 	REP #$20						;|
 	LDA $9A							;|

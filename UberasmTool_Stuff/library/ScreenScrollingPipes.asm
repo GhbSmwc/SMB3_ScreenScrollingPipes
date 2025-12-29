@@ -39,32 +39,14 @@ SSPMaincode:
 			ORA $1426|!addr				;>Don't lock controls on message boxes.
 			ORA $13FB|!addr				;>Player frozen (such as yoshi growing animation).
 			;ORA <address>				;>Other RAM to disable running pipe code.
-			BEQ ..HandleCarryingSprites
+			BEQ ..GameNotPaused
 			JMP ..pose				;>While the pipe-related code should stop running during a freeze, the pose should still be running (during freeze, he reverts to his normal pose).
 	
-		..HandleCarryingSprites
-			if !Setting_SSP_CarryAllowed != 0
-				...KeyGlitchFailsafe			;>A glitch that forces the player to drop the key upon exiting should the player enter and pick up the key the same frame.
-					LDA $1470|!addr
-					ORA $148F|!addr
-					BEQ ....NoCarry
-					LDA #$01			;\Set flag that the player is carrying sprites
-					STA !Freeram_SSP_CarrySpr	;/
-					;Y = index for carrying sprites or not.
-					....NoCarry
-						LDY #$00			;>Default Y as #$00 (later on, will remain #$00 if not carrying sprites) 
-						LDA !Freeram_SSP_CarrySpr	;\fix automatic drop item when carrying (when freeze disabled, he shouldn't automatically
-						BEQ ...NotCarrying		;/pick up sprites when the player didn't intend to do so.)
-				
-				...CarryingSprite
-					INY
-				
-				...NotCarrying
-			endif
+		..GameNotPaused
 		..ForceControlsSetAndClear
 			LDA $15					;\
-			ORA SSP_CarryControlsForceSet,y		;|>Force X and Y on controller to be set when carrying sprites.
-			AND SSP_CarryControlsForceClear,y	;|>Clear out other than XY and START.
+			ORA.b #%01000000			;|>Force X and Y on controller to be set for carrying sprites.
+			AND.b #%01010000			;|>Clear out other than XY and START.
 			STA $15					;|
 			LDA $16					;|\Prevent fireballs and cape action.
 			AND.b #%00010000			;||While enabling only the pause button.
@@ -88,13 +70,16 @@ SSPMaincode:
 			BEQ ...NoHide			;|
 			LDA !Freeram_SSP_PipeTmr	;|\If timer == 0, make player invisible.
 			BNE ...NoHide			;|/Carried sprites turning invisible is handled by Fixes.asm
-			
+			...StemHide
+				if !Setting_SSP_HideDuringPipeStemTravel == 0
+					LDA !Freeram_SSP_InvisbleFlag
+					BEQ ...NoHide
+				endif
 			...Hide
-			if !Setting_SSP_PipeDebug == 0
-				LDA #$FF		;|\Render player invisible
-				STA $78			;//
-			endif
-
+				if !Setting_SSP_PipeDebug == 0
+					LDA #$FF		;|\Render player invisible
+					STA $78			;//
+				endif
 			...NoHide
 		..YoshiImage
 			LDA $187A|!addr		;\if on yoshi, then use yoshi poses
@@ -143,15 +128,6 @@ SSPMaincode:
 			STZ $1407|!addr			;>so mario cannot fly out of the cap
 			STZ $72				;>zero air flag.
 			STZ $14A3|!addr			;>no yoshi tongue
-			if !Setting_SSP_CarryAllowed != 0
-				LDA !Freeram_SSP_CarrySpr	;\if mario not carrying anything, then skip
-				BEQ ...NotCarry			;/
-				LDA #$01			;\force keep carrying
-				STA $1470|!addr			;|
-				STA $148F|!addr			;/
-		
-				...NotCarry
-			endif
 		..DirectionalSpeed
 			LDA !Freeram_SSP_PipeDir	;\set player speed within pipe (use transfer commands
 			AND.b #%00001111		;|>Only read the low 4 bits (nibble)
@@ -342,7 +318,8 @@ SSPMaincode:
 		..ResetStatus
 			...HandleCarryingSprites
 				if !Setting_SSP_CarryAllowed != 0
-					LDA !Freeram_SSP_CarrySpr	;\Holding sprites routine
+					LDA $1470|!addr			;\Holding sprites routine
+					ORA $148F|!addr			;|
 					BEQ ....NotCarrySprite		;|
 				
 					....CarrySprite
@@ -391,9 +368,6 @@ SSPMaincode:
 				STA $16				;/
 				LDA #$00			;\reset freeram flags
 				STA !Freeram_SSP_PipeTmr	;|
-				if !Setting_SSP_CarryAllowed != 0
-					STA !Freeram_SSP_CarrySpr	;|
-				endif
 				STA !Freeram_SSP_EntrExtFlg	;/>Make code assume mario is out of the pipe.
 				LDA !Freeram_SSP_PipeDir	;\Clear direction bits (resets the pipe state).
 				AND.b #%11110000		;|
@@ -423,8 +397,15 @@ SSPMaincode:
 			...Horiz
 				LDA $187A|!addr		;\if mario is riding yoshi, then
 				BNE ....YoshiFaceHoriz	;/use "ride yoshi" pose
-				LDA #$00
-				BRA ...SetPose
+				LDA $1470|!addr
+				ORA $148F|!addr
+				BEQ ....NotCarry
+				....Carry
+					LDA #$07
+					BRA ...SetPose
+				....NotCarry
+					LDA #$00
+					BRA ...SetPose
 	
 				....YoshiFaceHoriz
 					LDA #$1D		;>crouch as entering a horizontal pipe on yoshi.

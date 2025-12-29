@@ -777,6 +777,10 @@ CheckIfSpriteIsInsideSSPWhenInvisible:
 		LDA !14C8,x			;\...or if sprite not carried
 		CMP #$0B			;|then make sprite visible.
 		BNE .Visible			;/
+		if !Setting_SSP_HideDuringPipeStemTravel == 0
+			LDA !Freeram_SSP_InvisbleFlag
+			BEQ .Visible
+		endif
 	.Invisible
 		SEC
 		RTL

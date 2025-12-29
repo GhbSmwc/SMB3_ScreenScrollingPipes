@@ -13,15 +13,6 @@ incsrc "../SSPDef/Defines.asm"
 	LDA !Freeram_SSP_EntrExtFlg				;\If already entering, don't do anything
 	CMP #$01						;|
 	BEQ ?.Return						;/
-	if !Setting_SSP_CarryAllowed != 0
-		?.CheckForCarry
-			LDA $1470|!addr			;\if mario not carrying anything
-			ORA $148F|!addr			;|then skip
-			BEQ ?..NoCarry			;/
-			LDA #$01			;\set flag
-			STA !Freeram_SSP_CarrySpr	;/
-			?..NoCarry
-	endif
 	LDA $00
 	LSR
 	TAX
@@ -37,6 +28,10 @@ incsrc "../SSPDef/Defines.asm"
 	STA !Freeram_SSP_PipeDir				;/
 	LDA #$01						;\set flag to "entering"
 	STA !Freeram_SSP_EntrExtFlg				;/
+	if !Setting_SSP_HideDuringPipeStemTravel == 0
+		LDA #$00						;\Make player visible
+		STA !Freeram_SSP_InvisbleFlag				;/
+	endif
 	LDX $00
 	REP #$20						;\Center horizontally (places mario horizontally next to cap should something like sprite pushes player into cap then entering)
 	LDA $9A							;|

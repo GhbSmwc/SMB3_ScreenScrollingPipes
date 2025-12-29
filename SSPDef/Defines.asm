@@ -44,6 +44,8 @@ endif
 ;Also be careful if you are using untouched RAM, as the game does not even reset them on level load, therefore the player
 ;will maintain his pipe state even after he dies and enters the level. You'll have to initialize them by resetting all these
 ;RAM address.
+;
+;Note: For boolean operators used in the "ByteUsed" field, it's 0 if the condition fails, 1 otherwise.
 
 	if !sa1 == 0
 		!Freeram_SSP_PipeDir		= $7E0060
@@ -94,14 +96,16 @@ endif
 		; #$03 = exiting (cannon)
 		
 	if !sa1 == 0
-		!Freeram_SSP_CarrySpr		= $7E0063
+		!Freeram_SSP_InvisbleFlag	= $7E0063
 	else
-		!Freeram_SSP_CarrySpr		= $63
+		!Freeram_SSP_InvisbleFlag	= $63
 	endif
-		;^[BytesUsed = !Setting_SSP_CarryAllowed, either not used or 1 byte taken] used for if
-		; mario enters a pipe while holding a sprite. Will store a #$01 if you did carry a
-		; sprite though pipe. Not used should your entire hack doesn't allow entering SSP with
-		; a sprite, otherwise 1 byte taken.
+		;^[BytesUsed = Equal(!Setting_SSP_HideDuringPipeStemTravel, 0)] 1 byte used for if you
+		; have !Setting_SSP_HideDuringPipeStemTravel set to 0, otherwise not used at all.
+		;
+		;This RAM determines to hide the player during a pipe stem travel or not. Used to
+		;distinguish between screen scrolling door travel (which supposed to hide the player),
+		;or a pipe stem (shouldn't hide the player for things like glass pipes).
 		
 	if !sa1 == 0
 		!Freeram_BlockedStatBkp	= $7E0079
@@ -194,6 +198,10 @@ endif
 		;^0 = no
 		; 1 = yes (this writes to the factional/subpixel components of the player's XY position used for RAM $7B and $7D's speed to change position, RAM $13DA and
 		;     $13DC). With this option, you'll have consistent positioning (rather than sometimes 1 pixel off) for things like exiting pipes.
+	!Setting_SSP_HideDuringPipeStemTravel = 0
+		;^Turn the player invisible during pipe travel:
+		; 0 = no (will only hide if drag-player mode or traveling through doors). Use this option if you wanted glass pipes.
+		; 1 = yes
 	!Setting_SSP_XPositionFractionSetTo = $00
 		;^Fractional amount to set $13DA. It's format is $X0, where X is a value from 0 to F, representing X/16 fraction. Not used if !Setting_SSP_SetXYFractionBits == 0
 	!Setting_SSP_YPositionFractionSetTo = $00

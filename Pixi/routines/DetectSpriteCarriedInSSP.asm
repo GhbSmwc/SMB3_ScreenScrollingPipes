@@ -3,7 +3,7 @@ incsrc "../SSPDef/Defines.asm"
 ;;Carry: Clear if outside pipe (should be visible), Set if inside pipe (should be invisible). This will determine
 ;;should the sprite being carried turn invisible with the player traveling through SSP.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	PlayerPipeStatus:
+	?PlayerPipeStatus:
 		LDA !Freeram_SSP_PipeDir	;\If player is outside...
 		AND.b #%00001111		;|
 		BEQ Visible			;/
@@ -12,13 +12,17 @@ incsrc "../SSPDef/Defines.asm"
 		BNE Visible			;/
 		LDA !Freeram_SSP_PipeTmr	;\...or in a pipe, entering, but before Mario turns invisible.
 		BNE Visible			;/
-	SpriteCarried:
+	?SpriteCarried:
 		LDA !14C8,x			;\...or if sprite not carried
 		CMP #$0B			;|then make sprite visible.
 		BNE Visible			;/
-	Invisible:
+		if !Setting_SSP_HideDuringPipeStemTravel
+			LDA !Freeram_SSP_InvisbleFlag
+			BNE .Invisible
+		endif
+	?Invisible:
 		SEC
 		RTL
-	Visible:
+	?Visible:
 		CLC
 		RTL

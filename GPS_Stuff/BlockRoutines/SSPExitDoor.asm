@@ -46,9 +46,11 @@ incsrc "../SSPDef/Defines.asm"
 		BMI ?.ReachedToExit
 		RTL
 	?.ReachedToExit
-		LDA $9A							;\Center horizontally
-		AND #$F0						;|
+		REP #$20						;\Center horizontally
+		LDA $9A							;|
+		AND #$FFF0						;|
 		STA $94							;|
+		SEP #$20						;|
 		if !Setting_SSP_SetXYFractionBits			;|
 			LDA.b #!Setting_SSP_XPositionFractionSetTo	;|
 			STA $13DA|!addr					;|
@@ -64,6 +66,10 @@ incsrc "../SSPDef/Defines.asm"
 		STA !Freeram_SSP_PipeTmr				;/
 		LDA #$02						;\Exiting state
 		STA !Freeram_SSP_EntrExtFlg				;/
+		if !Setting_SSP_HideDuringPipeStemTravel == 0
+			LDA #$00
+			STA !Freeram_SSP_InvisbleFlag
+		endif
 	?.Done
 		RTL
 	?.CompareYPositionToCheck
