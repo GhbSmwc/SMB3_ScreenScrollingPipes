@@ -31,7 +31,7 @@ within_pipe:
 exit:
 	JSR passable
 	STZ $02
-	LDA #$03
+	LDA #$04
 	STA $03
 	%SSPExitDownwardsPipe()
 return:

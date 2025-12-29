@@ -93,7 +93,7 @@ exit:
 	%Get_Player_XPosition_RelativeToBlock()
 	BMI return				;>If mario is too far from center, don't exit
 	STZ $02
-	LDA #$03
+	LDA #$04
 	STA $03
 	%SSPExitDownwardsPipe()
 return:

@@ -74,7 +74,7 @@ exit:
 	JSR passable
 	LDA #$02
 	STA $00
-	LDA #$02
+	LDA #$03
 	STA $01
 	%SSPExitHorizontalPipes()
 return1:

@@ -8,8 +8,8 @@ incsrc "../SSPDef/Defines.asm"
 ; -- #$00 = Exiting leftwards
 ; -- #$02 = Exiting rightwards
 ; - $01: How the player exits the pipe:
-; -- $02 = Exit normally
-; -- $03 = Cannon exit
+; -- $03 = Exit normally
+; -- $04 = Cannon exit
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ?SSPExitHorizontalPipes:
 	PHB

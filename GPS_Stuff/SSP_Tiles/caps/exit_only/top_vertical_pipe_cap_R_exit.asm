@@ -29,7 +29,7 @@ exit:
 	JSR passable
 	LDA #$02
 	STA $02
-	LDA #$02
+	LDA #$03
 	STA $03
 	%SSPExitUpwardsPipe()
 return:

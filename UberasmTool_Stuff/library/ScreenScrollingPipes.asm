@@ -66,7 +66,7 @@ SSPMaincode:
 			CMP #$09			;|
 			BCS ...Hide			;/
 			LDA !Freeram_SSP_EntrExtFlg	;\hide player if timer hits zero when entering.
-			CMP #$02			;|
+			CMP #$01			;|
 			BEQ ...NoHide			;|
 			LDA !Freeram_SSP_PipeTmr	;|\If timer == 0, make player invisible.
 			BNE ...NoHide			;|/Carried sprites turning invisible is handled by Fixes.asm
@@ -136,14 +136,14 @@ SSPMaincode:
 			
 			...NormalPipeMode
 				....NormalPipeStates
-					TAY				;|so you can use long freeram address)
+					TAY
 					LDA !Freeram_SSP_EntrExtFlg
-					CMP #$03
+					CMP #$04
 					BEQ ....CannonExit
-					LDA.w SSP_PipeXSpeed-1,y	;|
-					STA $7B				;|
-					LDA.w SSP_PipeYSpeed-1,y	;|
-					STA $7D				;/
+					LDA.w SSP_PipeXSpeed-1,y
+					STA $7B
+					LDA.w SSP_PipeYSpeed-1,y
+					STA $7D
 				....StopPotentialIssues
 					STZ $185C|!addr
 					JMP ..EnterExitTransition
@@ -248,7 +248,7 @@ SSPMaincode:
 				....StopPotentialIssues
 					LDA #$01
 					STA $185C|!addr
-					JMP .PipeCodeReturn ;>Don't run the ..EnterExitTransition!!
+					JMP .PipeCodeReturn ;>And done.
 
 		..EnterExitTransition
 			;This should ONLY be executed when Mario's state is $01-$08.
@@ -259,24 +259,26 @@ SSPMaincode:
 			...InPipe
 				CMP #$01		;\If entering a pipe...
 				BEQ ....entering_pipe	;/
-				CMP #$02		;\If exiting a pipe...
+				CMP #$03		;\If exiting a pipe...
 				BEQ ....ExitingPipe	;/
-				CMP #$03		;\If the player cannon-exits the cap
+				CMP #$04		;\If the player cannon-exits the cap
 				BEQ ....ExitingPipe	;/
 				JMP .PipeCodeReturn
 	
 				....entering_pipe		;
 					LDA !Freeram_SSP_PipeTmr	;\If timer isn't 0, set pose
-					BNE +
+					BNE .....DecrementTimer
 					JMP ..pose			;/
-					+
-					DEC A				;\Otherwise decrement it
-					STA !Freeram_SSP_PipeTmr	;/
-					BEQ .....StemSpeed		;>If decremented from 1 to 0, accelerate for stem speed
+					.....DecrementTimer
+						DEC A				;\Otherwise decrement it
+						STA !Freeram_SSP_PipeTmr	;/
+					BEQ .....StemSpeed		;>If decremented from 1 to 0, accelerate for stem speed (1 frame only)
 					JMP ..pose			;>Otherwise still set pose (cap speed).
 	
 					.....StemSpeed
 						;Switches Mario to stem speed
+						LDA #$02			;\#$02 == stem speed
+						STA !Freeram_SSP_EntrExtFlg	;/
 						LDA !Freeram_SSP_PipeDir	;\Switch to stem speed keeping the same direction.
 						AND.b #%00001111		;|>Check only bits 0-3 (normal direction bits)
 						CMP #$05			;|\If already at stem speed, don't subtract again.
@@ -296,7 +298,7 @@ SSPMaincode:
 					BEQ ..pose			;/
 					DEC A				;\otherwise decrement timer.
 					STA !Freeram_SSP_PipeTmr	;/
-					BEQ ..ResetStatus		;>Reset status if timer hits zero (happens once after -1 to 0).
+					BEQ ..ResetStatus		;>Reset status if timer hits zero (happens once after -1 to 0, again, a 1-frame action).
 					
 					.....CapSpeed
 						;Switches Mario to cap speed
@@ -346,8 +348,8 @@ SSPMaincode:
 					.....NoRevive
 				STZ $73				;>stop crouching (when going exiting down on yoshi)
 				STZ $140D|!addr			;>no spinjump out the pipe (possable if both enter and exit caps are bottoms)
-				LDA !Freeram_SSP_EntrExtFlg	;\Don't cancel speed if in firing mode.
-				CMP #$03			;|
+				LDA !Freeram_SSP_EntrExtFlg	;\Don't cancel speed if in cannon mode.
+				CMP #$04			;|
 				BEQ ....FireOut			;/
 				
 				....CancelSpeed

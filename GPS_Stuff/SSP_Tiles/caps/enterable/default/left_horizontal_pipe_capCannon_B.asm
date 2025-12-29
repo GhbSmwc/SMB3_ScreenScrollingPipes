@@ -76,7 +76,7 @@ HeadInside:
 exit:
 	JSR passable
 	STZ $00
-	LDA #$03
+	LDA #$04
 	STA $01
 	%SSPExitHorizontalPipes()
 return1:

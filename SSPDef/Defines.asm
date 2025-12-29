@@ -57,20 +57,20 @@ endif
 		;
 		; Bit format: PPPPDDDD
 		;
-		;-DDDD bits (The stem and pipe cap directions):
-		;--$00 = out of pipe (normal mode).
-		;--Values $01-$0A:
-		;---$01-$04 (%0001-%0100) = travel up, right, down and left (in that order) for stem sections.
-		;---$05-$08 (%0101-%1000) = same as above, but for cap speeds.
-		;---$09 (%1001) = Warp mode (more like drag) to specific XY position (!Freeram_SSP_DragWarpPipeDestinationXPos and
-		;   !Freeram_SSP_DragWarpPipeDestinationYPos)
-		;
-		;-PPPP bits (the planned direction for "special turning corners"):
-		;--$00 = Keep going straight, don't change direction. If in drag mode, reverts the player into his out-of-pipe state upon reaching his destination.
-		;  This is also known as "NULL" prep direction.
-		;--Values $01-$04:
-		;---$01-$04 (%0001-%0100) = travel up, right, down and left (in that order).
-		;   Note: When using warp mode, this will be the direction upon Mario reaches his warp destination his DDDD bits to be set to.
+		; - DDDD bits (The stem and pipe cap directions):
+		; -- $00 = out of pipe (normal mode).
+		; -- Values $01-$0A:
+		; --- $01-$04 (%0001-%0100) = travel up, right, down and left (in that order) for stem sections.
+		; --- $05-$08 (%0101-%1000) = same as above, but for cap speeds.
+		; --- $09 (%1001) = Warp mode (more like drag) to specific XY position (!Freeram_SSP_DragWarpPipeDestinationXPos and
+		;     !Freeram_SSP_DragWarpPipeDestinationYPos)
+		; 
+		; - PPPP bits (the planned direction for "special turning corners"):
+		; -- $00 = Keep going straight, don't change direction. If in drag mode, reverts the player into his out-of-pipe state upon reaching his destination.
+		;    This is also known as "NULL" prep direction.
+		; -- Values $01-$04:
+		; --- $01-$04 (%0001-%0100) = travel up, right, down and left (in that order).
+		;     Note: When using warp mode, this will be the direction upon Mario reaches his warp destination his DDDD bits to be set to.
 
 	if !sa1 == 0
 		!Freeram_SSP_PipeTmr		= $7E0061
@@ -78,9 +78,9 @@ endif
 		!Freeram_SSP_PipeTmr		= $61
 	endif
 		;^[1 byte] Used for various purposes:
-		;-If !Freeram_SSP_PipeDir's low nybble (DDDD bits) is 0-4:
-		; -for exiting and entering animations. Stored here is how
-		;  long the player perform a cap entering and exiting, in frames.
+		; - If !Freeram_SSP_PipeDir's low nybble (DDDD bits) is 0-4:
+		; --for exiting and entering animations. Stored here is how
+		;   long the player perform a cap entering and exiting, in frames.
 		;
 
 	if !sa1 == 0
@@ -90,10 +90,11 @@ endif
 	endif
 		;^[1 byte] use to determine if mario's entering or
 		; exiting, stored values are:
-		; #$00 = outside the pipe
-		; #$01 = entering (including during the entire pipe trip between pipe caps).
-		; #$02 = exiting
-		; #$03 = exiting (cannon)
+		; - #$00 = outside the pipe
+		; - #$01 = entering
+		; - #$02 = traveling through stem
+		; - #$03 = exiting
+		; - #$04 = exiting (cannon)
 		
 	if !sa1 == 0
 		!Freeram_SSP_InvisbleFlag	= $7E0063

@@ -4,7 +4,11 @@ incsrc "../SSPDef/Defines.asm"
 ;Destroyed:
 ; $00~$01: Used for vertical positioning checks
 ?SSPExitDoor
-	LDA !Freeram_SSP_PipeDir	;\If already exiting, skip
+	LDA !Freeram_SSP_EntrExtFlg
+	BEQ ?.Done
+	CMP #$03			;\If already exiting, skip
+	BCS ?.Done			;|
+	LDA !Freeram_SSP_PipeDir	;|
 	AND.b #%00001111		;|
 	BEQ ?.Done			;/
 	CMP #$05
@@ -64,7 +68,7 @@ incsrc "../SSPDef/Defines.asm"
 		STA $1DFC|!addr						;/
 		LDA #$01						;\Exiting timer
 		STA !Freeram_SSP_PipeTmr				;/
-		LDA #$02						;\Exiting state
+		LDA #$03						;\Exiting state
 		STA !Freeram_SSP_EntrExtFlg				;/
 		if !Setting_SSP_HideDuringPipeStemTravel == 0
 			LDA #$00
