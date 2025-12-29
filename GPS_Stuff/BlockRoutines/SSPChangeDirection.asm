@@ -54,6 +54,7 @@ incsrc "../SSPDef/Defines.asm"
 		dw ?.Down
 		dw ?.Left
 	?.Up
+		LDX #$00
 		JSR ?.CompareYPositionToCheck
 		BEQ ?.SwitchDirection
 		BMI ?.SwitchDirection
@@ -64,8 +65,18 @@ incsrc "../SSPDef/Defines.asm"
 		BPL ?.SwitchDirection
 		RTL
 	?.Down
+		LDX #$00
+		LDA $187A|!addr					;\Checking if player is low enough as an anti-noticeable-snap measure when moving downwards fails
+		BEQ ?..OffYoshi					;/to work when riding yoshi (collision points of player on yoshi is borked on the bottom 16x16).
+		?..OnYoshi
+			INX #2
+		?..OffYoshi
 		JSR ?.CompareYPositionToCheck
 		BPL ?.SwitchDirection
+		RTL
+		?..DifferentCheck
+			JSR ?.CompareYPositionToCheck
+			BPL ?.SwitchDirection
 		RTL
 	?.Left
 		JSR ?.CompareXPositionToCheck
@@ -117,13 +128,14 @@ incsrc "../SSPDef/Defines.asm"
 		SEP #$20
 		RTS
 	?.CompareYPositionToCheck
+		;X (8-bit): Use what Y position value to check to trigger:
+		; X = $00: Use !Setting_SSP_YPositionOffset
+		; X = $02: Use $FFF8 (-8) due to wonky player riding yoshi's bottom 16x16 object collision
 		REP #$20
 		LDA $98
 		AND #$FFF0
-		if !Setting_SSP_YPositionOffset != 0
-			CLC
-			ADC.w #!Setting_SSP_YPositionOffset
-		endif
+		CLC
+		ADC.l ?.YPositionCompare,x
 		STA $02
 		SEP #$20
 		%Get_Player_YPosition_LowerHalf()
@@ -135,3 +147,10 @@ incsrc "../SSPDef/Defines.asm"
 		dw $0008
 		dw $FFF8
 		dw $0000
+	?.YPositionCompare
+		if !Setting_SSP_YPositionOffset != 0
+			dw !Setting_SSP_YPositionOffset
+		else
+			dw $0000
+		endif
+		dw $FFF8

@@ -75,6 +75,12 @@ HeadInside:
 	BRA within_pipe
 exit:
 	JSR passable
+	REP #$20						;\Not lined up vertically enough, don't exit
+	STZ $00							;|
+	STZ $02							;|
+	SEP #$20						;|
+	%CheckIfPlayerBottom16x16CenterIsInBlock()		;|
+	BCC return						;/
 	STZ $00
 	LDA #$04
 	STA $01

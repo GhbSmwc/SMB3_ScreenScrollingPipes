@@ -23,13 +23,6 @@ BodyInside:
 	STX $1693|!addr			;/
 	CMP #$09			;\If traveling in any direction, do nothing except be passable.
 	BCS Return			;/
-	REP #$20
-	LDA #$FFFE			;\2 pixels to the left from center because player being halfway between 2 horizontally placed blocks
-	STA $00				;/would have his center picking the right block
-	STZ $02
-	SEP #$20
-	%CheckIfPlayerBottom16x16CenterIsInBlock()
-	BCC Return
 	
 	LDA !Freeram_SSP_PipeDir	;\Get current direction
 	AND.b #%00001111		;/
