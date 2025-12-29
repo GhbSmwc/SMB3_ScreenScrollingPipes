@@ -259,6 +259,10 @@ SSPMaincode:
 			...InPipe
 				CMP #$01		;\If entering a pipe...
 				BEQ ....entering_pipe	;/
+				CMP #$02		;\If after entering and is now through the stem part...
+				BNE ....BranchLimit
+				JMP ..pose		;/
+				....BranchLimit
 				CMP #$03		;\If exiting a pipe...
 				BEQ ....ExitingPipe	;/
 				CMP #$04		;\If the player cannon-exits the cap

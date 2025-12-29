@@ -370,3 +370,6 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	 allows setups as seen here: "Readme_files/VerticalExitCapsRequirePlayerCenteredHorizontally.png"
 	-Added an option !Setting_SSP_HideDuringPipeStemTravel, which can be set to 0 so that the player and
 	 carried sprite does not turn invisible inside pipes, ideal for glass pipes.
+	-RAM !Freeram_SSP_EntrExtFlg now have the in-between entering and exiting pipe state at value #$02,
+	 moving the exiting at values from $02~$03 to $03~$04. This can be used to easily check for pipe
+	 state for 3rd party ASM resources.
