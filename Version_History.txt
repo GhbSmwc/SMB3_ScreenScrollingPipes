@@ -366,8 +366,9 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	 have ASM resource-specific routines have their name (in this case, "screen scrolling pipes") in
 	 so that (1) reduce the risk of filename conflicts, and (2) be more informative that it is
 	 resource-specific).
-	-Vertical regular-sized pipe caps will now check if the player is centered enough to exit. This
-	 allows setups as seen here: "Readme_files/VerticalExitCapsRequirePlayerCenteredHorizontally.png"
+	-Vertical regular-sized pipe caps and turn corners will now check if the player is centered enough to
+	 exit. This allows setups like seen here:
+	 "Readme_files/VerticalExitCapsRequirePlayerCenteredHorizontally.png"
 	-Added an option !Setting_SSP_HideDuringPipeStemTravel, which can be set to 0 so that the player and
 	 carried sprite does not turn invisible inside pipes, ideal for glass pipes.
 	-RAM !Freeram_SSP_EntrExtFlg now have the in-between entering and exiting pipe state at value #$02,

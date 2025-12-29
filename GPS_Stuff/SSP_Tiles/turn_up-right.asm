@@ -45,6 +45,8 @@ BodyInside:
 Return:
 	RTL
 up_to_right:
+	%Get_Player_XPosition_RelativeToBlock()
+	BMI Return
 	LDA #$00
 	STA $00
 	LDA #$02

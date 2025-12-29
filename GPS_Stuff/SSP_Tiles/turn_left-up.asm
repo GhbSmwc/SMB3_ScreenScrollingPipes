@@ -51,6 +51,8 @@ left_to_up:
 	%SSPChangeDirection()
 	RTL
 down_to_right:
+	%Get_Player_XPosition_RelativeToBlock()
+	BMI Return
 	STZ $00
 	LDA #$02
 	STA $01

@@ -50,6 +50,10 @@ right_to_down:
 	%SSPChangeDirection()
 	RTL
 up_to_left:
+	%Get_Player_XPosition_RelativeToBlock()
+	BEQ .Allow
+	BPL Return
+	.Allow
 	LDA #$02
 	STA $00
 	LDA #$04
