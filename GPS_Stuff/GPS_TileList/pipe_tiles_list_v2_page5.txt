@@ -143,3 +143,14 @@ R0588-0598:0130		SSP_Tiles/pass_if_in_pipe.asm
 05FF:0025		SSP_Tiles/turn_special_small.asm
 ;;;Pipe turn corner-like object but have 4 screws on all 4 corners, presumably used for 4-way intersection or a cutoff prevention
 05AB:0130		SSP_Tiles/pass_if_in_pipe.asm
+;;;Doors
+05A0:0025		SSP_Tiles/Doors/DoorUpSmall.asm
+05A1:0025		SSP_Tiles/Doors/DoorRightSmall.asm
+05A2:0025		SSP_Tiles/Doors/DoorDownSmall.asm
+05A3:0025		SSP_Tiles/Doors/DoorLeftSmall.asm
+05A4:0025		SSP_Tiles/Doors/DoorExitOnly.asm
+05C0:0025		SSP_Tiles/Doors/DoorUp.asm
+05C1:0025		SSP_Tiles/Doors/DoorRight.asm
+05C2:0025		SSP_Tiles/Doors/DoorDown.asm
+05C3:0025		SSP_Tiles/Doors/DoorLeft.asm
+05C4:0025		SSP_Tiles/Doors/DoorExitOnly.asm

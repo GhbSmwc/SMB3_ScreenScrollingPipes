@@ -91,11 +91,9 @@ SSPWarpmode:
 	.HorizontalEntering
 		%SSPDragMarioMode()
 		BCS Done
-		REP #$20						;\Center horizontally
-		LDA $9A							;|
-		AND #$FFF0						;|
+		LDA $9A							;\Center horizontally
+		AND #$F0						;|
 		STA $94							;|
-		SEP #$20						;|
 		if !Setting_SSP_SetXYFractionBits			;|
 			LDA.b #!Setting_SSP_XPositionFractionSetTo	;|
 			STA $13DA|!addr					;|
