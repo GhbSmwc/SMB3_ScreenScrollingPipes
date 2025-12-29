@@ -33,19 +33,44 @@ incsrc "../SSPDef/Defines.asm"
 		LDA #$00						;\Make player visible
 		STA !Freeram_SSP_InvisbleFlag				;/
 	endif
-	?.Center
-		LDX $00
-		REP #$20
-		LDA $9A
-		AND #$FFF0
-		CLC
-		ADC.l ?.CenterHorizontalOffset,x
-		STA $94
-		SEP #$20
-		if !Setting_SSP_SetXYFractionBits
-			LDA.b #!Setting_SSP_XPositionFractionSetTo
-			STA $13DA|!addr
-		endif
+	LDX $00							;\Center horizontally
+	REP #$20						;|
+	LDA $9A							;|
+	AND #$FFF0						;|
+	CLC							;|
+	ADC.l ?.CenterHorizontalOffset,x			;|
+	STA $94							;|
+	SEP #$20						;|
+	if !Setting_SSP_SetXYFractionBits			;|
+		LDA.b #!Setting_SSP_XPositionFractionSetTo	;|
+		STA $13DA|!addr					;|
+	endif							;/
+	?.HandleVerticalPositioning						;\Position vertically
+		LDA $19								;|
+		ASL								;|
+		TAX								;|
+		LDA $187A|!addr							;|
+		BNE ?..VerticalCenterOnYoshi					;|
+		?..VerticalCenterOffYoshi					;|
+			REP #$20						;|
+			LDA $98							;|
+			CLC							;|
+			ADC.l ?.CenterVerticallyPowerupOffYoshi,x		;|
+			STA $96							;|
+			SEP #$20						;|
+			BRA ?..ClearYSubpixels					;|
+		?..VerticalCenterOnYoshi					;|
+			REP #$20						;|
+			LDA $98							;|
+			CLC							;|
+			ADC.l ?.CenterVerticallyPowerupOnYoshi,x		;|
+			STA $96							;|
+			SEP #$20						;|
+		?..ClearYSubpixels						;|
+			if !Setting_SSP_SetXYFractionBits			;|
+				LDA.b #!Setting_SSP_YPositionFractionSetTo	;|
+				STA $13DC|!addr					;|
+			endif							;/
 	?.Done
 	RTL
 
@@ -53,6 +78,21 @@ incsrc "../SSPDef/Defines.asm"
 	dw $0008
 	dw $FFF8
 	dw $0000
+	;Note: These is powerup-indexd. Indexed by RAM $19 and doubled.
+	;Up to 256 items allowed. Make changes here if you use custom powerups
+	;or any form of custom hitboxes.
+		?.CenterVerticallyPowerupOffYoshi
+		;Offset from the block's Y position (units of pixels, not 16x16) to set the player's Y position.
+			dw $FFF0 ;>$19 = #$00 (*2 = #$00)
+			dw $FFF8 ;>$19 = #$01 (*2 = #$02)
+			dw $FFF8 ;>$19 = #$02 (*2 = #$04)
+			dw $FFF8 ;>$19 = #$03 (*2 = #$06)
+		?.CenterVerticallyPowerupOnYoshi
+		;Same as above but on yoshi
+			dw $FFEC ;>$19 = #$00 (*2 = #$00)
+			dw $FFF0 ;>$19 = #$01 (*2 = #$02)
+			dw $FFF0 ;>$19 = #$02 (*2 = #$04)
+			dw $FFF0 ;>$19 = #$03 (*2 = #$06)
 if !Setting_SSP_YoshiAllowed != 0
 	?.YoshiTimersEnter
 	db !SSP_PipeTimer_Enter_Upwards_OffYoshi,!SSP_PipeTimer_Enter_Upwards_OnYoshi,!SSP_PipeTimer_Enter_Upwards_OnYoshi	;>Timers: 1st one = on foot, 2nd and 3rd one = on yoshi

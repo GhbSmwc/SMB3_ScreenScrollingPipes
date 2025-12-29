@@ -33,8 +33,8 @@ incsrc "../SSPDef/Defines.asm"
 		STA !Freeram_SSP_InvisbleFlag				;/
 	endif
 	LDX $00
-	REP #$20						;\Center horizontally (places mario horizontally next to cap should something like sprite pushes player into cap then entering)
-	LDA $9A							;|
+	REP #$20						;\Position horizontally (places mario horizontally next to cap should something like sprite pushes player into cap then entering)
+	LDA $9A							;|(this keeps the player turning invisible at a consistent spot)
 	AND #$FFF0						;|
 	CLC							;|
 	ADC.l ?.EnteringXPositions,x				;|
