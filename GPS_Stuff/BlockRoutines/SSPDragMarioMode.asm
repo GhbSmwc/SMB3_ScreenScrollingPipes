@@ -86,16 +86,19 @@ incsrc "../SSPDef/Defines.asm"
 ;
 ;When I mean “entry”, I mean the number of items, regardless of the value is 8 or 16-bit.
 ;
-;Due to signed 16-bit limitations, you can have up to 32768 ($8000 in hex, index numbers from $0000-$7FFF
-;(0-32767)) warp entries in your entire game per this routine. Highly unlikely you would even get close to
-;that number.
+;You can have up to 16384 ($4000 in hex, index numbers ranging $0000~$3FFC (0~16380)) warp entries in your
+;entire game per this routine. Reason: with 16 bit numbers, that's 65536 possible values, but the loop
+;checks if the index is negative, thus half of the range, 32768~65535, cannot be used and now we only have
+;0~32767 available. However, some tables below have items each spanning 2 bytes long ("dw" prefix), thus
+;if we divide each pair of integers in groups of 2 ([0, 1], [2, 3], ..., [16382, 16383] ) we get the true
+;16384 available values. Good news is that it is highly unlikely you would even get close to that number.
 ;
 ;Also note that if you have a huge number of entries here, and you trigger this routine that does not match
 ;any of the entries here (match the direction to warp, level number, and XY start position), the game will lag.
 ;Reason of the lag is because this code checks every single entry in these tables and all of them will fail.
 ;
 ;Technically, this should only lag for 1-frame execution (barely noticeable though) when it matches, especially
-;if the player triggering the warp mode block matches with the first entry on the list (the loop code above
+;if the player triggering the warp mode block matches with the last entry on the list (the loop code above
 ;starts at the last index and counts backwards until a match is found or when reaches a negative number).
 ;
 ;If you need a lot of warp entries and not have slowdown, here are ways to avoid it:
@@ -108,7 +111,7 @@ incsrc "../SSPDef/Defines.asm"
 ; this routine and the block with name variations, including the function call [%SSPDragMarioMode()] itself
 ; inside [DragPlayer.asm], with each of them having a smaller list. This will cut down the loop iterations
 ; and limits to what group it should focus on.
-;--Example: Instead of having 100 items in the list, I would have:
+;--Made-up example: Instead of having 100 items in the list, I would have:
 ;---2 drag mario subroutine files, the original and [SSPDragMarioMode1.asm] (note the “1” appended to the file name before the extension)
 ;---2 blocks to enter drag mode, the original and [DragPlayer1.asm] (duplicates should have [%SSPDragMarioMode1()])
 ;---And have 50 in each of the subroutine files.
