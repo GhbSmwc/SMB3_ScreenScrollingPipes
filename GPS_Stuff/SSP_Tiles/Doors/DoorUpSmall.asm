@@ -50,5 +50,5 @@ Done:
 RTL
 
 if !Setting_SSP_Description != 0
-	print "An upwards screen-scrolling door."
+	print "An upwards screen-scrolling door for Small Mario."
 endif
