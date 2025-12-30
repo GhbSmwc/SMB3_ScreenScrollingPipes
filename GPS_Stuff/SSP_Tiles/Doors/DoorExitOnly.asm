@@ -27,5 +27,5 @@ Done:
 RTL
 
 if !Setting_SSP_Description != 0
-	print "An exit-only screen-scrolling door."
+	print "An exit-only screen-scrolling door. Any direction on this tile will exit."
 endif

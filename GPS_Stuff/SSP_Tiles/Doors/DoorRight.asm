@@ -48,5 +48,5 @@ Done:
 RTL
 
 if !Setting_SSP_Description != 0
-	print "An rightwards screen-scrolling door."
+	print "An rightwards screen-scrolling door. Exits when going leftwards."
 endif
