@@ -64,27 +64,44 @@
 	</div>
 </div>
 <h1>GPS block list relocator</h1>
-<p>Relocates a blocks list file to another page, while maintaining everything else.</p>
+<p>Relocates a blocks list file's map16 number to another map16 number, while maintaining everything else.</p>
 <div>
 	<div>
-		Enter your GPS list file: <input type="file" id="UserInputTxtFile" accept=".txt" onchange="ProcessFile();">
-		<div>
-<pre id="ProcessDisplayText">Not Loaded.</pre>
-		</div>
-	</div>
-	<div>
-		Offset page numbers by: <input type="number" value="1" onchange="SyncOtherRadixInput(); MainCode()" id="OffsetPageNumber" data-radix="10">($<input type="text" value="0" onkeydown="IncrementDecrementAnyRadix()" onchange="SyncOtherRadixInput(); MainCode()" data-radixprefix="0x" data-radix="16">)
+		<table>
+			<tr>
+				<td style="width: 40%">Enter your GPS list file</td>
+				<td>
+					<input type="file" id="UserInputTxtFile" accept=".txt" onchange="ProcessFile();">
+					<div>
+						<pre id="ProcessDisplayText">Not Loaded.</pre>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 40%">Enter your offset amount. Positive values moves the map16 numbers forward by that amount, negative values for backwards.</td>
+				<td>
+					$<input type="text" value="0" onkeydown="IncrementDecrementAnyRadix()" onchange="SyncOtherRadixInput(); MainCode()" data-radixprefix="0x" data-radix="16">(Decimal: <input type="number" value="0" onkeydown="IncrementDecrementAnyRadix()" onchange="SyncOtherRadixInput(); MainCode()" id="OffsetPageNumber" data-radix="10">)
+				</td>
+			</tr>
+		</table>
 	</div>
 	<hr>
 	<div class="CodeBlock">
 <pre id="OutputText">Not loaded.</pre>
 	</div>
+	<div style="text-align: center; padding: 10px;">
+		<button onclick="DownloadTxtFile()" id="Button_DownloadListFile" disabled>Download text file</button>
+	</div>
 </div>
 <script>
 	let StoredTextFromUploadedFile = ""
+	let ConvertedTextFromUploadedFile = ""
+	let FileName = ""
 	function ProcessFile() {
 		let Files = [...event.target.files]	//failsafe
 		let FileToProcess = Files.at(-1)	//
+		
+		FileName = FileToProcess.name
 		
 		let Flag_InvalidFile = (FileToProcess && (FileToProcess.type !== "text/plain"))
 		if (Flag_InvalidFile) {
@@ -128,6 +145,7 @@
 	function SyncOtherRadixInput() {
 		let CurrentElement = event.target
 		let Value = ParseBigIntValue(CurrentElement.value, parseInt(CurrentElement.dataset.radix))
+		CurrentElement.value = Value.toString(CurrentElement.dataset.radix).toUpperCase()
 		let OtherInputs = [...event.target.parentNode.querySelectorAll("input")]
 		OtherInputs.forEach(HTMLEle => {
 			if (HTMLEle == CurrentElement) {
@@ -143,11 +161,13 @@
 	function MainCode() {
 		let Lines = StoredTextFromUploadedFile.split("\n")
 		let Offset = 0n
+		let Element_Offset = document.getElementById("OffsetPageNumber")
 		try {
-			Offset = ParseBigIntValue(document.getElementById("OffsetPageNumber").value, 16) * 256n
+			Offset = ParseBigIntValue(Element_Offset.value, parseInt(Element_Offset.dataset.radix))
 		} catch {}
 		
 		let InvalidLineExists = false
+		document.getElementById("Button_DownloadListFile").disabled = true
 		Lines = Lines.map((Line, Index) => {
 			let LineNumber = Index+1
 			if (/(^\s*$|^\s*;)/.test(Line)) {
@@ -178,10 +198,12 @@
 				
 				if ((Map16Number < 0n)||(Map16Number > 32768n)) {
 					InvalidLineExists = true
+					
+					let ErrorReason = "Offset out of bounds (offsetted to " + BigIntToStringSignedHex(Map16Number) + ")"
 					return {
 						LineNumber: LineNumber,
 						Type: "Invalid",
-						Reason: "Offset to out of bounds",
+						Reason: ErrorReason,
 						InputLine: Line
 					}
 				}
@@ -207,6 +229,28 @@
 				}
 				let Map16Data1 = BigInt("0x" + Map16Numbers[0]) + Offset
 				let Map16Data2 = BigInt("0x" + Map16Numbers[1]) + Offset
+				let IsMap16Data1OutOfBounds = ((Map16Data1 < 0n) || (Map16Data1 > 32768n))
+				let IsMap16Data2OutOfBounds = ((Map16Data2 < 0n) || (Map16Data2 > 32768n))
+				if (IsMap16Data1OutOfBounds || IsMap16Data2OutOfBounds) {
+					InvalidLineExists = true
+					let ErrorReason = "Offset out of bounds ("
+					if (IsMap16Data1OutOfBounds) {
+						ErrorReason += "First map16 number: " + BigIntToStringSignedHex(Map16Data1)
+						if (IsMap16Data2OutOfBounds) {
+							ErrorReason += ", " //Add a comma when both 1 and 2 are out of bounds
+						}
+					}
+					if (IsMap16Data2OutOfBounds) {
+						ErrorReason += "Second map16 number: " + BigIntToStringSignedHex(Map16Data2)
+					}
+					ErrorReason += ")";
+					return {
+						LineNumber: LineNumber,
+						Type: "Invalid",
+						Reason: ErrorReason,
+						InputLine: Line
+					}
+				}
 				let OutputString = Indent + RectangleParameter + Map16Data1.toString(16).padStart(4, "0").toUpperCase() + "-" + Map16Data2.toString(16).padStart(4, "0").toUpperCase() + BehaviorPart + StuffAfterMap16NumbersAndBehaviors
 				return {
 					LineNumber: LineNumber,
@@ -238,6 +282,7 @@
 			document.getElementById("OutputText").textContent = Text
 			return
 		}
+		document.getElementById("Button_DownloadListFile").disabled = false
 		let Text = ""
 		Lines.forEach((Line, Index, Arr) => {
 			Text += Line.OutputString
@@ -246,6 +291,23 @@
 			}
 		});
 		document.getElementById("OutputText").textContent = Text
+		ConvertedTextFromUploadedFile = Text
+	}
+	function DownloadTxtFile() {
+		let TextFile = new Blob([ConvertedTextFromUploadedFile], {type: "text/plain"})
+		
+		let Link = document.createElement("a");
+		Link.href = URL.createObjectURL(TextFile);
+		let FileNamePart = FileName.match(/^.+?(?=\.)/)[0]
+		let FileExtension = FileName.match(/\..*$/)[0]
+		let NewFileName = FileNamePart + "_Offsetted" + FileExtension
+		Link.download = NewFileName //Set output file name
+		
+		document.body.appendChild(Link)
+		Link.click()
+		
+		document.body.removeChild(Link) //Remove stuff as to not cause more data as user repeatedly clicks the download button
+		URL.revokeObjectURL(Link.href)
 	}
 	function IncrementDecrementAnyRadix() {
 		let ElementUsed = event.target
@@ -264,10 +326,14 @@
 			return
 		}
 		event.preventDefault()
+		let JumpBy = 1n
+		if (event.shiftKey) {
+			JumpBy = 256n
+		}
 		if (KeyPressed == "ArrowUp") {
-			Value++
+			Value += JumpBy
 		} else {
-			Value--
+			Value -= JumpBy
 		}
 		ElementUsed.value = Value.toString(Radix).toUpperCase()
 		ElementUsed.onchange()
@@ -306,6 +372,18 @@
 		
 		}
 		return Output
+	}
+	function BigIntToStringSignedHex(BigIntVal) {
+		//Converts a bigint value into a signed ASM-styled hex number:
+		//16n -> "$10"
+		//-16n -> "-$10"
+		let StringOutput = ""
+		if (BigIntVal >= 0n) {
+			StringOutput = "$" + BigIntVal.toString(16).toUpperCase()
+		} else {
+			StringOutput = "-$" + (BigIntVal*-1n).toString(16).toUpperCase()
+		}
+		return StringOutput
 	}
 //These makes all <pre>...</pre> have an effect that double-clicking will select all the text
 //in it, to make it easy to copy code and paste it in your ASM stuff.
