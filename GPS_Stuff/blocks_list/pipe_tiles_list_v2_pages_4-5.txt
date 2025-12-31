@@ -185,3 +185,160 @@ R046F-047F:0025		SSP_Tiles/turn_special_prep_right.asm
 
 ;;DragPlayer mode
 R04C0-04D3:0130		SSP_Tiles/DragPlayer.asm
+
+;SSPs - page 5
+;;Cap cannons
+;;;2-way caps
+;;;;Regular sized-caps
+0500:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_capCannon_L.asm
+0501:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_capCannon_R.asm
+0502-0503:0130		SSP_Tiles/pass_if_in_pipe.asm
+0512:0130		SSP_Tiles/caps/enterable/default/left_horizontal_pipe_capCannon_B.asm
+0513:0130		SSP_Tiles/caps/enterable/default/right_horizontal_pipe_capCannon_B.asm
+0510:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_capCannon_L.asm
+0511:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_capCannon_R.asm
+;;;;Small caps
+0520:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_capCannon_small.asm
+0530:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_capCannon_small.asm
+0521:0130		SSP_Tiles/caps/enterable/default/left_horizontal_pipe_capCannon_small.asm
+0522:0130		SSP_Tiles/caps/enterable/default/right_horizontal_pipe_capCannon_small.asm
+;;;1-way exit caps
+;;;;Regular sized-caps
+0504:0130		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_L_exit.asm
+0505:0130		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_R_exit.asm
+0514:0130		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_L_exit.asm
+0515:0130		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_R_exit.asm
+0506-0507:0130		SSP_Tiles/pass_if_in_pipe.asm
+0516:0130		SSP_Tiles/caps/exit_only/left_horizontal_pipe_capCannon_B_exit.asm
+0517:0130		SSP_Tiles/caps/exit_only/right_horizontal_pipe_capCannon_B_exit.asm
+;;;;Small caps
+0524:0130		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_small_exit.asm
+0534:0130		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_small_exit.asm
+0525:0130		SSP_Tiles/caps/exit_only/left_horizontal_pipe_capCannon_B_exit.asm
+0526:0130		SSP_Tiles/caps/exit_only/right_horizontal_pipe_capCannon_B_exit.asm
+;;;;1-way exit passable caps
+;;;;;Regular sized-caps
+0508:0025		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_L_exit.asm
+0509:0025		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_R_exit.asm
+0518:0025		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_L_exit.asm
+0519:0025		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_R_exit.asm
+051A:0025		SSP_Tiles/caps/exit_only/left_horizontal_pipe_capCannon_B_exit.asm
+051B:0025		SSP_Tiles/caps/exit_only/right_horizontal_pipe_capCannon_B_exit.asm
+;;;;;Small caps
+0529:0025		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_small_exit.asm
+0539:0025		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_small_exit.asm
+053A:0025		SSP_Tiles/caps/exit_only/left_horizontal_pipe_capCannon_B_exit.asm
+053B:0025		SSP_Tiles/caps/exit_only/right_horizontal_pipe_capCannon_B_exit.asm
+;;Drag mode (passable)
+R050C-051F:0025		SSP_Tiles/DragPlayer.asm
+;;Special turn corners controlled by switch
+;;;On/Off switch
+;;;;Normal-size
+;;;;;Solid objects
+R0540-0550:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1D.asm
+R0541-0551:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1U.asm
+R0542-0552:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1N.asm
+R0543-0553:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1N.asm
+R0544-0554:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1U.asm
+R0545-0555:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1D.asm
+0560-0561:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0L_1R.asm
+0562-0563:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1L.asm
+0564-0565:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0L_1N.asm
+0570-0571:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1N.asm
+0572-0573:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1L.asm
+0574-0575:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1R.asm
+;;;;;Passable
+R0546-0556:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1D.asm
+R0547-0557:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1U.asm
+R0548-0558:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1N.asm
+R0549-0559:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1N.asm
+R054A-055A:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1U.asm
+R054B-055B:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1D.asm
+0566-0567:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0L_1R.asm
+0568-0569:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1L.asm
+056A-056B:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0L_1N.asm
+0576-0577:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1N.asm
+0578-0579:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1L.asm
+057A-057B:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1R.asm
+;;;;Small pipes
+;;;;;Solid
+054C:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1D.asm
+054D:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1U.asm
+054E:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1N.asm
+054F:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1N.asm
+055C:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1U.asm
+055D:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1D.asm
+055E:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0L_1R.asm
+055F:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1L.asm
+056C:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0L_1N.asm
+056D:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1N.asm
+056E:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1L.asm
+056F:0130		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1R.asm
+;;;;;Passable
+057C:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1D.asm
+057D:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1U.asm
+057E:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0U_1N.asm
+057F:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0D_1N.asm
+058C:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1U.asm
+058D:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1D.asm
+058E:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0L_1R.asm
+058F:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1L.asm
+059C:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0L_1N.asm
+059D:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0R_1N.asm
+059E:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1L.asm
+059F:0025		SSP_Tiles/SwitchControlledSpecialTurnPrep/OnOff/0N_1R.asm
+;;Small vertical pipes that allows big mario.
+;;;Caps
+;;;;Regular
+0580:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_cap_smallAllowBig.asm
+0590:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_smallAllowBig.asm
+0581:0130		SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_smallAllowBig_exit.asm
+0591:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_cap_smallAllowBig.asm
+0582:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_cap_smallAllowBig.asm
+0592:0130		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_cap_smallAllowBig_exit.asm
+;;;;;Passable
+0586:0025		SSP_Tiles/caps/exit_only/top_vertical_pipe_cap_smallAllowBig_exit.asm
+0596:0025		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_cap_smallAllowBig_exit.asm
+;;;;Cap cannons
+0583:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_capCannon_smallAllowBig.asm
+0593:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_capCannon_smallAllowBig.asm
+0584:0130		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_smallAllowBig_exit.asm
+0594:0130		SSP_Tiles/caps/enterable/default/bottom_vertical_pipe_capCannon_smallAllowBig.asm
+0585:0130		SSP_Tiles/caps/enterable/default/top_vertical_pipe_capCannon_smallAllowBig.asm
+0595:0130		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_smallAllowBig_exit.asm
+;;;;;Passable
+0587:0025		SSP_Tiles/caps/exit_only/top_vertical_pipe_capCannon_smallAllowBig_exit.asm
+0597:0025		SSP_Tiles/caps/exit_only/bottom_vertical_pipe_capCannon_smallAllowBig_exit.asm
+;;;Stems
+R0588-0598:0130		SSP_Tiles/pass_if_in_pipe.asm
+;;;Turn corners
+;;;;solid
+05AC-05AD:0130		SSP_Tiles/pass_if_in_pipe.asm
+05BC:0130		SSP_Tiles/turn_up-right_small.asm
+05BD:0130		SSP_Tiles/turn_right-down_small.asm
+05DC:0130		SSP_Tiles/turn_left-up_small.asm
+05DD:0130		SSP_Tiles/turn_down-left_small.asm
+05CC-05CD:0130		SSP_Tiles/pass_if_in_pipe.asm
+;;;;;special turn corner
+05EE:0130		SSP_Tiles/pass_if_in_pipe.asm
+05FE:0130		SSP_Tiles/turn_special_small.asm
+;;;;Passable
+05BE:0025		SSP_Tiles/turn_up-right_small.asm
+05BF:0025		SSP_Tiles/turn_right-down_small.asm
+05DE:0025		SSP_Tiles/turn_left-up_small.asm
+05DF:0025		SSP_Tiles/turn_down-left_small.asm
+;;;;;special turn corner
+05FF:0025		SSP_Tiles/turn_special_small.asm
+;;;Pipe turn corner-like object but have 4 screws on all 4 corners, presumably used for 4-way intersection or a cutoff prevention
+05AB:0130		SSP_Tiles/pass_if_in_pipe.asm
+;;;Doors
+05A0:0025		SSP_Tiles/Doors/DoorUpSmall.asm
+05A1:0025		SSP_Tiles/Doors/DoorRightSmall.asm
+05A2:0025		SSP_Tiles/Doors/DoorDownSmall.asm
+05A3:0025		SSP_Tiles/Doors/DoorLeftSmall.asm
+05A4:0025		SSP_Tiles/Doors/DoorExitOnly.asm
+05C0:0025		SSP_Tiles/Doors/DoorUp.asm
+05C1:0025		SSP_Tiles/Doors/DoorRight.asm
+05C2:0025		SSP_Tiles/Doors/DoorDown.asm
+05C3:0025		SSP_Tiles/Doors/DoorLeft.asm
+05C4:0025		SSP_Tiles/Doors/DoorExitOnly.asm

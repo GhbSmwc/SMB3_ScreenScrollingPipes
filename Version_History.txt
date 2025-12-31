@@ -374,3 +374,7 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	-RAM !Freeram_SSP_EntrExtFlg now have the in-between entering and exiting pipe state at value #$02,
 	 moving the exiting at values from $02~$03 to $03~$04. This can be used to easily check for pipe
 	 state for 3rd party ASM resources.
+	-Map16 files for LM's map16 and tile list for GPS for "v2" versions now have page 4 and page 5 merged
+	 rather than having one file per-page.
+	-Made moving blocks to a different page for blocks list for GPS much MUCH easier, by including a tool,
+	 "JS_GPSBlockListRelocator.html".

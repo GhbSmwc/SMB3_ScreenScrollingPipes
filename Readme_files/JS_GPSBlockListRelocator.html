@@ -1,0 +1,302 @@
+<html>
+	<head>
+		<style>
+			html {
+			background-color: #101010;
+			color: rgb(221, 221, 221);
+			font-family: sans-serif;
+			}
+			
+			table, th, td {
+			border: 1px solid white;
+			border-collapse: collapse;
+			}
+			
+			abbr{cursor: help;}
+			img.img-hor {
+				-moz-transform: scaleX(-1);
+				-o-transform: scaleX(-1);
+				-webkit-transform: scaleX(-1);
+				transform: scaleX(-1);
+				filter: FlipH;
+				-ms-filter: "FlipH";
+			}
+			div.CodeBlock {
+				overflow: auto;
+				width: 1000px;
+				height: 500px;
+				border: 1px solid white;
+				resize: both;
+				background-color: #101010;
+			}
+			pre {
+				margin: 0px;
+			}
+			*.FixedWidth {
+				font-family: monospace;
+			}
+			
+			*.NoLineBreak {
+				font-family: monospace;
+				white-space: pre;
+			}
+			*.Center {
+				text-align: center;
+			}
+			li {
+				padding: 5px;
+			}
+			tr.RedBackground {
+				background-color: #400000;
+			}
+			input {
+				font-family: monospace;
+			}
+		</style>
+	</head>
+<body style="max-width: 1000px; margin: auto; padding: 15px">
+<div>
+	<div>
+		<a href="../Readme.html#Return_JSToolList">Back (info about tools provided)</a>
+	</div>
+	<div>
+		<a href="../Readme.html#BlockListRelocatorInfo">Back (info about relocating blocks)</a>
+	</div>
+</div>
+<h1>GPS block list relocator</h1>
+<p>Relocates a blocks list file to another page, while maintaining everything else.</p>
+<div>
+	<div>
+		Enter your GPS list file: <input type="file" id="UserInputTxtFile" accept=".txt" onchange="ProcessFile();">
+		<div>
+<pre id="ProcessDisplayText">Not Loaded.</pre>
+		</div>
+	</div>
+	<div>
+		Offset page numbers by: <input type="number" value="1" onchange="MainCode()" id="OffsetPageNumber">
+	</div>
+	<hr>
+	<div class="CodeBlock">
+<pre id="OutputText">Not loaded.</pre>
+	</div>
+</div>
+<script>
+	let StoredTextFromUploadedFile = ""
+	function ProcessFile() {
+		let Files = [...event.target.files]	//failsafe
+		let FileToProcess = Files.at(-1)	//
+		
+		let Flag_InvalidFile = (FileToProcess && (FileToProcess.type !== "text/plain"))
+		if (Flag_InvalidFile) {
+			document.getElementById("OutputText").textContent = "Error! Invalid file and/or format."
+			return
+		}
+		let FileReaderText = new FileReader()
+		FileReaderText.addEventListener("load", SuccessfulLoad)
+		FileReaderText.addEventListener("error", LoadError)
+		FileReaderText.addEventListener("progress", DisplayProgress)
+		FileReaderText.addEventListener("loadend", ClearLoad)
+		try {
+			FileReaderText.readAsText(FileToProcess) //Yet to read the file
+		} catch {
+			//User presses escapes and causes an exception
+				document.getElementById("OutputText").textContent = "File process aborted."
+				document.getElementById("ProcessDisplayText").textContent = "File process aborted."
+		}
+	}
+	function SuccessfulLoad(e) {
+		StoredTextFromUploadedFile = e.target.result
+		MainCode()
+	}
+	function LoadError(e) {
+		document.getElementById("OutputText").textContent = "Error! Invalid file and/or format."
+	}
+	function DisplayProgress(e) {
+		let Progress = e.loaded
+		let ProgressEnd = e.total
+		let ProgressPercentage = Progress * 100 / ProgressEnd //Multiply first so that rounding (after division) happens at the end to mitigate rounding errors
+		document.getElementById("ProcessDisplayText").textContent = "Loading file: " + ProgressPercentage.toFixed(0) + "%"
+	}
+	function ClearLoad(e) {
+		//Prevent memory leaks
+		let FileRead = event.target
+		FileRead.removeEventListener("load", SuccessfulLoad)
+		FileRead.removeEventListener("error", LoadError)
+		FileRead.removeEventListener("progress", DisplayProgress)
+		FileRead.removeEventListener("loadend", ClearLoad)
+	}
+	function CorrectOffsetValue() {
+	
+	}
+	function MainCode() {
+		let Lines = StoredTextFromUploadedFile.split("\n")
+		let Offset = 0n
+		try {
+			Offset = ParseBigIntValue(document.getElementById("OffsetPageNumber").value, 16) * 256n
+		} catch {}
+		
+		let InvalidLineExists = false
+		Lines = Lines.map((Line, Index) => {
+			let LineNumber = Index+1
+			if (/(^\s*$|^\s*;)/.test(Line)) {
+				return {
+					LineNumber: LineNumber,
+					OutputString: Line,
+					Type: "BlankOrComment"
+				}
+			}
+			//These preserves the whitespace characters in each line so that only the map16 numbers are changed in the output
+				let Indent = Line.match(/^\s*/)[0]
+				let StuffAfterMap16NumbersAndBehaviors = Line.replace(/^\s*/, "").replace(/^[\dA-Fa-f\-\:Rr]+/, "")
+				
+			let Map16NumberAndBehaviorsString = Line.match(/(?:[\dA-Fa-f]+|(?:(?:R|r)?[\dA-Fa-f]+-[\dA-Fa-f]+))(?:\:[\dA-Fa-f]+)?/)[0]
+			//Preserve non-map16 number such as behavior
+				let RectangleParameter = ""
+				try {
+					RectangleParameter = Map16NumberAndBehaviorsString.match(/^(R|r)/)[0]
+				} catch {}
+				let BehaviorPart = ""
+				try {
+					BehaviorPart = Line.match(/\:[\dA-Fa-f]+/)[0]
+				} catch {}
+			
+			
+			if (/^\s*[\dA-Fa-f]+(:[\dA-Fa-f]+)?\s+/.test(Line)) {
+				let Map16Number = BigInt("0x" + Line.match(/[\dA-Fa-f]+/)[0]) + Offset
+				
+				if ((Map16Number < 0n)||(Map16Number > 32768n)) {
+					InvalidLineExists = true
+					return {
+						LineNumber: LineNumber,
+						Type: "Invalid",
+						Reason: "Offset to out of bounds",
+						InputLine: Line
+					}
+				}
+				let OutputString = Indent + Map16Number.toString(16).padStart(4, "0").toUpperCase() + BehaviorPart + StuffAfterMap16NumbersAndBehaviors
+				return {
+					LineNumber: LineNumber,
+					Type: "Span_SingleBlock",
+					OutputString: OutputString,
+					Text: Line
+				}
+			}
+			if (/^\s*(?:R|r)?[\dA-Fa-f]+-[\dA-Fa-f]+(:[\dA-Fa-f]+)?\s+/.test(Line)) {
+				let Map16Numbers = Line.match(/[\dA-Fa-f]+/g)
+				if (Map16Numbers == null) {
+					//Failsafe
+					InvalidLineExists = true
+					return {
+						LineNumber: LineNumber,
+						Type: "Invalid",
+						Reason: "Invalid syntax",
+						InputLine: Line
+					}
+				}
+				let Map16Data1 = BigInt("0x" + Map16Numbers[0]) + Offset
+				let Map16Data2 = BigInt("0x" + Map16Numbers[1]) + Offset
+				let OutputString = Indent + RectangleParameter + Map16Data1.toString(16).padStart(4, "0").toUpperCase() + "-" + Map16Data2.toString(16).padStart(4, "0").toUpperCase() + BehaviorPart + StuffAfterMap16NumbersAndBehaviors
+				return {
+					LineNumber: LineNumber,
+					Type: "Span_MultiBlock",
+					OutputString: OutputString,
+					Text: Line
+				}
+			}
+			
+			InvalidLineExists = true
+			return {
+				LineNumber: LineNumber,
+				Type: "Invalid",
+				Reason: "Invalid syntax",
+				InputLine: Line
+			}
+		});
+		if (InvalidLineExists) {
+			let BadItems = Lines.filter(Line => {
+				return (Line.Type == "Invalid")
+			})
+			let Text = "Error! Problems found:\n"
+			BadItems.forEach((BadItem, Index, Arr) => {
+				Text += "Line " + BadItem.LineNumber.toString(10) + ": " + BadItem.Reason + " [" + BadItem.InputLine + "]"
+				if (Index != Arr.length-1) {
+					Text += "\n"
+				}
+			})
+			document.getElementById("OutputText").textContent = Text
+			return
+		}
+		let Text = ""
+		Lines.forEach((Line, Index, Arr) => {
+			Text += Line.OutputString
+			if (Index != Arr.length-1) {
+				Text += "\n"
+			}
+		});
+		document.getElementById("OutputText").textContent = Text
+	}
+	function ParseBigIntValue(string, radix) {
+		//Acts more closely to parseInt, unlike other methods (other functions, like CorrectBinBigIntValue)
+		//this works with bigInt.
+		let Output = 0n
+		let NegativeNumber = 1n
+		if ((/^-/).test(string)) {
+			NegativeNumber = -1n
+		}
+		let DigitPart = string.substring((string.search(/[0-9a-zA-Z]/)))
+		switch (radix) {
+			//decimal
+				default:
+				if ((/^-?\d+$/).test(string)) {
+					Output = BigInt(string)
+				}
+				break
+			//Hexadecimal
+				case 16:
+				case "0x":
+				case "0X":
+				if ((/^-?[0-9A-Fa-f]+$/).test(string)) {
+					Output = BigInt("0x" + DigitPart) * NegativeNumber
+				}
+				break
+			//Binary
+				case 2:
+				case "0b":
+				case "0B":
+				if ((/^-?[01]+$/).test(string)) {
+					Output = BigInt("0b" + DigitPart) * NegativeNumber
+				}
+		
+		}
+		return Output
+	}
+//These makes all <pre>...</pre> have an effect that double-clicking will select all the text
+//in it, to make it easy to copy code and paste it in your ASM stuff.
+//
+//Credit:
+// https://keestalkstech.com/2014/04/click-to-select-all-on-the-pre-element/
+// https://www.sanwebe.com/2014/04/select-all-text-in-element-on-click
+document.addEventListener('dblclick', e => {
+  let pre = getClosest(e.target, "PRE");
+  if (pre && e.ctrlKey) {
+    let range = new Range();
+    range.selectNodeContents(pre);
+    document.getSelection().removeAllRanges();
+    document.getSelection().addRange(range);
+  }
+});
+
+function getClosest(el, tagName) {
+  tagName = tagName && tagName.toUpperCase();
+
+  if (!tagName || !el)
+    return null;
+
+  do
+    if (el.nodeName === tagName)
+      return el;
+  while (el = el.parentNode);
+
+  return null;
+}
+</script>

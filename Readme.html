@@ -169,13 +169,10 @@ meaning you don't have to worry about the path being in the way of designing lev
 <h2><a href="#TOC_Insertion" id="Insertion">^</a>Insertion</h2>
 <h3>What you need:</h3>
 <ul>
-<li><a href="https://www.smwcentral.net/?p=section&a=details&id=19982">Uberasm Tool</a> (Not the patch version)</li>
+<li><a href="https://www.smwcentral.net/?p=section&a=details&id=39036">Uberasm Tool</a> (v2.0+ required)</li>
 <li><a href="https://www.smwcentral.net/?p=section&a=details&id=19047">Gopher Popcorn Stew (GPS)</a></li>
 <li>Lunar Magic's map16 page 4 (and/or 5, if you're only going to use the &ldquo;main parts&rdquo;) not used, unless you can <a href="#MoveToDifferentM16Page">move it to another page</a></li>
-<li><a href="https://www.smwcentral.net/?p=section&a=details&id=18741">No More Sprite Tile Limits patch</a>.
-Certain sprites on screen randomly disappear when in pipes. Ignore this if you have SA-1 installed.</li>
-<li><s>No shooting fireballs/cape spin when carrying something (to prevent auto-capespin when
-carrying a sprite when exiting pipes)</s> EDIT: this is fixed.</li>
+<li><a href="https://www.smwcentral.net/?p=section&a=details&id=18741">No More Sprite Tile Limits patch</a>. Certain sprites on screen randomly disappear when in pipes. Ignore this if you have SA-1 installed.</li>
 </ul><br>
 <h2>Recommended</h2>
 <ul>
@@ -183,6 +180,15 @@ carrying a sprite when exiting pipes)</s> EDIT: this is fixed.</li>
 		<a href="https://www.smwcentral.net/?p=section&a=details&id=33679">Player X speed patch</a>. If you're using the horizontal cannon pipes, the player can inadvertenly slow down when
 		holding in the direction he's fired.
 	</li>
+	<li>
+		<a href="https://www.smwcentral.net/?p=section&a=details&id=30127">Yoshi Pipe Animation Fix</a>, by Kevin. Fixes a visual bug where if RAM <a href="https://smwc.me/m/smw/ram/7E1419"><kbd>$7E1419</kbd></a> is set
+		to any nonzero value, yoshi will act as if he's entering a pipe reguardless if the player is on yoshi or not.
+	</li>
+</ul>
+<h2>Tools provided</h2>
+<ul>
+	<li><a href="Readme_files/JS_GPSBlockListRelocator.html" id="Return_JSToolList">GPS block list relocator tool</a> I made this tool to deal with moving large number of blocks. By default, almost the entire page of 4 and 5, and you
+	can either move your custom blocks or my pipes to a different page.</li>
 </ul>
 
 
@@ -198,7 +204,7 @@ be obvious.</li><br>
 file...)</li><br>
 
 <li>Open your map16 editor, and import <kbd>tilemap.map16</kbd> (Question block with a red left
-arrow on it; <img src="Readme_files/LM_ImportMap16FromFile.png">). After the blocks are imported, hit save.*</li>
+arrow on it; <img src="Readme_files/LM_ImportMap16FromFile.png">). After the blocks are imported, hit save.<sup>[<a href="#BlockListRelocatorInfo">Map 16 location note</a>]</sup></li>
 
 </ol>
 
@@ -222,23 +228,15 @@ files used for the same gamemode number.)</li><br>
 
 <li>On Uberasm tool's <kbd>list.txt</kbd>, under gamemode, just put this:
 
-<div class="CodeBlock" style="width: 97px; height: 18px;"><pre>14 GM14.asm</pre></div></li><br>
+<div class="CodeBlock" style="width: 295px; height: 18px;"><pre>14	GM14_ScreenScrollingPipes.asm</pre></div></li><br>
 
 
 <ul><li>Title screen note</li>
 <ol>
 <li>If you are planning to have this also apply on the title screen, create another entry for <kbd>list.txt</kbd>:
-<div class="CodeBlock" style="width: 97px; height: 18px;"><pre>7 GM07.asm</pre></div></li>
-
-<li>Create an ASM file (it is a text file with an <kbd>.asm</kbd> extension), <kbd>GM07.asm</kbd> inside &ldquo;gamemode&rdquo;. Inside the file, have this code:
-<div class="CodeBlock" style="width: 944px; height: 125px;"><pre>;gamemode 7 (title screen).
-main:
-	;You can have codes (including JSL to library codes, just like the one below here) between the main label (above) and the code below here, if you want
-	;third-party stuff here.
-	JSL ScreenScrollingPipes_SSPMaincode
-	;...or codes here before the RTL.
-	RTL</pre></div>
-It is pretty much the same as gamemode 14.</li>
+<div class="CodeBlock" style="width: 285px; height: 20px;"><pre>7	GM14_ScreenScrollingPipes.asm</pre></div></li>
+<li>Please note that <kbd>Fixes.asm</kbd> <b>modifies some of the player's vanilla physics for the entire game</b> to check the freeram used by the screen scrolling pipes. Therefore the RAMs are reserved even when
+<kbd>GM14_ScreenScrollingPipes.asm</kbd>'s code is not running.</li>
 </ol>
 </ul>
 <li>Now insert the code by running uberasm tool.</li>
@@ -250,7 +248,7 @@ It is pretty much the same as gamemode 14.</li>
 paste another copy of <kbd>SSPDef</kbd> in the main directory of GPS (where the exe program is at, not in the subfolder/subdirectory).
 Also paste the asm file(s) in <kbd>BlockRoutines</kbd> in GPS's routines folder.</li><br>
 
-<li>Copy the text from one of the two files in <kbd>GPS_TileList</kbd> folder and paste it in GPS's list file. Now run GPS to insert the blocks.*
+<li>Copy the text from one of the two files in <kbd>blocks_list</kbd> folder and paste it in GPS's list file. Now run GPS to insert the blocks.*
 Both the tile lists and the map16 blocks provided must match.</li><br>
 </ol>
 
@@ -264,7 +262,7 @@ Unfortunately, the “<a href="https://www.smwcentral.net/?p=section&a=details&i
 the WJNB because Fixes.asm will auto-detect that and will not modify WJNB's hijack in any way. But if you installed Fixes.asm first, and wanted to install the WJNB fix patch afterwards, open Defines.asm, and set <kbd>!Setting_SSP_Hijack_00EA18</kbd>
 to 0, reinstall Fixes.asm, <b>and then</b> install the WJNB fix patch. And whatever you do, DON'T install the WJNB patch with Fixes.asm's <kbd>!Setting_SSP_Hijack_00EA18</kbd> set to 1, or a potential freespace may have been leaked.</li>
 
-<li>Not much to say, simply install <kbd>Fixes.asm</kbd> via asar. This patch fixes various bugs relating with the pipes. Make sure you do not move the file, else you have to edit the
+<li>Not much to say, simply install <kbd>Fixes.asm</kbd> via asar. This patch fixes various bugs relating with the pipes and sprites to not interact with the player during a pipe travel. Make sure you do not move the file, else you have to edit the
 <kbd>incsrc "&ltpath to the defines file&gt;"</kbd> to get it to work.</li><br>
 </ol><br>
 <li>Pixi (in <kbd>Pixi</kbd> folder). This mainly deals with making custom sprites be compatible with the SSPs. Mainly the fact that custom sprites may interact with the player in ways they shouldn't, and they should be rendered invisible
@@ -286,37 +284,7 @@ See <a name="UseBlocksInLevel2" href="Readme_files/BlocksUsageInLevel2.html">her
 
 </ol>
 
-<span id="MoveToDifferentM16Page">*If you need to move your pipes to a different map16 page, simply change <kbd>$PPNN</kbd> where PP is the page number to move to.
-Make sure they line up properly (the first block that was originally placed on the top-left corner should remain on the top corner
-on the new page you're moving to). A faster way to do this is to use <a href="https://notepad-plus-plus.org/downloads/">notepad plus plus</a>'s regular expression to replace (CTRL+H) the page numbers:
-Note: include ALL that is boxed!
-<ol>
-<li>replace the numbers at the left edge of the document:
-<table>
-<tr><td>Find what:</td><td>^\t*[0-9A-F][0-9A-F](?'NonPageNumber'[0-9A-F][0-9A-F]:)</td></tr>
-<tr><td>Replace with:</td><td><font color="red">05</font>$+{NonPageNumber}</td></tr>
-<tr><td>Search mode:</td><td>Regular expression</td></tr>
-</table>
-</li><br>
-<li>same as before but for multi-blocks (rectangle of blocks):
-<table>
-<tr><td>Find what:</td><td>^\t*R[0-9A-F][0-9A-F](?'NonPageNumber'[0-9A-F][0-9A-F]:)</td></tr>
-<tr><td>Replace with:</td><td>R<font color="red">05</font>$+{NonPageNumber}</td></tr>
-<tr><td>Search mode:</td><td>Regular expression</td></tr>
-</table>
-</li><br>
-
-<li>same as before but for range of block numbers:
-<table>
-<tr><td>Find what:</td><td>-[0-9A-F][0-9A-F](?'NonPageNumber'[0-9A-F][0-9A-F])</td></tr>
-<tr><td>Replace with:</td><td>-<font color="red">05</font>$+{NonPageNumber}</td></tr>
-<tr><td>Search mode:</td><td>Regular expression</td></tr>
-</table>
-</ol>
-
-</li>
-The red <font color="red">05</font> is the page number to move to. Make sure ALL the block digits are <b>4 digits long</b> which means have leading zeroes should less digits exist (<kbd>400</kbd> &rightarrow; <kbd>0400</kbd>)
-so that the regex will only replace block IDs and not the behavors.
+<span id="MoveToDifferentM16Page">*If you need to move your pipes to a different map16 page, use <a href="Readme_files/JS_GPSBlockListRelocator.html" id="BlockListRelocatorInfo">this tool</a> to move to a different page number.</span>
 
 <h2><a href="#TOC_ExtraFeatures" id="ExtraFeatures">^</a>Extra features</h2>
 <h3><a href="#TOC_ScreenScrollingWarpPipes" id="ScreenScrollingWarpPipes">^</a>Screen Scrolling *Warp* Pipes</h3>
@@ -633,13 +601,6 @@ print "<description>"
 </pre></div>
 
 </li><br>
-
-<li>Note that RAM address <kbd>$7E1419</kbd> (this handles when the player enters a pipe, including handling yoshi pose, and carrying sprites) is a nonzero value, it will force
-the player to continue holding the carried sprite, regardless if the dash button is held down, disabled (clears the controller bit every frame) or not pressed at all. Once the player exits the pipe,
-the frame the player exits the pipe completely will have <kbd>$7E1419</kbd> be cleared but his controllers still disabled until a frame later, causing the player to let go the sprite,
-which is why this uberasm code must handle that not just the frame of entering the pipes, but also <i>every</i> frame during travel as well to prevent accidental let-go of the sprite. There is also a bug in the original game as well as this ASM
-resource that if you enter a pipe, reguardless if you are on yoshi or not, yoshi will always show his pipe animation. <a href="https://www.smwcentral.net/?p=section&a=details&id=30127">This patch</a>
-fixes the yoshi issue so that it does not show its pipe animation when the player is off yoshi traveling through pipes (and it should also apply on this ASM resource as well.).</li><br><br>
 
 <li>Although, you may not use the SSPs on certain levels at your own discretion, and that you could only have the SSP uberasm tool code run at specific levels, be warned that the <kbd>Fixes.asm</kbd>
 patch will apply to all levels, meaning that the freeram addresses the SSPs use are still used even if the uberasm tool code isn't running, which can cause glitches when being set to nonzero values.</li><br>
