@@ -342,3 +342,7 @@ R0588-0598:0130		SSP_Tiles/pass_if_in_pipe.asm
 05C2:0025		SSP_Tiles/Doors/DoorDown.asm
 05C3:0025		SSP_Tiles/Doors/DoorLeft.asm
 05C4:0025		SSP_Tiles/Doors/DoorExitOnly.asm
+058A:0025		SSP_Tiles/turn_up-right_small.asm
+058B:0025		SSP_Tiles/turn_right-down_small.asm
+059A:0025		SSP_Tiles/turn_down-left_small.asm
+059B:0025		SSP_Tiles/turn_left-up_small.asm
