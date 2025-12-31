@@ -73,7 +73,7 @@
 		</div>
 	</div>
 	<div>
-		Offset page numbers by: <input type="number" value="1" onchange="MainCode()" id="OffsetPageNumber">
+		Offset page numbers by: <input type="number" value="1" onchange="SyncOtherRadixInput(); MainCode()" id="OffsetPageNumber" data-radix="10">($<input type="text" value="0" onkeydown="IncrementDecrementAnyRadix()" onchange="SyncOtherRadixInput(); MainCode()" data-radixprefix="0x" data-radix="16">)
 	</div>
 	<hr>
 	<div class="CodeBlock">
@@ -125,8 +125,20 @@
 		FileRead.removeEventListener("progress", DisplayProgress)
 		FileRead.removeEventListener("loadend", ClearLoad)
 	}
-	function CorrectOffsetValue() {
-	
+	function SyncOtherRadixInput() {
+		let CurrentElement = event.target
+		let Value = ParseBigIntValue(CurrentElement.value, parseInt(CurrentElement.dataset.radix))
+		let OtherInputs = [...event.target.parentNode.querySelectorAll("input")]
+		OtherInputs.forEach(HTMLEle => {
+			if (HTMLEle == CurrentElement) {
+				return
+			}
+			let Radix = 10
+			try {
+				Radix = parseInt(HTMLEle.dataset.radix)
+			} catch {}
+			HTMLEle.value = Value.toString(Radix).toUpperCase()
+		});
 	}
 	function MainCode() {
 		let Lines = StoredTextFromUploadedFile.split("\n")
@@ -234,6 +246,31 @@
 			}
 		});
 		document.getElementById("OutputText").textContent = Text
+	}
+	function IncrementDecrementAnyRadix() {
+		let ElementUsed = event.target
+		let KeyPressed = event.key
+		
+		let Radix = 10
+		try {
+			Radix = parseInt(ElementUsed.dataset.radix)
+		} catch {}
+		
+		let Value = ParseBigIntValue(ElementUsed.value, Radix)
+		if (event.altKey) {
+			return
+		}
+		if (!/(?:ArrowUp|ArrowDown)/.test(KeyPressed)) {
+			return
+		}
+		event.preventDefault()
+		if (KeyPressed == "ArrowUp") {
+			Value++
+		} else {
+			Value--
+		}
+		ElementUsed.value = Value.toString(Radix).toUpperCase()
+		ElementUsed.onchange()
 	}
 	function ParseBigIntValue(string, radix) {
 		//Acts more closely to parseInt, unlike other methods (other functions, like CorrectBinBigIntValue)
