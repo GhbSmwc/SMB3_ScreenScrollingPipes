@@ -515,9 +515,6 @@ can cause issues like yoshi keeping his facing direction from when you enter aft
 horizontal pipe. This can be fixed by opening <kbd>SSPDef/Defines.asm</kbd>, and setting <kbd>!Setting_SSP_UsingCustomSprites</kbd> to <kbd>0</kbd>. This is due to the fact that this ASM package assumes
 you've installed spritetool/pixi.</li><br>
 
-<li>As if the time writing (9/3/2018), codes like <kbd>DistanceFromTurnCornerCheck</kbd> and some other routines are <b>not</b> moved to GPS's
-routines folder because it is using a version of Asar before 1.60, thus using labels can leak out with no convenient way around it.</li><br>
-
 <li><a name="SmallMarioCannotInteractAboveAndBelowHorizPipes">When traveling through horizontal small pipes, Mario will interact with the &ldquo;bottom&rdquo; offset of any blocks placed above the horizontal
 pipe. It is possible to prevent that by positing Mario lower, but he will interact with  the &ldquo;above&rdquo; offset of blocks below the pipe.
 Because of how small Mario's object collision points are <b>exactly</b> 16 pixels (full block, 15 pixels in between exclusively) tall, there is no
