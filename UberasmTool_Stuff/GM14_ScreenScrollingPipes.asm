@@ -3,6 +3,7 @@
 
 incsrc "../SSPDef/Defines.asm"
 
+main:
 SSPMaincode:
 	PHB					;\Setup banks
 	PHK					;|
@@ -40,7 +41,7 @@ SSPMaincode:
 			ORA $13FB|!addr				;>Player frozen (such as yoshi growing animation).
 			;ORA <address>				;>Other RAM to disable running pipe code.
 			BEQ ..GameNotPaused
-			JMP ..pose				;>While the pipe-related code should stop running during a freeze, the pose should still be running (during freeze, he reverts to his normal pose).
+			JMP ..Pose				;>While the pipe-related code should stop running during a freeze, the pose should still be running (during freeze, he reverts to his normal pose).
 	
 		..GameNotPaused
 		..ForceControlsSetAndClear
@@ -257,27 +258,32 @@ SSPMaincode:
 			JMP .PipeCodeReturn		;>Otherwise do nothing and player will continue pipe movement.
 	
 			...InPipe
-				CMP #$01		;\If entering a pipe...
-				BEQ ....entering_pipe	;/
-				CMP #$02		;\If after entering and is now through the stem part...
-				BNE ....BranchLimit
-				JMP ..pose		;/
-				....BranchLimit
-				CMP #$03		;\If exiting a pipe...
-				BEQ ....ExitingPipe	;/
-				CMP #$04		;\If the player cannon-exits the cap
-				BEQ ....ExitingPipe	;/
-				JMP .PipeCodeReturn
+				CMP.b #((....PipeTravelStates_PointerTableEnd-....PipeTravelStates+2)/2)		;>Failsafe so the game doesn't crash
+				BCC ....Valid
+				....Invalid
+					JMP .PipeCodeReturn
+				....Valid
+				ASL
+				TAX
+				JMP (....PipeTravelStates-2,x)
+
+				....PipeTravelStates
+					dw ....entering_pipe		;>State $01 (X=$02) Entering via pipe cap
+					dw ..Pose			;>State $02 (X=$04) Pipe stem travel
+					dw ....ExitingPipe		;>State $03 (X=$06) Exiting normally
+					dw ....ExitingPipe		;>State $04 (X=$08) Exiting cannon out
+					.....PointerTableEnd ;>This needed to mark the end of the table, to calculate the lowest index that points to invalid location.
+
 	
 				....entering_pipe		;
 					LDA !Freeram_SSP_PipeTmr	;\If timer isn't 0, set pose
 					BNE .....DecrementTimer
-					JMP ..pose			;/
+					JMP ..Pose			;/
 					.....DecrementTimer
 						DEC A				;\Otherwise decrement it
 						STA !Freeram_SSP_PipeTmr	;/
 					BEQ .....StemSpeed		;>If decremented from 1 to 0, accelerate for stem speed (1 frame only)
-					JMP ..pose			;>Otherwise still set pose (cap speed).
+					JMP ..Pose			;>Otherwise still set pose (cap speed).
 	
 					.....StemSpeed
 						;Switches Mario to stem speed
@@ -295,11 +301,11 @@ SSPMaincode:
 						STA !Freeram_SSP_PipeDir	;>And set pipe direction from cap to stem speed with the same direction.
 		
 						......StemSpeedDone
-							JMP ..pose
+							JMP ..Pose
 	
 				....ExitingPipe			;
 					LDA !Freeram_SSP_PipeTmr	;\if timer already = 0, then skip the reset (so it does it once).
-					BEQ ..pose			;/
+					BEQ ..Pose			;/
 					DEC A				;\otherwise decrement timer.
 					STA !Freeram_SSP_PipeTmr	;/
 					BEQ ..ResetStatus		;>Reset status if timer hits zero (happens once after -1 to 0, again, a 1-frame action).
@@ -309,12 +315,12 @@ SSPMaincode:
 						LDA !Freeram_SSP_PipeDir	;\Switch to cap speed keeping the same direction.
 						AND.b #%00001111		;|>Check only bits 0-3 (normal direction bits)
 						CMP #$05			;|\If already at pipe cap speed, don't add again.
-						BCS ..pose			;|/
+						BCS ..Pose			;|/
 						LDA !Freeram_SSP_PipeDir	;|>Reload because we want to retain bits 4-7 (planned direction bits).
 						CLC				;|
 						ADC #$04			;/
 						STA !Freeram_SSP_PipeDir	;>Set direction
-						BRA ..pose			;>and skip the reset routine
+						BRA ..Pose			;>and skip the reset routine
 ;---------------------------------
 ;This resets mario's status.
 ;It must be exceuted for one frame
@@ -382,7 +388,7 @@ SSPMaincode:
 ;-----------------------------------------
 ;code that controls mario's pose
 ;-----------------------------------------
-		..pose
+		..Pose
 			LDA !Freeram_SSP_PipeDir
 			AND.b #%00001111
 			CMP #$09

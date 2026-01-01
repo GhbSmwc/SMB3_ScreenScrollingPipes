@@ -95,6 +95,8 @@ endif
 		; - #$02 = traveling through stem
 		; - #$03 = exiting
 		; - #$04 = exiting (cannon)
+		; - #$05 = Long-range cannon fire (pause)
+		; - #$06 = Long-range cannon fire (shot out of the pipe)
 		
 	if !sa1 == 0
 		!Freeram_SSP_InvisbleFlag	= $7E0063
