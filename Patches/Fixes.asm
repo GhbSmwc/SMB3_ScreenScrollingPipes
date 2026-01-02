@@ -130,6 +130,13 @@ incsrc "../SSPDef/Defines.asm"
 %define_sprite_table("190F", $190F, $7658)
 %define_sprite_table("1FD6", $1FD6, $766E)
 %define_sprite_table("1FE2", $1FE2, $7FD6)
+
+macro RemoveFreespaceCodeFromJMLJSL(Addr)
+	;Addr is the address of the instruction byte itself.
+	if or(equal(read1(<Addr>), $22), equal(read1(<Addr>), $5C)) ;If instruction is JSL/JML
+		autoclean read3(<Addr>+1)
+	endif
+endmacro
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Fix player-related glitches
 	org $00C5CE				;\fix hdma issues (like message box) when setting
@@ -275,6 +282,15 @@ incsrc "../SSPDef/Defines.asm"
 
 	org $0196A1
 	autoclean JML DontUnstunInPipes
+	
+	org $00EEDD
+	if !Setting_SSP_SetXYFractionBits
+		autoclean JSL ClearYPosFractionOnLayer1Platforms
+	else
+		%RemoveFreespaceCodeFromJMLJSL($00EEDD)
+		SBC $90
+		STA $97
+	endif
 freecode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 FixHDMA: ;>JSL from $00C5CE
@@ -758,6 +774,18 @@ DontUnstunInPipes:   ;>$JML from $0196A1
 	
 	.Unstun
 		JML $0196A9
+;---------------------------------------------------------------------------------
+if !Setting_SSP_SetXYFractionBits
+	ClearYPosFractionOnLayer1Platforms: ;>JSL from $00EEDD
+		.Restore
+			SBC $90
+			STA $97
+		.ClearFraction
+			LDA.b #!Setting_SSP_YPositionFractionSetTo
+			STA $13DC|!addr
+		.Done
+			RTL
+endif
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Subroutines.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
