@@ -10,6 +10,7 @@ db $42
 JMP MarioBelow : JMP MarioAbove : JMP MarioSide : JMP return : JMP return : JMP return
 JMP return : JMP TopCorner : JMP BodyInside : JMP HeadInside
 
+TopCorner:
 MarioAbove:			;>mario above only so he cannot enter edge and warp all the way to middle.
 	LDA !Freeram_SSP_PipeDir	;\if not in pipe
 	AND.b #%00001111		;|then enter
@@ -38,7 +39,6 @@ within_pipe:
 	JSR passable
 return:
 	RTL
-TopCorner:
 MarioSide:
 HeadInside:
 BodyInside:

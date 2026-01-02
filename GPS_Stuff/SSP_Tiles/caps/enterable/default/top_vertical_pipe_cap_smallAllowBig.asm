@@ -10,7 +10,7 @@ JMP MarioBelow : JMP MarioAbove : JMP MarioSide : JMP return : JMP return : JMP 
 JMP return : JMP TopCorner : JMP BodyInside : JMP HeadInside
 
 TopCorner:
-MarioAbove:			;>mario above only so he cannot enter edge and glitch
+MarioAbove:
 	LDA !Freeram_SSP_PipeDir	;\if not in pipe
 	AND.b #%00001111		;/
 	BEQ enter		;/then enter

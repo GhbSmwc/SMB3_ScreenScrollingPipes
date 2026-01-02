@@ -378,3 +378,4 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	 rather than having one file per-page.
 	-Made moving blocks to a different page for blocks list for GPS much MUCH easier, by including a tool,
 	 "JS_GPSBlockListRelocator.html".
+	-Fixed a missing TopCorner for small pipes that I forgot to include for small-mario-only pipes.
