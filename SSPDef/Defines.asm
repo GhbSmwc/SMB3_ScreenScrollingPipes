@@ -95,8 +95,6 @@ endif
 		; - #$02 = traveling through stem
 		; - #$03 = exiting
 		; - #$04 = exiting (cannon)
-		; - #$05 = Long-range cannon fire (pause)
-		; - #$06 = Long-range cannon fire (shot out of the pipe)
 		
 	if !sa1 == 0
 		!Freeram_SSP_InvisbleFlag	= $7E0063
@@ -311,7 +309,7 @@ endif
 		!SSP_PipeTimer_CannonExit_Rightwards				= $04
 		!SSP_PipeTimer_CannonExit_Upwards_OffYoshi			= $09
 		!SSP_PipeTimer_CannonExit_Upwards_OnYoshi			= $08
-		!SSP_PipeTimer_CannonExit_Downwards_OffYoshi_SmallMario	= $06
-		!SSP_PipeTimer_CannonExit_Downwards_OffYoshi_BigMario	= $09
-		!SSP_PipeTimer_CannonExit_Downwards_OnYoshi_SmallMario	= $09
+		!SSP_PipeTimer_CannonExit_Downwards_OffYoshi_SmallMario		= $06
+		!SSP_PipeTimer_CannonExit_Downwards_OffYoshi_BigMario		= $09
+		!SSP_PipeTimer_CannonExit_Downwards_OnYoshi_SmallMario		= $09
 		!SSP_PipeTimer_CannonExit_Downwards_OnYoshi_BigMario		= $09

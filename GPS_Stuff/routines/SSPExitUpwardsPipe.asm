@@ -1,4 +1,5 @@
 incsrc "../SSPDef/Defines.asm"
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;This handles mario exiting an upwards-facing screen-scrolling pipe.
 ;Handles centering, animation, SFX, etc.
 ;
@@ -8,6 +9,7 @@ incsrc "../SSPDef/Defines.asm"
 ; - $03 (1 byte): Exit mode: 
 ; -- #$03 = regular exit
 ; -- #$04 = Cannon exit.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ?SSPExitUpwardsPipe:
 	LDA !Freeram_SSP_EntrExtFlg
 	CMP $03
