@@ -200,7 +200,8 @@ endif
 	!Setting_SSP_SetXYFractionBits = 1
 		;^0 = no
 		; 1 = yes (this writes to the factional/subpixel components of the player's XY position used for RAM $7B and $7D's speed to change position, RAM $13DA and
-		;     $13DC). With this option, you'll have consistent positioning (rather than sometimes 1 pixel off) for things like exiting pipes.
+		;     $13DC). With this option, you'll have consistent positioning (rather than sometimes 1 pixel off) for things like exiting pipes. Note that Fixes.asm
+		;     would also make layer 1 and 2 platforms also write the player's Y position fraction component.
 	!Setting_SSP_HideDuringPipeStemTravel = 0
 		;^Turn the player invisible during pipe travel:
 		; 0 = no (will only hide if drag-player mode or traveling through doors). Use this option if you wanted glass pipes.
@@ -211,7 +212,7 @@ endif
 		;^Same as above but for $13DC.
 	!Setting_SSP_YPositionOffset = -$0001
 		;^Y position offset after centering vertically (when entering horizontal pipe caps and when switching from vertical to horizontal movement), notes:
-		; - Values $0000 and and higher means interacting with tiles below pipes.
+		; - Values $0000 and higher means interacting with tiles below pipes.
 		; - Don't use values outside the -$0003 to $0003 range or it's possible for the player to phase through turn corners and other tiles when he shouldn't.
 ;Pipe travel speeds:
 ;Use only values $01-$7F (negative speeds already calculated).
