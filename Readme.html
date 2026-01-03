@@ -340,11 +340,11 @@ corners and exit caps without interacting them, causing the player to continue i
 <h2><a href="#TOC_Notes" id="Notes">^</a>Notes</h2>
 <ul>
 
-<li>If you carry any <b>custom</b> sprites through these pipes, they will not go behind the layer;
- appearing superimpose of the pipe as mario is being behind the layer. Unless you can
- make it change the yxppccct using this code to be used in a custom sprite's code:
- 
- <div class="CodeBlock" style="width: 857px; height: 318px;"><pre>
+	<li>
+		If you carry any <b>custom</b> sprites through these pipes, they will not go behind the layer;
+		appearing superimpose of the pipe as mario is being behind the layer. Unless you can
+		make it change the yxppccct using this code to be used in a custom sprite's code:
+<div class="CodeBlock" style="width: 857px; height: 318px;"><pre>
 SSPPriority:
 	%SSPDetectSpriteCarriedInPipe() ;&gt;Carry clear = Not carried inside the pipe, Set: Carried into the pipe.
 	BCC .InFront
@@ -365,23 +365,27 @@ SSPPriority:
 			;11 = Appear in front of everything, except Layer 3 tiles with priority setting 1 if the
 			;     "force above everything" bit is set
 	.Skip
-		STA !15F6,x</pre></div>
-<ul><li>Also, this SSP package is intended to make both the player and the carried sprite invisible when he fully enters
-the pipe (when his entering animation timer hits 0) so that you can have non-physically-connected pipes without the
-carried sprite revealing the player's position. However, this only works with SMW's sprites handled by <kbd>Fixes.asm</kbd>.<br><br>
+		STA !15F6,x</pre></div><br>
+		Same also applies if the carried sprite is a stunned sprite that can unstun themselves during a pipe travel, with <kbd class="NoLineBreak">!Setting_SSP_FreezeTime == 0</kbd>, then you would set the timer to some value every frame
+		(such as the value of <kbd>!Setting_SSP_Minimal_StuntimerSprites</kbd>) to prevent it.
+		<ul>
+			<li>
+				Also, this SSP package is intended to make both the player and the carried sprite invisible when he fully enters
+				the pipe (when his entering animation timer hits 0) so that you can have non-physically-connected pipes without the
+				carried sprite revealing the player's position. However, this only works with SMW's sprites handled by <kbd>Fixes.asm</kbd>.<br><br>
 
-To have this be applied to carryable custom sprites, I provided a small subroutine in <kbd>Pixi/routines/SSPCheckShouldCarriedSpriteTurnInvisible.asm</kbd>, for use in PIXI's <kbd>routines</kbd>
-folder, and any carryable custom sprite used in your hack, on their graphics handler, do this (this is a template/example, most sprites uses different label names):
+				To have this be applied to carryable custom sprites, I provided a small subroutine in <kbd>Pixi/routines/SSPCheckShouldCarriedSpriteTurnInvisible.asm</kbd>, for use in PIXI's <kbd>routines</kbd>
+				folder, and any carryable custom sprite used in your hack, on their graphics handler, do this (this is a template/example, most sprites uses different label names):
 <div class="CodeBlock" style="width: 247px; height: 35px;"><pre>	CodeStart:
 		JSR GRAPHICS</pre></div>
-turns into:
+				turns into:
 <div class="CodeBlock" style="width: 439px; height: 80px;"><pre>	CodeStart:
 		%SSPCheckShouldCarriedSpriteTurnInvisible()
 		BCS SkipGFX
 		JSR GRAPHICS
 	SkipGFX:</pre></div>
-And that will cause the sprite to skip the entire graphics routines folder when carried fully into the pipe.</li></ul>
-</li><br>
+		And that will cause the sprite to skip the entire graphics routines folder when carried fully into the pipe.</li></ul>
+	</li><br>
 <li>When the player enters the pipe, he ignores most sprites and any carried sprites with him will also ignore them too,
 combined with the above info that the player (and carried sprite) turns invisible, the fact that you actually don't need connectors besides caps, turn corners, and (maybe) dragmode block,
 to keep the player in pipe state (because it is handled by uberasm tool, most non-changing-state-blocks are <kbd>pass_if_in_pipe.asm</kbd> which becomes passible if in pipe and does nothing
