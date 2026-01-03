@@ -591,7 +591,7 @@ MakeShellsInvisible:            ;>JSL from $01981B
 	.Restore
 		STA !15EA,x
 	.CheckPipeState
-		JSL CheckIfSpriteIsInsideSSPWhenInvisible
+		JSL SSPCheckShouldCarriedSpriteTurnInvisible
 		BCC ..Visible
 	..Invisible
 		RTL
@@ -611,7 +611,7 @@ MakeKeyInvisible:                  ;>JSL from $01A1F3 (key)
 		JML $01A169
 		..jslrtsreturn
 	.CheckPipeState
-		JSL CheckIfSpriteIsInsideSSPWhenInvisible
+		JSL SSPCheckShouldCarriedSpriteTurnInvisible
 		BCC ..Visible
 		..Invisible
 			RTL
@@ -624,7 +624,7 @@ MakeKeyInvisible:                  ;>JSL from $01A1F3 (key)
 		RTL
 ;---------------------------------------------------------------------------------
 MakeMechaKoopaInvisible:           ;>JSL from $01A162
-	JSL CheckIfSpriteIsInsideSSPWhenInvisible
+	JSL SSPCheckShouldCarriedSpriteTurnInvisible
 	BCC .Visible
 	
 	.Invisible
@@ -634,7 +634,7 @@ MakeMechaKoopaInvisible:           ;>JSL from $01A162
 		RTL
 ;---------------------------------------------------------------------------------
 MakeGoombaInvisible:    ;>JML from $01A14D
-	JSL CheckIfSpriteIsInsideSSPWhenInvisible
+	JSL SSPCheckShouldCarriedSpriteTurnInvisible
 	BCS .Invisible
 	
 	.Visible
@@ -644,7 +644,7 @@ MakeGoombaInvisible:    ;>JML from $01A14D
 		JML $019F5A
 ;---------------------------------------------------------------------------------
 ;SubSprGfx2Invisible:   ;>JML from $019F0F
-;	JSL CheckIfSpriteIsInsideSSPWhenInvisible
+;	JSL SSPCheckShouldCarriedSpriteTurnInvisible
 ;	BCS .Invisible
 ;	
 ;	.Visible
@@ -660,7 +660,7 @@ MakeGoombaInvisible:    ;>JML from $01A14D
 ;		JML $019F5A
 ;---------------------------------------------------------------------------------
 MakeBobOmbInvisible:       ;>JSL from $01A1EC
-	JSL CheckIfSpriteIsInsideSSPWhenInvisible
+	JSL SSPCheckShouldCarriedSpriteTurnInvisible
 	BCS .Invisible
 	
 	.Visible
@@ -674,7 +674,7 @@ MakeBobOmbInvisible:       ;>JSL from $01A1EC
 	RTL
 ;---------------------------------------------------------------------------------
 MakeBabyYoshiInvisible:     ;>JSL from $01A352
-	JSL CheckIfSpriteIsInsideSSPWhenInvisible
+	JSL SSPCheckShouldCarriedSpriteTurnInvisible
 	BCS .Invisible
 	
 	.Visible
@@ -689,7 +689,7 @@ MakeBabyYoshiInvisible:     ;>JSL from $01A352
 		RTL
 ;---------------------------------------------------------------------------------
 MakeSpringBoardInvisible:          ;>JSL from $01E6F7
-	JSL CheckIfSpriteIsInsideSSPWhenInvisible
+	JSL SSPCheckShouldCarriedSpriteTurnInvisible
 	BCS .Invisible
 	
 	.Visible
@@ -704,7 +704,7 @@ MakeSpringBoardInvisible:          ;>JSL from $01E6F7
 		RTL
 ;---------------------------------------------------------------------------------
 MakePSwitchesInvisible:       ;>$JSL from $01A21D
-	JSL CheckIfSpriteIsInsideSSPWhenInvisible
+	JSL SSPCheckShouldCarriedSpriteTurnInvisible
 	BCS .Invisible
 	
 	.Visible
@@ -723,7 +723,7 @@ MakeThrowBlockInvisible:        ;>JML from $01A1D4
 	;Had to recreate the whole block of code because of branches over towards the
 	;GFX JSR call at $01A1E8 (StunYoshiEgg) and there's another branch to that at
 	;$01A1D9.
-	JSL CheckIfSpriteIsInsideSSPWhenInvisible
+	JSL SSPCheckShouldCarriedSpriteTurnInvisible
 	BCS .Invisible
 	
 	.Visible
@@ -752,7 +752,7 @@ MakeThrowBlockInvisible:        ;>JML from $01A1D4
 		JML $01A1EB
 ;---------------------------------------------------------------------------------
 DontUnstunInPipes:   ;>$JML from $0196A1
-	JSL CheckIfSpriteCarriedInPipe
+	JSL SSPDetectSpriteCarriedInPipe
 	BCC .NoFreeze
 	
 	.FreezeTimerAtMinimum
@@ -789,42 +789,67 @@ endif
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Subroutines.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-CheckIfSpriteIsInsideSSPWhenInvisible:
-	;Carry: Clear if outside pipe, Set if inside pipe. This will determine should
-	;the sprite being carried turn invisible with the player traveling through SSP.
-	.PlayerPipeStatus
-		LDA !Freeram_SSP_PipeDir	;\Get player pipe direction
-		AND.b #%00001111		;/
-		BEQ .Visible			;>If player is outside...
-		CMP #$09			;\
-		BEQ .Invisible			;/>Not in drag mode
-		LDA !Freeram_SSP_PipeTmr	;\...or in a pipe, entering, but before Mario turns invisible.
-		BNE .Visible			;/
-	.SpriteCarried
-		LDA !14C8,x			;\...or if sprite not carried
-		CMP #$0B			;|then make sprite visible.
-		BNE .Visible			;/
-		if !Setting_SSP_HideDuringPipeStemTravel == 0
-			LDA !Freeram_SSP_InvisbleFlag
-			BEQ .Visible
-		endif
-	.Invisible
-		SEC
-		RTL
-	.Visible
-		CLC
-		RTL
-CheckIfSpriteCarriedInPipe:
-	LDA !Freeram_SSP_PipeDir
-	AND.b #%00001111
-	BEQ .OutsideOfPipe
-	LDA !14C8,x
-	CMP #$0B
-	BNE .OutsideOfPipe
-	
-	.InsideOfPipe
-		SEC
-		RTL
-	.OutsideOfPipe
-		CLC
-		RTL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;Check should a sprite be hidden when dragged through a screen scrolling pipe. With
+;!Setting_SSP_HideDuringPipeStemTravel == 0, it shall only turn invisible during warp/drag mode or when traveling
+;through doors. Otherwise it shall turn invisible during mid-stem travel, wrap/drag mode, and door traveling.
+;Output:
+; Carry: Set = Turn invisible, Clear = Remain visible.
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	SSPCheckShouldCarriedSpriteTurnInvisible:
+		;Determines should a carried sprite skip drawing during pipe travel should draw to OAM or not:
+		;Carry clear = No, Set = yes.
+		.PlayerPipeStatus
+			LDA !Freeram_SSP_PipeDir	;\Get player pipe direction
+			AND.b #%00001111		;/
+			BEQ .Visible			;>If player is outside...
+			XBA				;>Move the pipe directions to A's high byte for later
+			LDA !14C8,x			;\...or if sprite not carried
+			CMP #$0B			;|then make sprite visible.
+			BNE .Visible			;/
+			LDA !Freeram_SSP_EntrExtFlg	;\If transitioning between pipe and outside-of-pipe state, or just outside the pipe,
+			CMP #$02			;|draw.
+			BNE .Visible			;/
+		.CarriedAndTraveling
+			if !Setting_SSP_HideDuringPipeStemTravel == 0
+				XBA				
+				CMP #$09			;\
+				BNE .CheckIfDoorPassing		;/>Not in drag mode
+				BRA .Invisible			;>Regardless if door or not, if dragmode is on, don't render the sprite.
+			endif
+		.CheckIfDoorPassing
+			if !Setting_SSP_HideDuringPipeStemTravel == 0
+				LDA !Freeram_SSP_InvisbleFlag
+				BEQ .Visible
+			endif
+		.Invisible
+			SEC
+			RTL
+		.Visible
+			CLC
+			RTL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;Detect if sprite is being carried through a screen scrolling pipe, to go behind the layer with the player and
+;preventing them from unstunning themselves during travel.
+;
+;Output:
+; Carry: Clear = Draw normally in front of the layer, Set = To draw behind the layer.
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	SSPDetectSpriteCarriedInPipe:
+		;Carry: Clear if outside pipe, Set if inside pipe. This will determine should
+		;the sprite being carried to go behind the layer while traveling through SSP.
+		LDA !Freeram_SSP_PipeDir
+		AND.b #%00001111
+		BEQ .OutsideOfPipe
+		LDA !14C8,x
+		CMP #$0B
+		BNE .OutsideOfPipe
+		
+		.InsideOfPipe
+			SEC
+			RTL
+		.OutsideOfPipe
+			CLC
+			RTL

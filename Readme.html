@@ -269,7 +269,7 @@ to 0, reinstall Fixes.asm, <b>and then</b> install the WJNB fix patch. And whate
 with the player (by skipping the graphics code/routine) when dragged into the pipe.</li><br>
 <ol>
 <li>The first thing you want to do is similar to Uberasm tool and GPS-- Paste a copy of <kbd>SSPDef</kbd> in the same directory as <kbd>pixi.exe</kbd> is located.</li><br>
-<li>Paste <kbd>DetectSpriteCarriedInSSP.asm</kbd> in pixi's <kbd>routines</kbd> folder.</li><br>
+<li>Paste all ASM files in this package's <kbd>Pixi/routines</kbd> in pixi's <kbd>routines</kbd> folder.</li><br>
 </ol>
 </ol>
 
@@ -344,13 +344,10 @@ corners and exit caps without interacting them, causing the player to continue i
  appearing superimpose of the pipe as mario is being behind the layer. Unless you can
  make it change the yxppccct using this code to be used in a custom sprite's code:
  
- <div class="CodeBlock" style="width: 969px; height: 369px;"><pre>
+ <div class="CodeBlock" style="width: 857px; height: 318px;"><pre>
 SSPPriority:
-	LDA $14C8,x	;\If sprite not carried, go in front
-	CMP #$0B		;|
-	BNE .InFront		;/
-	LDA !FR_PipeDir		;\or if mario is not in a pipe, go in front
-	BEQ .InFront		;/
+	%SSPDetectSpriteCarriedInPipe() ;&gt;Carry clear = Not carried inside the pipe, Set: Carried into the pipe.
+	BCC .InFront
 	.Behind
 		LDA !15F6,x
 		AND.b #%11001111
@@ -373,13 +370,13 @@ SSPPriority:
 the pipe (when his entering animation timer hits 0) so that you can have non-physically-connected pipes without the
 carried sprite revealing the player's position. However, this only works with SMW's sprites handled by <kbd>Fixes.asm</kbd>.<br><br>
 
-To have this be applied to carryable custom sprites, I provided a small subroutine in <kbd>Pixi/routines/DetectSpriteCarriedInSSP.asm</kbd>, for use in PIXI's <kbd>routines</kbd>
+To have this be applied to carryable custom sprites, I provided a small subroutine in <kbd>Pixi/routines/SSPCheckShouldCarriedSpriteTurnInvisible.asm</kbd>, for use in PIXI's <kbd>routines</kbd>
 folder, and any carryable custom sprite used in your hack, on their graphics handler, do this (this is a template/example, most sprites uses different label names):
 <div class="CodeBlock" style="width: 247px; height: 35px;"><pre>	CodeStart:
 		JSR GRAPHICS</pre></div>
 turns into:
-<div class="CodeBlock" style="width: 362px; height: 80px;"><pre>	CodeStart:
-		%DetectSpriteCarriedInSSP()
+<div class="CodeBlock" style="width: 439px; height: 80px;"><pre>	CodeStart:
+		%SSPCheckShouldCarriedSpriteTurnInvisible()
 		BCS SkipGFX
 		JSR GRAPHICS
 	SkipGFX:</pre></div>
