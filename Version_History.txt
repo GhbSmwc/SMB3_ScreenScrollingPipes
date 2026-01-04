@@ -365,11 +365,10 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	  subroutines.
 	-!Freeram_SSP_EntrExtFlg updated to now have values for entering, stem traveling, exiting normally,
 	 and cannon exiting. Also the defines now reflect on this.
-	-Renamed several routine files to have a "SSP" at the beginning of the name due to things like
-	 "FaceYoshi.asm" (now "SSPFaceYoshi.asm") using freeram of screen scrolling pipes (It's better to
-	 have ASM resource-specific routines have their name (in this case, "screen scrolling pipes") in
-	 so that (1) reduce the risk of filename conflicts, and (2) be more informative that it is
-	 resource-specific).
+	-Renamed several routine files to have a "SSP" at the beginning of the name using freeram of screen
+	 scrolling pipes (It's better to have ASM resource-specific routines have their name (in this case,
+	 "screen scrolling pipes") in so that (1) reduce the risk of filename conflicts, and (2) be more
+	 informative that it is resource-specific).
 	-Vertical regular-sized pipe caps and turn corners will now check if the player is centered enough to
 	 exit. This allows setups like seen here:
 	 "Readme_files/VerticalExitCapsRequirePlayerCenteredHorizontally.png"
@@ -377,8 +376,11 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	 carried sprite does not turn invisible inside pipes, ideal for glass pipes.
 	-Map16 files for LM's map16 and tile list for GPS for "v2" versions now have page 4 and page 5 merged
 	 rather than having one file per-page.
-	-Made moving blocks to a different page for blocks list for GPS much MUCH easier, by including a tool,
-	 "JS_GPSBlockListRelocator.html".
+	-Made moving blocks to a different block number for blocks list for GPS much MUCH easier, by including
+	 a tool, "JS_GPSBlockListRelocator.html" which will offset them.
 	-Fixed a missing TopCorner for small pipes that I forgot to include for small-mario-only pipes.
 	-Facing directions are now corrected when traveling through pipes rather than just when the player
 	 exits horizontal pipe caps, so that the player doesn't appear going backwards in glass pipes.
+	-The uberasm tool code is no longer a library code to be called from a gamemode 14 ASM file, because
+	 UAT2.0 now supports multiple separate ASM files for the same N where N is the level/gamemode/
+	 overworld number to apply its effects on.
