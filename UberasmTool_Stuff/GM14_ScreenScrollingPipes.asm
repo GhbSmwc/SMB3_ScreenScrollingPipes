@@ -146,7 +146,9 @@ SSPMaincode:
 					LDA.w SSP_PipeYSpeed-1,y
 					STA $7D
 				....StopPotentialIssues
-					STZ $185C|!addr
+					STZ $185C|!addr			;Must interact with layers
+				....HandleFacingDirections
+					JSR CorrectFacing
 					JMP ..EnterExitTransition
 				
 				....CannonExit
@@ -247,8 +249,8 @@ SSPMaincode:
 						LDA $02
 						STA $7D
 				....StopPotentialIssues
-					LDA #$01
-					STA $185C|!addr
+					LDA #$01		;\Disable interaction with layers.
+					STA $185C|!addr		;/
 					JMP .PipeCodeReturn ;>And done.
 
 		..EnterExitTransition
@@ -798,3 +800,49 @@ CheckPlayerBottomCollisionPointIsInDestinationHitBox:
 		SEP #$20
 		CLC
 		RTL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Correct facing direction
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+CorrectFacing:
+	LDA !Freeram_SSP_PipeDir
+	AND.b #%00001111
+	TAX
+	LDA.l .PipeDirectionToFacing-1,x
+	BMI .Done				;>For vertical movements, don't set direction.
+	STA $76					;>Set player facing direction
+	EOR #$01				;\RAM $157C's directions are opposite of RAM $76.
+	STA $00					;/
+	LDA $187A|!addr				;\Don't flip yoshi if yoshi is not ridden during pipe travel
+	BEQ .Done				;/
+	.YoshiFacing
+		;Yes, this loops ALL 12 or 22 slots, even when yoshi is found. This is a failsafe
+		;when there is a double-/multiple yoshis (from a glitch or placed directly in LM), it wouldn't
+		;pick only the yoshi at the highest slot
+		LDX.b #!sprite_slots-1
+		..Loop
+			if !Setting_SSP_UsingCustomSprites != 0
+				LDA !7FAB10,x	;\If custom sprite, next slot
+				AND #$08	;|
+				BNE ..Next	;/
+			endif
+			LDA !9E,x	;\If other than yoshi, next slot
+			CMP #$35	;|
+			BNE ..Next	;/
+			...IsYoshi
+				LDa $00
+				STA !157C,x
+		..Next
+			DEX
+			BPL ..Loop
+	.Done
+		RTS
+	.PipeDirectionToFacing
+		;$80~$FF = don't set, $00 = left, $01 = right
+		db $FF		;>$01 = Up (stem)
+		db $01		;>$02 = Right (stem)
+		db $FF		;>$03 = Down (stem)
+		db $00		;>$04 = Left (stem)
+		db $FF		;>$05 = Up (Pipe cap)
+		db $01		;>$06 = Right (Pipe cap)
+		db $FF		;>$07 = Down (Pipe cap)
+		db $00		;>$08 = Left (Pipe cap)

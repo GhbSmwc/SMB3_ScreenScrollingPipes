@@ -380,3 +380,5 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	-Made moving blocks to a different page for blocks list for GPS much MUCH easier, by including a tool,
 	 "JS_GPSBlockListRelocator.html".
 	-Fixed a missing TopCorner for small pipes that I forgot to include for small-mario-only pipes.
+	-Facing directions are now corrected when traveling through pipes rather than just when the player
+	 exits horizontal pipe caps, so that the player doesn't appear going backwards in glass pipes.

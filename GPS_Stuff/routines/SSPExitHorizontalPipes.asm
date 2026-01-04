@@ -53,7 +53,6 @@ incsrc "../SSPDef/Defines.asm"
 		STZ $7B				;\Prevent centering, and then displaced by xy speeds.
 		STZ $7D				;/
 		STX $76				;/Face in the correct direction
-		%SSPFaceYoshi()			;>When riding yoshi, make him also face correct direction
 		REP #$20						;\Center horizontally
 		LDA $9A							;|
 		AND #$FFF0						;|
