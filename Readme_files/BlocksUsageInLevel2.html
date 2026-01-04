@@ -61,6 +61,7 @@ Navigation:
 	<li><a href="#TOC_BackgroundPipeTiles" id="TOC_BackgroundPipeTilesBack">Background pipe tiles</a></li>
 	<li><a href="#TOC_WarpMode" id="TOC_WarpModeBack">Warp mode usage</a></li>
 	<li><a href="#TOC_SwitchedPrepDirection" id="TOC_SwitchedPrepDirectionBack">Switchable prep turn direction</li>
+	<li><a href="#TOC_ScreenScrollingDoors" id="TOC_ScreenScrollingDoorsBack">Screen-scrolling doors</a></li>
 </ol>
 <hr>
 <h1><a href="#TOC_GeneralBlockPartsBack" id="TOC_GeneralBlockParts">^</a>General block parts</h1>
@@ -267,5 +268,14 @@ to apply its effects.<br><br>
 
 The animated graphics should be obvious. If the arrows on them are &ldquo;lit up&rdquo;, that means that direction will be used. If there is only one, and isn't lit up,
 would mean the player goes straight. The level file should explain using all directions states.
+<h1><a href="#TOC_ScreenScrollingDoorsBack" id="TOC_ScreenScrollingDoors">^</a>Screen scrolling doors</h1>
+Arrows here represents directions the player will move when entering them. The grey-color door is an exit-only door that causes the player to exit from any direction. For enterable doors,
+to exit them, the player must head to them in the opposite direction of the doors' entering direction (i.e heading left onto a door that would send the player to the right when entering).<br><br>
 
-<br><br><center><a href="../Readme.html#UseBlocksInLevel2">Back</a><br></center>
+The 2x2 16x16 area are invisible turn corners to allow changing directions much like the small pipes' turn corners.
+<table><tr><td><img src="ScreenScrollingDoorsM16.png"></td></tr></table><br><br>
+
+Be careful that the player remains 2 blocks tall when Super Mario and/or riding Yoshi, in the same way how he travels through pipes. He occupies the spot where the directional blocks are at, and
+the tile above it. If you don't know, just place coins in the path and test it out.
+
+<div class="Center"><a href="../Readme.html#UseBlocksInLevel2">Back</a></div>
