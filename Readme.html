@@ -260,7 +260,7 @@ the downwards-facing small pipe cap by hitting the bottom corners, he'll enter 1
 <img src="Readme_files/PushedLeftFromCenterSmallPipeDownwardsCap.gif"><br>
 Unfortunately, the “<a href="https://www.smwcentral.net/?p=section&a=details&id=19932">WJNB fix patch</a>” also hijacks that spot (a range from <kbd>$00EA16</kbd> to <kbd>$00EA21</kbd>). It is okay to patch Fixes.asm AFTER patching
 the WJNB because Fixes.asm will auto-detect that and will not modify WJNB's hijack in any way. But if you installed Fixes.asm first, and wanted to install the WJNB fix patch afterwards, open Defines.asm, and set <kbd>!Setting_SSP_Hijack_00EA18</kbd>
-to 0, reinstall Fixes.asm, <b>and then</b> install the WJNB fix patch. And whatever you do, DON'T install the WJNB patch with Fixes.asm's <kbd>!Setting_SSP_Hijack_00EA18</kbd> set to 1, or a potential freespace may have been leaked.</li>
+to 0, reinstall Fixes.asm, <b>and then</b> install the WJNB fix patch. And whatever you do, DON'T install the WJNB patch with Fixes.asm being installed with <kbd>!Setting_SSP_Hijack_00EA18</kbd> set to 1, or a potential freespace may have been leaked.</li>
 
 <li>Not much to say, simply install <kbd>Fixes.asm</kbd> via asar. This patch fixes various bugs relating with the pipes and sprites to not interact with the player during a pipe travel. Make sure you do not move the file, else you have to edit the
 <kbd>incsrc "&ltpath to the defines file&gt;"</kbd> to get it to work.</li><br>
