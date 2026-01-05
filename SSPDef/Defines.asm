@@ -149,7 +149,7 @@ endif
 			;^The sound effect played when you tried to enter pipes on yoshi when yoshi is prohibited.
 	
 	!Setting_SSP_Description	= 0
-		;^0 = off, 1 = on. Due to a bug in GPS with blocks with the wrong description, I added an option just in case if GPS has that fixed in the future.
+		;^0 = off, 1 = on.
 		
 	!Setting_SSP_FreezeTime	= 0
 		;^0 = FuSoYa's pipe to not freeze stuff, 1 = freeze stuff.
@@ -193,15 +193,18 @@ endif
 		; could potentially result the screen jolting and revealing a layer 1 column of glitch graphics.
 	!Setting_SSP_UsingCustomSprites = 1
 		;^0 = only using vanilla sprites in your entire hack
-		; 1 = using custom sprites.
+		; 1 = using custom sprites (pixi).
 		; This is only used during setting the player's facing direction upon exiting horizontal pipe caps while riding yoshi.
+		; NOTE: If you didn't install custom sprites and have this option == 1, this may cause issues on some emulators because RAM $7FAB10 ($400040 if SA-1) isn't
+		; initialized (this can cause yoshi to sometimes fail to update his facing direction).
 	!Setting_SSP_SetXYFractionBits = 1
 		;^0 = no
 		; 1 = yes (this writes to the factional/subpixel components of the player's XY position used for RAM $7B and $7D's speed to change position, RAM $13DA and
 		;     $13DC). With this option, you'll have consistent positioning (rather than sometimes 1 pixel off) for things like exiting pipes. Note that Fixes.asm
-		;     would also make layer 1 and 2 platforms also write the player's Y position fraction component.
+		;     would also make layer 1 and 2 platforms also write the player's Y position fraction component (original game, the Y fraction bits keeps incrementing
+		;     while on the ground every frame).
 	!Setting_SSP_HideDuringPipeStemTravel = 0
-		;^Turn the player invisible during pipe travel:
+		;^Turn the player, yoshi that the player is riding, and carried sprite invisible during pipe travel:
 		; 0 = no (will only hide if drag-player mode or traveling through doors). Use this option if you wanted glass pipes.
 		; 1 = yes
 	!Setting_SSP_XPositionFractionSetTo = $00
@@ -213,7 +216,7 @@ endif
 		; - Values $0000 and higher means interacting with tiles below pipes.
 		; - Don't use values outside the -$0003 to $0003 range or it's possible for the player to phase through turn corners and other tiles when he shouldn't.
 ;Pipe travel speeds:
-;Use only values $01-$7F (negative speeds already calculated).
+;Use only values $01-$7F (negative speeds already calculated). Values here are subpixels, 1/16th of a pixel, per frame ($10 means a full pixel).
 	if !Setting_SSP_FuSoYaSpd == 0		;>Don't change this if statement.
 		;SMW styled speed
 		!SSP_HorizontalSpd		= $40 ;\Stem speed (changing this does not affect the timing of the entering/exiting)
