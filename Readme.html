@@ -74,7 +74,7 @@ screen-fading to the next level, the player will move through the pipes (along w
 	<li>
 		<a href="#ExtraFeatures" id="TOC_ExtraFeatures">Extra features</a>
 		<ol>
-			<li><a href="#ScreenScrollingWarpPipes" id="TOC_ScreenScrollingWarpPipes">Screen Scrolling *warp* pipes</a></li>
+			<li><a href="#ScreenScrollingWarpPipes" id="TOC_ScreenScrollingWarpPipes">Screen Scrolling *warp* pipes (warp/drag mode)</a></li>
 			<li><a href="#CapCannons" id="TOC_CapCannons">Pipe cap cannons</a></li>
 		</ol>
 	</li>
@@ -159,7 +159,7 @@ past the point he needs to change direction (it will center the player correctly
 
 <li>Customizable speed. Because why not? (be careful not to set to speeds that are too fast though).</li><br>
 
-<li>As of version 4.0.0, a brand new feature was added: Screen Scrolling *Warp* pipes. Inspired by
+<li>As of version 4.0.0, a brand new feature was added: Screen Scrolling *warp* pipes. Inspired by
 WhiteYoshiEgg's <i><a href="https://www.smwcentral.net/?p=section&a=details&id=20835">Carryable Pipe</a></i>,
 this gimmick lets you have non-physically-connected pipes in your level without any required blocks in between,
 meaning you don't have to worry about the path being in the way of designing levels in between those two points.</li>
@@ -287,7 +287,7 @@ See <a name="UseBlocksInLevel2" href="Readme_files/BlocksUsageInLevel2.html">her
 <span id="MoveToDifferentM16Page">*If you need to move the pipes or your other blocks to a different map16 page, use <a href="Readme_files/JS_GPSBlockListRelocator.html" id="BlockListRelocatorInfo">this tool</a> to move to a different page number.</span>
 
 <h2><a href="#TOC_ExtraFeatures" id="ExtraFeatures">^</a>Extra features</h2>
-<h3><a href="#TOC_ScreenScrollingWarpPipes" id="ScreenScrollingWarpPipes">^</a>Screen Scrolling *Warp* Pipes</h3>
+<h3><a href="#TOC_ScreenScrollingWarpPipes" id="ScreenScrollingWarpPipes">^</a>Screen Scrolling *warp* pipes (warp/drag mode)</h3>
 <p>I also have given a new feature that let you have pipes &ldquo;warp&rdquo; (or teleport) the player to another location in the same level (this is not as in, refresh the level! I mean to be at another location without using exit-enabled
 pixelulate to black level-refresh effects). This is somewhat similar to the <a href="https://www.smwcentral.net/?p=section&a=details&id=20835">carryable pipe</a> in the sprites section that the pipe pairs appear not to be
 physically connected to another, but they acts as portals that &ldquo;teleports&rdquo; (The player actually gets dragged to his destination ignoring all object and sprite interactions, since instant teleporting result in graphical glitches)
@@ -442,7 +442,7 @@ print "A simple test block that behaves differently depending on if the player i
 	<li>
 		Same goes for custom sprites and other third-party ASM resources. Use <kbd>incsrc "&lt;path_to_SSP_defines&gt;"</kbd> (file paths must be wrapped in quotes if it has spaces) to obtain <kbd>!Freeram_SSP_PipeDir</kbd>, use it for checking its low nybble, and ignore when nonzero.
 	</li>
-	<li>If you have <kbd>!Setting_SSP_HideDuringPipeStemTravel</kbd> set to <kbd>0</kbd> in the defines, the player remains visible even when he is in the gap he's passing through.</li>
+	<li>If you have <kbd>!Setting_SSP_HideDuringPipeStemTravel</kbd> set to <kbd>0</kbd> in the defines, the player remains visible even when he is in the gap he's passing through. The exception of that is entering through screen scrolling doors or using warp/drag mode.</li>
 </ul>
 
 <li>If you enter a pipe, while yoshi exist, yoshi will also turn invisible (with some 8x8
