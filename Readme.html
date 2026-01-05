@@ -511,7 +511,7 @@ The reason for displacement of <kbd>$0006</kbd> and <kbd>$000A</kbd> is because 
 center X-displacement (<kbd>X + $0008</kbd>) would point to the block to the right of the player, but not to the left, resulting to only interact with the right half of the player
 in such cases such as the special turn corners that is 32x32 (2x2 full block) when the player MUST interact with <b>both</b> the left and right half.</li>
 
-<li>If you're not using custom sprites, RAM address $7FAB10 ($400040 SA-1) aren't initialized, thus
+<li>If you're not using custom sprites, RAM address <kbd>$7FAB10</kbd> (<kbd>$400040</kbd> SA-1) aren't initialized, thus
 can cause issues like yoshi keeping his facing direction from when you enter after exiting a
 horizontal pipe. This can be fixed by opening <kbd>SSPDef/Defines.asm</kbd>, and setting <kbd>!Setting_SSP_UsingCustomSprites</kbd> to <kbd>0</kbd>. This is due to the fact that this ASM package assumes
 you've installed spritetool/pixi.</li><br>
