@@ -217,13 +217,14 @@ endif
 		; - Don't use values outside the -$0003 to $0003 range or it's possible for the player to phase through turn corners and other tiles when he shouldn't.
 ;Pipe travel speeds:
 ;Use only values $01-$7F (negative speeds already calculated). Values here are subpixels, 1/16th of a pixel, per frame ($10 means a full pixel).
+;Note that high speed values means longer distances traveled per frame, and have a tendency of Mario overshooting and causing him to interact with stuff past a point he should change his pipe state.
 	if !Setting_SSP_FuSoYaSpd == 0		;>Don't change this if statement.
 		;SMW styled speed
 		!SSP_HorizontalSpd		= $40 ;\Stem speed (changing this does not affect the timing of the entering/exiting)
 		!SSP_VerticalSpd		= $40 ;/
 		!SSP_HorizontalSpdPipeCap	= $08 ;\cap speed (if changed, you must change the timers below this section)
 		!SSP_VerticalSpdPipeCap		= $10 ;/
-		!SSP_DragSpd			= $40 ;>Speed mario travels when using warp mode.
+		!SSP_DragSpd			= $40 ;>Speed mario travels when using warp mode. Remember, high speeds and the player could overshoot and softlock oscillating around his target position!
 	else
 		;FuSoYa styled speed.
 		!SSP_HorizontalSpd		= $40 ;\Duplicate of above, but for fusoya style speeds.

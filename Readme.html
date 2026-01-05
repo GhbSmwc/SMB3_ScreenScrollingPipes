@@ -391,9 +391,59 @@ combined with the above info that the player (and carried sprite) turns invisibl
 to keep the player in pipe state (because it is handled by uberasm tool, most non-changing-state-blocks are <kbd>pass_if_in_pipe.asm</kbd> which becomes passible if in pipe and does nothing
 beyond that), it also means you can have SSPs setups like this:<br>
 <img src="Readme_files/DisconnectedStraightPipe.png"><br>
-Just remember that the player will keep going in whatever last sets his direction state, and that unlike dragmode, you <b>have to</b>
-worry about placing blocks in that path (either add a code on all blocks in his path to do nothing and behave $0025 if
-he's in pipe state, or use the dragmode state). Just be warned that 3rd-party resources like custom sprites may be needed to be edited to ignore the player inside pipes.</li><br>
+Just remember that:
+<ul>
+	<li>The player will keep going in whatever last sets his direction state.</li>
+	<li>
+		Unlike warp/drag mode, blocks in his path must not be interactable as they can interfere with the pipe traveling movement (best case is to make blocks act as <kbd>#$0025</kbd> when <kbd>!Freeram_SSP_PipeDir</kbd>'s <abbr title="bits 0~3 of a byte; the Xs in %****XXXX">low nybble</abbr> is set):
+<div class="CodeBlock"><pre>incsrc "../SSPDef/Defines.asm" ;&gt;This to obtain a define that points to a RAM address use for the checking
+
+db $42 ; or db $37
+JMP MarioBelow : JMP MarioAbove : JMP MarioSide
+JMP SpriteV : JMP SpriteH : JMP MarioCape : JMP MarioFireball
+JMP TopCorner : JMP BodyInside : JMP HeadInside
+; JMP WallFeet : JMP WallBody ; when using db $37
+
+MarioBelow:
+MarioAbove:
+MarioSide:
+
+TopCorner:
+BodyInside:
+HeadInside:
+CheckPipeTraveling:
+	LDA !Freeram_SSP_PipeDir		;&gt;Load pipe direction state
+	AND.b #%00001111			;&gt;Mask out bits 4~7 so we only have bits 0~3, which are the actual pipe state.
+	BEQ .NotInPipeTraveling			;&gt;If zero (not in a pipe), then Mario isn't pipe traveling
+	.InPipeTraveling
+		;Code here that does something while pipe traveling.
+		LDY #$00			;\Example: Make this block passable
+		LDA #$30			;|
+		STA $1693|!addr			;/
+		RTL				;&gt;And only do just nothing for a pipe-traveling player.
+	.NotInPipeTraveling
+		;Code here that interacts with the player while outside the pipe. Example: Insta-kill the player
+		JSL $00F606|!bank
+		
+;WallFeet:	; when using db $37
+;WallBody:
+
+SpriteV:
+SpriteH:
+
+MarioCape:
+MarioFireball:
+	RTL
+
+print "A simple test block that behaves differently depending on if the player is pipe traveling or not."
+
+</pre></div>
+	</li>
+	<li>
+		Same goes for custom sprites and other third-party ASM resources. Use <kbd>incsrc "&lt;path_to_SSP_defines&gt;"</kbd> (file paths must be wrapped in quotes if it has spaces) to obtain <kbd>!Freeram_SSP_PipeDir</kbd>, use it for checking its low nybble, and ignore when nonzero.
+	</li>
+	<li>If you have <kbd>!Setting_SSP_HideDuringPipeStemTravel</kbd> set to <kbd>0</kbd> in the defines, the player remains visible even when he is in the gap he's passing through.</li>
+</ul>
 
 <li>If you enter a pipe, while yoshi exist, yoshi will also turn invisible (with some 8x8
  pieces still visible), I couldn't fix that.</li><br>
@@ -491,10 +541,10 @@ with the player traveling:
 </pre></div></li><br>
 
 <li><a name="SpeedClipping">To add to the note above, be careful with setting the travel speeds to make the player travel very fast, he may phase through
-the interaction fields of the turn corners and pipe caps (he'll pass through without triggering them). This is because SMW (and pretty much most video games, even in 3D) handles
+the interaction fields of the turn corners and pipe caps (he'll pass through without triggering them). This is because SMW (and pretty much all video games, even in 3D) handles
 movement as movement broken up into &ldquo;individual step of positions&rdquo; each frame (movement isn't continuous). Each position
-movement handles collision, but not in between these points, thus the faster the player moves, the more wider-apart these interactable positions are, and the more
-likely he'll phase through them should the next position the player moves ends up on the other side of the interaction field:<br>
+of movement handles collision, but not in between these points, thus the faster the player moves, the more wider-apart these interactable positions are, and the more
+likely he'll phase and overshoot through them should the next position the player moves ends up on the other side of the interaction field:<br>
 <img src="Readme_files/CollisionPositionInteractions.png"><br>
 The player is essentially teleporting from point to point, here is what it looks like (augmented):<br>
 <img src="Readme_files/MovementFramesGif.gif"><br>
