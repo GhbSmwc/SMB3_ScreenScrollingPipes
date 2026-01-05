@@ -808,9 +808,11 @@ endif
 			LDA !14C8,x			;\...or if sprite not carried
 			CMP #$0B			;|then make sprite visible.
 			BNE .Visible			;/
-			LDA !Freeram_SSP_EntrExtFlg	;\If transitioning between pipe and outside-of-pipe state, or just outside the pipe,
-			CMP #$02			;|draw.
-			BNE .Visible			;/
+			if !Setting_SSP_HideDuringPipeStemTravel
+				LDA !Freeram_SSP_EntrExtFlg	;\If transitioning between pipe and outside-of-pipe state, or just outside the pipe,
+				CMP #$02			;|draw.
+				BNE .Visible			;/
+			endif
 		.CarriedAndTraveling
 			if !Setting_SSP_HideDuringPipeStemTravel == 0
 				XBA				
