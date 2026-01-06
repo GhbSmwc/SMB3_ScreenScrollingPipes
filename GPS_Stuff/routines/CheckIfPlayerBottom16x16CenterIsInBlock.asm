@@ -7,8 +7,8 @@
 ;bottom 16x16. Things like 2 corner turn blocks touching each other vertically would
 ;cause the player to get stuck in between without this check.
 ; - Input:
-; -- $00~$01: X position offset from player's bottom 16x16 (#$0000 is exactly centered).
-; -- $02~$03: Y position offset from player's bottom 16x16 (#$0000 is exactly centered).
+; -- $00~$01: X position offset from player's bottom 16x16 (#$0000 is exactly centered), signed.
+; -- $02~$03: Y position offset from player's bottom 16x16 (#$0000 is exactly centered), signed.
 ; - Output:
 ; -- Carry: Set if the point is in the current block, clear otherwise.
 ;

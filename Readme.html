@@ -551,15 +551,26 @@ The player is essentially teleporting from point to point, here is what it looks
 Mario actually moves up to <u class="DottedUnderline" title="RAM address $7B and $7D contains a signed value measuring the displacement, in units of 1/16th of a pixel, so a value of #$80 is 8 pixels (#$7F may displace 8 pixels due to accumulation of fractional coordinates).">8 pixels per frame</u>, and the blocks runs a position check (if the player is centered enough within a certain range to alter his pipe
 state and snap him centered in a short distance) and &ldquo;pseudo collision points&rdquo;, therefore, the area range to trigger Mario to change direction or state
 is not a full 16x16 pixels block.</li><br>
-<li>Turn corners, and &ldquo;prep-turns&rdquo; utilize a &ldquo;pseudo collision points&rdquo; to prevent bugs when two turn corners, especially small ones, are touching each other, which
-causes the player to be able to interact with both at the same time, causing a potential softlock. It also finds out what block coordinates the player's bottom 16x16
-is mostly on (what row or what column of blocks) so he does not interact with other turn corners if they are adjicent to Mario's &ldquo;lane&rdquo;. They are located here:<br>
+
+<li>Turn corners, and &ldquo;prep-turns&rdquo; utilize a &ldquo;pseudo collision points&rdquo; system to pick only one block at a given pixel coordinate to interact with when the player touches multiple. This is to prevent bugs when two different turn corners or other pipe parts, especially small ones, are touching each other, which
+causes the player to be able to interact with both at the same time, causing a potential softlock. The points are located here:<br>
 <img src="Readme_files/SMW_PseudoCollisionPoints.png"><br>
-How this works is that it takes Mario's coordinates, displace it to find the bottom 16x16 tile's center, divide the coordinates by 16 (and round down) to obtain
-the location in units of 16x16 blocks, and compares with <kbd>BlockPositionTouched = (floor(RAM_98_9A / 16) * 16)</kbd> (accomplished via <kbd>AND.w #%1111111111110000</kbd>).
-The reason for displacement of <kbd>$0006</kbd> and <kbd>$000A</kbd> is because when the player is halfway between two blocks horizontally, his
-center X-displacement (<kbd>X + $0008</kbd>) would point to the block to the right of the player, but not to the left, resulting to only interact with the right half of the player
-in such cases such as the special turn corners that is 32x32 (2x2 full block) when the player MUST interact with <b>both</b> the left and right half.</li>
+It works like this:
+<div class="CodeBlock" style="height: 175px; width: 889px;"><pre>
+	BlockXPosition_In_Pixels = floor((XPosition + 8 + XOffset) / 16) * 16
+	BlockYPosition_In_Pixels = floor((YPosition + ToPlayerBottomTile + YOffset) / 16) * 16
+	
+	- "In_Pixels" refer to the XY position in pixels, meaning each block along an axis is 16 units, rather than 1 unit.
+	- Floor(x / 16) * 16 <a href="https://en.wikipedia.org/wiki/Rounding#Rounding_to_a_specified_multiple">rounds</a> the number downwards to the nearest 16.
+	  The bitwise equivalent is AND.w #%1111111111110000, clearing bits 0~3.
+	- XPosition and YPosition are the player's coordinate, RAM $94~$95 and $96~$97.
+	- XOffset and YOffset is a custom offset from the center of the player's bottom 16x16 tile (signed)
+	- ToPlayerBottomTile is either:
+	-- #$0018 if not riding yoshi
+	-- #$0028 if riding yoshi</pre></div>
+GPS subroutine <kbd>CheckIfPlayerBottom16x16CenterIsInBlock</kbd> handle this to determine if the point is within the currently processed block. Now note: When the player is horizontally centered in-between 2 adjacent blocks,
+using the exact horizontal center (<kbd>XOffset = 8</kbd>) point of the player would end up picking the block to the right rather than the left. In this case, left block's code would call the subroutine with <kbd>XOffset = 6</kbd> instead.
+</li>
 
 <li>If you're not using custom sprites, RAM address <kbd>$7FAB10</kbd> (<kbd>$400040</kbd> SA-1) aren't initialized, thus
 can cause issues like yoshi keeping his facing direction from when you enter after exiting a
