@@ -50,6 +50,7 @@
 	!addr = $0000
 	!sa1 = 0
 	!gsu = 0
+	!bank = $800000
 
 if read1($00FFD6) == $15
 	sfxrom
@@ -61,6 +62,7 @@ elseif read1($00FFD5) == $23
 	!dp = $3000
 	!addr = $6000
 	!sa1 = 1
+	!bank = $000000
 endif
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Check for other hijacks
@@ -291,6 +293,10 @@ endmacro
 		SBC $90
 		STA $97
 	endif
+	
+	org $01F668
+	autoclean JML RidingYoshiInPipeIgnoreSprContact
+	NOP #2 ;Just in case for debugging display
 freecode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 FixHDMA: ;>JSL from $00C5CE
@@ -786,6 +792,20 @@ if !Setting_SSP_SetXYFractionBits
 		.Done
 			RTL
 endif
+;---------------------------------------------------------------------------------
+
+RidingYoshiInPipeIgnoreSprContact: ;>JML from $01F668
+	LDA !Freeram_SSP_PipeDir	;\Get player pipe direction
+	AND.b #%00001111		;/
+	BNE .Return
+	.Restore
+		PHX
+		TYX
+		JSL $03B6E5|!bank		;>GetSpriteClippingB
+		JML $01F66E|!bank
+
+	.Return
+		JML $01F667|!bank
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Subroutines.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

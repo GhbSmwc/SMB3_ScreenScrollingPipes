@@ -362,7 +362,7 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	--Vertical centering code (accounting for whether or not riding yoshi or powerup states) now moved
 	  to subroutines.
 	--Majority of the code handling exiting vertical pipe caps and turn corners now moved to block
-	  subroutines.
+	  subroutines, saving significant space.
 	-!Freeram_SSP_EntrExtFlg updated to now have values for entering, stem traveling, exiting normally,
 	 and cannon exiting. Also the defines now reflect on this.
 	-Renamed several routine files to have a "SSP" at the beginning of the name using freeram of screen
@@ -384,5 +384,8 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	-The uberasm tool code is no longer a library code to be called from a gamemode 14 ASM file, because
 	 UAT2.0 now supports multiple separate ASM files for the same N where N is the level/gamemode/
 	 overworld number to apply its effects on.
-	-[pending] Fixed a problem where sprite interaction with the player during pipe travel still happens
+	-Fixed a problem where sprite interaction with the player during pipe travel still happens (lose yoshi)
 	 when the player is riding yoshi.
+	-Added a level wraparound feature for warp-drag mode: If the player pipe traveling heads into the edge
+	 of a level, will send him to the opposite edge of the level. If V/H scrolling disabled, then
+	 wraparound will adjust to be the screen's width.
