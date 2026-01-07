@@ -215,6 +215,11 @@ endif
 		;^Y position offset after centering vertically (when entering horizontal pipe caps and when switching from vertical to horizontal movement), notes:
 		; - Values $0000 and higher means interacting with tiles below pipes.
 		; - Don't use values outside the -$0003 to $0003 range or it's possible for the player to phase through turn corners and other tiles when he shouldn't.
+	;Settings for "SSP_WarpDragLevelWrap.asm"
+		!Setting_SSP_WarpDragLevelWrap_TopTriggerYPosition = -$0030
+			;^Y position of the top edge of the level (screen if V-scroll disabled) the player would warp
+		!Setting_SSP_WarpDragLevelWrap_BottomTriggerYOffset = $0000
+			;^Y position offset from bottom edge of the level (screen if V-scroll disabled) the player would warp
 ;Pipe travel speeds:
 ;Use only values $01-$7F (negative speeds already calculated). Values here are subpixels, 1/16th of a pixel, per frame ($10 means a full pixel).
 ;Note that high speed values means longer distances traveled per frame, and have a tendency of Mario overshooting and causing him to interact with stuff past a point he should change his pipe state.
