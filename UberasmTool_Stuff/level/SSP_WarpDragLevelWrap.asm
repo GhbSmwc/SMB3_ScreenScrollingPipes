@@ -133,8 +133,7 @@ main:
 			BMI .Done
 			LDA $01
 			STA !Freeram_SSP_DragWarpPipeDestinationXPos
-			LDA $96
-			STA !Freeram_SSP_DragWarpPipeDestinationYPos
+			JSR CalculateYPositionDestination
 			BRA ...SetWarpDrag
 		...Down
 			LDA $96
@@ -151,17 +150,28 @@ main:
 			BPL .Done
 			LDA $03
 			STA !Freeram_SSP_DragWarpPipeDestinationXPos
-			LDA $96
-			STA !Freeram_SSP_DragWarpPipeDestinationYPos
+			JSR CalculateYPositionDestination
 		...SetWarpDrag
 			SEP #$20
 			LDA $00				;\Get direction into the prep
-			ASL #4				;|
-			ORA !Freeram_SSP_PipeDir	;/
-			AND.b #%11110000		;\Set to warp/drag mode
-			ORA #$09			;/
-			STA !Freeram_SSP_PipeDir	;>And set the RAM
+			ASL #4				;/(will be #%XXXX0000)
+			ORA #$09			;>set direction to warp/drag
+			STA !Freeram_SSP_PipeDir	;>Set pipe state
 	.Done
 		SEP #$30
 		RTL
+CalculateYPositionDestination:
+	LDA $187A|!addr
+	AND #$00FF
+	ASL
+	TAX
+	LDA $96
+	CLC
+	ADC .YoshiYOffset,x
+	STA !Freeram_SSP_DragWarpPipeDestinationYPos
+	RTS
+	.YoshiYOffset
+		dw $0010
+		dw $0020
+		dw $0020
 ;EXLEVEL

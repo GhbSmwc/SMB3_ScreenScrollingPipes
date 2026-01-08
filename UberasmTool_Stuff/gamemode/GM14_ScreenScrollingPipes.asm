@@ -755,11 +755,15 @@ Aiming:
 		dw $1042,$1039,$1031,$1029,$1020,$1018,$1010,$1008
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Check if a given pixel at the player's (or yoshi's if riding yoshi)
-;;feet is close enough (within 4 pixels in any direction) to his centering position.
-;$00-$01: Feet position point X pos
-;$02-$03: Feet position point Y pos
+;;feet is close enough (within 4 pixels in any direction) to his destination
+;position.
+;Input:
+; - $00~$01: Feet position point X pos
+; - $02~$03: Feet position point Y pos
+;Output:
+; - Carry: 0 = too far, 1 = close enough.
 ;Destroyed values:
-;$04-$05: Offset of destination point X and Y pos
+; - $04~$05: Offset of destination point X and Y pos
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 CheckPlayerBottomCollisionPointIsInDestinationHitBox:
 	REP #$20
