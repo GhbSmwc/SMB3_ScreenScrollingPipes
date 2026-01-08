@@ -220,6 +220,9 @@ endif
 	;Settings for "SSP_WarpDragLevelWrap.asm"
 		!Setting_SSP_WarpDragLevelWrap_TopTriggerYPosition = -$0030
 			;^Y position of the top edge of the level (screen if V-scroll disabled) the player would warp
+		!Setting_SSP_WarpDragLevelWrap_LevelEdgeTriggerOffset = $0008
+			;^Width extending from the left and right edges, to the middle of the level. Positive values only. Note that the solid screen barriers extends
+			; 8 pixels towards the center of the screen of where Mario is being pushed towards.
 		!Setting_SSP_WarpDragLevelWrap_BottomTriggerYOffset = $0000
 			;^Y position offset from bottom edge of the level (screen if V-scroll disabled) the player would warp
 ;Pipe travel speeds:

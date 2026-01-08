@@ -26,107 +26,142 @@ main:
 	CMP #$09			;\If already in warp/drag mode, skip
 	BEQ No				;/
 	CMP #$05
-	BCC .NormalDirections
-	SEC
-	SBC #$04
-		.NormalDirections
-	STA $02				;>$01 = directions.
-	.VerticalWrap
-		..GetWrapHeight
-			;Pixel Y position range: $0000~$01B0 in vanilla,
-			;otherwise $0000~Value_In_RAM_13D7
-			wdm
-			LDA $1412|!addr
-			BEQ ...WrapBasedByScreen
-			
-			...WrapBasedByLevel
-				REP #$20
-				if !EXLEVEL == 0
-					LDA.w #($01B0+!Setting_SSP_WarpDragLevelWrap_BottomTriggerYOffset)-!Setting_SSP_WarpDragLevelWrap_TopTriggerYPosition
-				else
-					LDA $13D7|!addr
-					CLC
-					ADC.w #!Setting_SSP_WarpDragLevelWrap_BottomTriggerYOffset-!Setting_SSP_WarpDragLevelWrap_TopTriggerYPosition
-				endif
-				BRA ...SetHeight
-			...WrapBasedByScreen
-				REP #$20
-				LDA #$00E0+!Setting_SSP_WarpDragLevelWrap_BottomTriggerYOffset-!Setting_SSP_WarpDragLevelWrap_TopTriggerYPosition
-			...SetHeight
-				STA $00
-		..CheckIfAboveOrBelow
-			LDA $1412|!addr
-			AND #$00FF
-			BNE ...CheckYpositionRelativeToLevel
-			...CheckYpositionRelativeToScreen
-				;I wouldn't use RAM $80 else the boundary essentially shakes during a screen shakes
-				LDA $96
-				SEC
-				SBC $1464|!addr
-				CMP.w #$00E0+!Setting_SSP_WarpDragLevelWrap_BottomTriggerYOffset
-				BPL ..WrapToTop
-				CMP.w #!Setting_SSP_WarpDragLevelWrap_TopTriggerYPosition
-				BMI ..WrapToBottom
-				BRA .HorizontalWrap
-			...CheckYpositionRelativeToLevel
-				LDA $96
-				CMP.w #!Setting_SSP_WarpDragLevelWrap_TopTriggerYPosition
-				BMI ..WrapToBottom
-				if !EXLEVEL == 0
-					CMP.w #$01B0+!Setting_SSP_WarpDragLevelWrap_BottomTriggerYOffset
-				else
-					SEC
-					SBC.w #!Setting_SSP_WarpDragLevelWrap_BottomTriggerYOffset
-					CMP $13D7|!addr
-				endif
-				BPL ..WrapToTop
-				BRA .HorizontalWrap
-		..WrapToBottom
-			SEP #$20
-			LDA $02
-			CMP #$01				;>Prevent potential softlock
-			BNE .Done
-			LDA !Freeram_SSP_PipeDir		;\Set prep direction to up
-			AND.b #%00001111			;|
-			ORA #$10				;|
-			STA !Freeram_SSP_PipeDir		;/
-			REP #$20
-			LDA $96
-			CLC
-			ADC $00
-			STA !Freeram_SSP_DragWarpPipeDestinationYPos
-			LDA $94
-			STA !Freeram_SSP_DragWarpPipeDestinationXPos
-			BRA .SetDragMode
-		..WrapToTop
-			SEP #$20
-			LDA $02
-			CMP #$03				;>Prevent potential softlock
-			BNE .Done
-			LDA !Freeram_SSP_PipeDir		;\Set prep direction to down
-			AND.b #%00001111			;|
-			ORA #$30				;|
-			STA !Freeram_SSP_PipeDir		;/
-			REP #$20
-			LDA $96
+	.GetDirectionsOnly
+		BCC ..NormalDirections
+		..CapDirections
 			SEC
-			SBC $00
-			STA !Freeram_SSP_DragWarpPipeDestinationYPos
+			SBC #$04
+		..NormalDirections
+			STA $00				;>$00 = directions (ranges from #$01~#$04).
+	.GetLeftAndRightEdges
+		;After this:
+		; - $01~$02: contains the left edge for the trigger
+		; - $03~$04: contains the right edge for the trigger
+		LDA $1411|!addr
+		BEQ ..ScreenBasedWrap
+		REP #$20
+		LDA.w #!Setting_SSP_WarpDragLevelWrap_LevelEdgeTriggerOffset
+		STA $01
+		LDA $5B
+		LSR
+		BCS ..VerticalLevel
+		..HorizontalLevel
+			LDA.b $5E-1
+			AND #$FF00
+			SEC
+			SBC.w #($00F0-!Setting_SSP_WarpDragLevelWrap_LevelEdgeTriggerOffset)
+			BRA ..SetRightEdgeXPos
+		..VerticalLevel
+			LDA.w #($01F0-!Setting_SSP_WarpDragLevelWrap_LevelEdgeTriggerOffset)
+			BRA ..SetRightEdgeXPos
+		..ScreenBasedWrap
+			LDA $1462|!addr
+			CLC
+			ADC.w #!Setting_SSP_WarpDragLevelWrap_LevelEdgeTriggerOffset
+			STA $01
+			LDA $1462|!addr
+			CLC
+			ADC.w #($00F0-!Setting_SSP_WarpDragLevelWrap_LevelEdgeTriggerOffset)
+		..SetRightEdgeXPos
+			STA $03
+	.GetTopAndBottom
+		;After this:
+		; - $05~$06: contains the top for the trigger
+		; - $07~$08: contains the bottom for the trigger
+		LDA $1412|!addr
+		BEQ ..ScreenBasedWrap
+		REP #$20
+		LDA.w #!Setting_SSP_WarpDragLevelWrap_TopTriggerYPosition
+		STA $05
+		LDA $5B
+		LSR
+		BCS ..VerticalLevel
+		..HorizontalLevel
+			if !EXLEVEL == 0
+				LDA.w #($01B0+!Setting_SSP_WarpDragLevelWrap_BottomTriggerYOffset)
+			else
+				LDA $13D7|!addr
+				CLC
+				ADC.w !Setting_SSP_WarpDragLevelWrap_BottomTriggerYOffset
+			endif
+			BRA ..SetBottom
+		..VerticalLevel
+			;Note that the bottom two rows of blocks in a 32x16 block screen area
+			;are not visible since the screen stops where its top is on the level's
+			;screen boundary
+			LDA.b $5F-1
+			AND #$FF00
+			SEC
+			SBC.w #($0020-!Setting_SSP_WarpDragLevelWrap_BottomTriggerYOffset)
+			BRA ..SetBottom
+		..ScreenBasedWrap
+			;224 ($00E0) is the height of the screen
+			LDA $1464|!addr
+			CLC
+			ADC.w #!Setting_SSP_WarpDragLevelWrap_TopTriggerYPosition
+			STA $05
+			LDA $1464|!addr
+			CLC
+			ADC.w #($00E0+!Setting_SSP_WarpDragLevelWrap_BottomTriggerYOffset)
+		..SetBottom
+			STA $07
+	.CheckHeadingBoundary
+		SEP #$20
+		LDA $00
+		ASL
+		TAX
+		REP #$20
+		JMP (..DirectionsToWrapCheck-2,x)
+		
+		..DirectionsToWrapCheck
+			dw ...Up
+			dw ...Right
+			dw ...Down
+			dw ...Left
+		...Up
+			LDA $96
+			CMP $05
+			BPL .Done
 			LDA $94
 			STA !Freeram_SSP_DragWarpPipeDestinationXPos
-			BRA .SetDragMode
-	.HorizontalWrap
-		;[...]
-		BRA .Done
-	.SetDragMode
-		SEP #$30
-		LDA !Freeram_SSP_PipeDir
-		ASL #4				;\Copy directions to the prep directions
-		ORA !Freeram_SSP_PipeDir	;/
-		AND.b #%11110000		;\Set directions
-		ORA.b #$09			;/
-		STA !Freeram_SSP_PipeDir	;>And write
+			LDA $07
+			STA !Freeram_SSP_DragWarpPipeDestinationYPos
+			BRA ...SetWarpDrag
+		...Right
+			LDA $94
+			CMP $03
+			BMI .Done
+			LDA $01
+			STA !Freeram_SSP_DragWarpPipeDestinationXPos
+			LDA $96
+			STA !Freeram_SSP_DragWarpPipeDestinationYPos
+			BRA ...SetWarpDrag
+		...Down
+			LDA $96
+			CMP $07
+			BMI .Done
+			LDA $94
+			STA !Freeram_SSP_DragWarpPipeDestinationXPos
+			LDA $05
+			STA !Freeram_SSP_DragWarpPipeDestinationYPos
+			BRA ...SetWarpDrag
+		...Left
+			LDA $94
+			CMP $01
+			BPL .Done
+			LDA $03
+			STA !Freeram_SSP_DragWarpPipeDestinationXPos
+			LDA $96
+			STA !Freeram_SSP_DragWarpPipeDestinationYPos
+		...SetWarpDrag
+			SEP #$20
+			LDA $00				;\Get direction into the prep
+			ASL #4				;|
+			ORA !Freeram_SSP_PipeDir	;/
+			AND.b #%11110000		;\Set to warp/drag mode
+			ORA #$09			;/
+			STA !Freeram_SSP_PipeDir	;>And set the RAM
 	.Done
-	SEP #$30
-	RTL
+		SEP #$30
+		RTL
 ;EXLEVEL
