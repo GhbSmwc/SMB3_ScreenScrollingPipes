@@ -389,3 +389,5 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	-Added a level wraparound feature for warp-drag mode: If the player pipe traveling heads into the edge
 	 of a level, will send him to the opposite edge of the level. If V/H scrolling disabled, then
 	 wraparound will adjust to be the screen's width.
+	-Fixed a problem where if player is off yoshi, and enters a pipe and turns invisible, so too will
+	 yoshi. Credit to AmperSam (https://www.smwcentral.net/?p=profile&id=41223)

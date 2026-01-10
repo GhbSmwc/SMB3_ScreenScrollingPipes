@@ -219,12 +219,14 @@ endif
 		; - Don't use values outside the -$0003 to $0003 range or it's possible for the player to phase through turn corners and other tiles when he shouldn't.
 	;Settings for "SSP_WarpDragLevelWrap.asm"
 		!Setting_SSP_WarpDragLevelWrap_TopTriggerYPosition = -$0030
-			;^Y position of the top edge of the level (screen if V-scroll disabled) the player would warp
+			;^Y position of the top edge of the level (screen if V-scroll disabled) the player would warp. Note that this does not offset up by 1 tile if riding yoshi
+			; (that's why it is 3 blocks above the level by default)
 		!Setting_SSP_WarpDragLevelWrap_LevelEdgeTriggerOffset = $0008
 			;^Width extending from the left and right edges, to the middle of the level. Positive values only. Note that the solid screen barriers extends
 			; 8 pixels towards the center of the screen of where Mario is being pushed towards.
 		!Setting_SSP_WarpDragLevelWrap_BottomTriggerYOffset = $0000
-			;^Y position offset from bottom edge of the level (screen if V-scroll disabled) the player would warp
+			;^Y position offset from bottom edge of the level (screen if V-scroll disabled) the player would warp. Like !Setting_SSP_WarpDragLevelWrap_TopTriggerYPosition, this also
+			; does not offset by 1 block when riding yoshi.
 ;Pipe travel speeds:
 ;Use only values $01-$7F (negative speeds already calculated). Values here are subpixels, 1/16th of a pixel, per frame ($10 means a full pixel).
 ;Note that high speed values means longer distances traveled per frame, and have a tendency of Mario overshooting and causing him to interact with stuff past a point he should change his pipe state.

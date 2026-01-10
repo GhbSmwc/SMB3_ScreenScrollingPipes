@@ -78,8 +78,12 @@ SSPMaincode:
 				endif
 			...Hide
 				if !Setting_SSP_PipeDebug == 0
-					LDA #$FF		;|\Render player invisible
-					STA $78			;//
+					LDA #$EF			;>%11101111
+					LDY $187A|!addr
+					BEQ +
+					LDA #$FF
+					+
+					STA $78				;>Make player invisible
 				endif
 			...NoHide
 		..YoshiImage
