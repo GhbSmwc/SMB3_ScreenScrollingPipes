@@ -65,12 +65,13 @@ main:
 			LDA.b $5E-1
 			AND #$FF00
 			SEC
-			SBC.w #($00F0-!Setting_SSP_WarpDragLevelWrap_LevelEdgeTriggerOffset)
+			SBC.w #(!Setting_SSP_WarpDragLevelWrap_LevelEdgeTriggerOffset+$0010) ;#$00E8 is the rightmost position within a screen the player cannot move further to the right without being pushed into.
 			BRA ..SetRightEdgeXPos
 		..VerticalLevel
 			LDA.w #($01F0-!Setting_SSP_WarpDragLevelWrap_LevelEdgeTriggerOffset)
 			BRA ..SetRightEdgeXPos
 		..ScreenBasedWrap
+			REP #$20
 			LDA $1462|!addr
 			CLC
 			ADC.w #!Setting_SSP_WarpDragLevelWrap_LevelEdgeTriggerOffset
@@ -81,6 +82,7 @@ main:
 		..SetRightEdgeXPos
 			STA $03
 	.GetTopAndBottom
+		wdm
 		;After this:
 		; - $05~$06: contains the top for the trigger
 		; - $07~$08: contains the bottom for the trigger
@@ -98,7 +100,7 @@ main:
 			else
 				LDA $13D7|!addr
 				CLC
-				ADC.w !Setting_SSP_WarpDragLevelWrap_BottomTriggerYOffset
+				ADC.w #!Setting_SSP_WarpDragLevelWrap_BottomTriggerYOffset
 			endif
 			BRA ..SetBottom
 		..VerticalLevel
@@ -238,19 +240,44 @@ YoshiYOffset:
 	dw $0020
 	dw $0020
 InvertXPosition:
-	;XPositionFlipped = RightEdge - (MarioXPos - LeftEdgeXPos)
-	;Simplified to XPositionFlipped = RightEdge - MarioXPos + LeftEdgeXPos
-	LDA $03
-	SEC
-	SBC $94
-	CLC
-	ADC $01
-	STA !Freeram_SSP_DragWarpPipeDestinationXPos
-	RTS
+	;XPositionFlipped = LevelWidth - MarioXPosition - #$0010
+	LDA $1411|!addr
+	AND #$00FF
+	BEQ .ScreenBasedWrap
+	.Normal
+		LDA $5B
+		LSR
+		BCS ..VerticalLevel
+		..HorizontalLevel
+			LDA $5E-1
+			AND #$FF00
+			BRA .SetXPos
+		..VerticalLevel
+			LDA #$0200
+	.ScreenBasedWrap
+		;XPositionFlipped = (ScreenXPos + #$0100) - (MarioXPos - ScreenXPos) - #$0010
+		;Becomes: XPositionFlipped = ScreenXPos + #$0100 - MarioXPos + ScreenXPos - #$0010
+		LDA $1462|!addr
+		CLC
+		ADC.w #$0100
+		SEC
+		SBC $94
+		CLC
+		ADC $1462|!addr
+		SEC
+		SBC #$0010
+		STA !Freeram_SSP_DragWarpPipeDestinationXPos
+		RTS
+	.SetXPos
+		SEC
+		SBC $94
+		SEC
+		SBC #$0010
+		STA !Freeram_SSP_DragWarpPipeDestinationXPos
+		RTS
 InvertYPosition:
 	;We don't use $05 and $07 here because then it's possible at certain Y position settings
 	;would calculate incorrectly.
-	wdm
 	LdA $187A|!addr
 	AND #$00FF
 	ASL
@@ -282,7 +309,7 @@ InvertYPosition:
 		LDA $1464|!addr
 		STA $09
 		CLC
-		ADC #$00E0
+		ADC.w #$00E0			;>Height of the screen
 	.SetBottom
 		STA $0B
 	.Invert
