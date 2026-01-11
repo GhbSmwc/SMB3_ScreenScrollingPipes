@@ -7,12 +7,7 @@ JMP SpriteV : JMP SpriteH : JMP MarioCape : JMP MarioFireball
 JMP TopCorner : JMP BodyInside : JMP HeadInside
 ; JMP WallFeet : JMP WallBody ; when using db $37
 
-MarioBelow:
-MarioAbove:
-MarioSide:
-TopCorner:
 BodyInside:
-HeadInside:
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BNE ExitingDoor
@@ -39,6 +34,11 @@ Exit:
 ;WallFeet:	; when using db $37
 ;WallBody:
 
+MarioBelow:
+MarioAbove:
+MarioSide:
+TopCorner:
+HeadInside:
 SpriteV:
 SpriteH:
 
