@@ -300,7 +300,10 @@ not to be required to have any pipe-related blocks in the area in between.</p>
 
 <p>Psst, Nintendo called them &ldquo;warp pipes&rdquo; instead of just &ldquo;pipes&rdquo; because of that very reason of not always being physically connected to the other end.</p>
 
-<p>To get this running, see this tutorial <a href="Readme_files/BlocksUsageInLevel2.html#TOC_WarpMode" target="_blank">here</a></p>
+<p>To get this running (when using the warp-drag mode block), see this tutorial <a href="Readme_files/BlocksUsageInLevel2.html#TOC_WarpMode" target="_blank">here</a></p>
+
+<p>I also included a per-level ASM code for uberasm tool, <kbd>SSP_WarpDragLevelWrap.asm</kbd>, that adds a trigger when Mario hits the edge of the level (screen if disabled scrolling) while pipe-traveling, to send him to the opposite of the level with optionally inverting where on the edge
+the player should emerge from.</p>
 
 <h3><a href="#TOC_CapCannons" id="CapCannons">^</a>Cap cannons</h3>
 <p>Along with the variations of cap cannons added (including the ability to have each cap individually allow or forbid things like carrying and riding yoshi), I also featured pipe caps

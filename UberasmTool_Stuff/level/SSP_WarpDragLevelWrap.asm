@@ -9,8 +9,9 @@ incsrc "../SSPDef/Defines.asm"
 ;opposite edge of the level, effectively having a wraparound
 ;effect.
 ;
-;Works both horizontally and vertical, including the level
-;format.
+;Works for both horizontal and VerticalLevel, as well as LM's
+;custom level dimensions, as well as when horizontal and/or
+;vertical scrolling is disabled.
 ;
 ;Notes:
 ; - Triggers for left and right edges of the level
@@ -20,8 +21,9 @@ incsrc "../SSPDef/Defines.asm"
 ;   rightmost column of the level may have no effect and have
 ;   this ASM wraparound effect take precedence instead.
 ; - If you have trouble knowing where the player is going, I
-;   would recommend having !Setting_SSP_PipeDebug set to 1 to
-;   see where the player's actual position.
+;   would recommend having !Setting_SSP_PipeDebug set to 1 and
+;   re-run uberasm tool, and test to see the player's actual
+;   position.
 ; - Use Lunar Magic's XY position and
 ;   "Selection <BlockWidth>X<BlockHeight>" (when clicking on
 ;   nothing and dragging) on the bottom status bar to know if

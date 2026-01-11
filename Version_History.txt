@@ -391,3 +391,5 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	 wraparound will adjust to be the screen's width.
 	-Fixed a problem where if player is off yoshi, and enters a pipe and turns invisible, so too will
 	 yoshi. Credit to AmperSam (https://www.smwcentral.net/?p=profile&id=41223)
+	-Added a uberasm tool level file that adds wraparound effect for screen scrolling pipes when the
+	 traveling player hits the edge of the level.
