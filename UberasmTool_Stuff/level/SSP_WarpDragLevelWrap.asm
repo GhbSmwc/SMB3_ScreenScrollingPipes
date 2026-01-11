@@ -1,3 +1,5 @@
+;>bytes 1
+
 incsrc "../SSPDef/Defines.asm"
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Run this ASM file as level as "level"
@@ -15,11 +17,25 @@ incsrc "../SSPDef/Defines.asm"
 ;(such as turn corners) at the leftmost or rightmost column of
 ;the level may have no effect and have this ASM wraparound
 ;effect take precedence instead.
+;
+;
+;Extra bytes settings:
+;EXB1: Wrap option: %000000VH:
+; - H = Invert wraparound for left and right edges (hitting
+;   left/right edges also inverts Y position): 0 = no, 1 =
+;   yes.
+; - V = Invert wraparound for top and bottom (hitting
+;   top/bottom also inverts X position): 0 = no, 1 = yes.
+;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 No: ;Branch out of bounds
 	RTL
 main:
+	REP #$20
+	LDA $00
+	STA $8A				;>$8A~$8B = address of extra byte.
+	SEP #$20
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ No
@@ -121,11 +137,24 @@ main:
 		...Up
 			LDA $96
 			CMP $05
-			BPL .Done
-			LDA $94
-			STA !Freeram_SSP_DragWarpPipeDestinationXPos
-			LDA $07
-			STA !Freeram_SSP_DragWarpPipeDestinationYPos
+			;BPL .Done
+			BMI +
+			JMP .Done
+			+
+			SEP #$20
+			LDA ($8A)
+			AND.b #%0000001
+			REP #$20
+			BNE ....Invert
+			....Normal
+				LDA $94
+				STA !Freeram_SSP_DragWarpPipeDestinationXPos
+				BRA ....SetYPosition
+			....Invert
+				JSR InvertXPosition
+			....SetYPosition
+				LDA $07
+				STA !Freeram_SSP_DragWarpPipeDestinationYPos
 			BRA ...SetWarpDrag
 		...Right
 			LDA $94
@@ -133,16 +162,37 @@ main:
 			BMI .Done
 			LDA $01
 			STA !Freeram_SSP_DragWarpPipeDestinationXPos
-			JSR CalculateYPositionDestination
-			BRA ...SetWarpDrag
+			SEP #$20
+			LDA ($8A)
+			AND.b #%00000010
+			REP #$20
+			BNE ....Invert
+			....Normal
+				LDA $96
+				STA $09
+				JSR CalculateYPositionDestination
+				BRA ...SetWarpDrag
+			....Invert
+				JSR InvertYPosition
+				BRA ...SetWarpDrag
 		...Down
 			LDA $96
 			CMP $07
 			BMI .Done
-			LDA $94
-			STA !Freeram_SSP_DragWarpPipeDestinationXPos
-			LDA $05
-			STA !Freeram_SSP_DragWarpPipeDestinationYPos
+			SEP #$20
+			LDA ($8A)
+			AND.b #%00000001
+			REP #$20
+			BNE ....Invert
+			....Normal
+				LDA $94
+				STA !Freeram_SSP_DragWarpPipeDestinationXPos
+				BRA ....SetYPosition
+			....Invert
+				JSR InvertXPosition
+			....SetYPosition
+				LDA $05
+				STA !Freeram_SSP_DragWarpPipeDestinationYPos
 			BRA ...SetWarpDrag
 		...Left
 			LDA $94
@@ -150,7 +200,19 @@ main:
 			BPL .Done
 			LDA $03
 			STA !Freeram_SSP_DragWarpPipeDestinationXPos
-			JSR CalculateYPositionDestination
+			SEP #$20
+			LDA ($8A)
+			AND.b #%00000010
+			REP #$20
+			BNE ....Invert
+			....Normal
+				LDA $96
+				STA $09
+				JSR CalculateYPositionDestination
+				BRA ...SetWarpDrag
+			BRA ...SetWarpDrag
+			....Invert
+				JSR InvertYPosition
 		...SetWarpDrag
 			SEP #$20
 			LDA $00				;\Get direction into the prep
@@ -161,17 +223,44 @@ main:
 		SEP #$30
 		RTL
 CalculateYPositionDestination:
+	;Input: $09~$0A: Y Position destination of the player's lowest 16x16 position
 	LDA $187A|!addr
 	AND #$00FF
 	ASL
 	TAX
-	LDA $96
+	LDA $09
 	CLC
-	ADC .YoshiYOffset,x
+	ADC YoshiYOffset,x
 	STA !Freeram_SSP_DragWarpPipeDestinationYPos
 	RTS
-	.YoshiYOffset
-		dw $0010
-		dw $0020
-		dw $0020
+YoshiYOffset:
+	dw $0010
+	dw $0020
+	dw $0020
+InvertXPosition:
+	;XPositionFlipped = RightEdge - (MarioXPos - LeftEdgeXPos)
+	;Simplified to XPositionFlipped = RightEdge - MarioXPos + LeftEdgeXPos
+	LDA $03
+	SEC
+	SBC $94
+	CLC
+	ADC $01
+	STA !Freeram_SSP_DragWarpPipeDestinationXPos
+	RTS
+InvertYPosition:
+	;YPositionFlipped = Bottom - (MarioYPos - Top)
+	;Simplified to YPositionFlipped = Bottom - MarioYPos + Top + YoshiOffset
+	LdA $187A|!addr
+	AND #$00FF
+	ASL
+	TAX
+	LDA $07
+	SEC
+	SBC $96
+	CLC
+	ADC $05
+	CLC
+	ADC YoshiYOffset,x
+	STA !Freeram_SSP_DragWarpPipeDestinationYPos
+	RTS
 ;EXLEVEL
