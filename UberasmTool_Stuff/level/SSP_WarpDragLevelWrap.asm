@@ -35,7 +35,7 @@ incsrc "../SSPDef/Defines.asm"
 ;    ScreenY+$0100. This means you shouldn't count the blocks
 ;    on where the LM's screen exit/subscreen boundaries are
 ;    at, rather you should use the "Game View Screen" (Menu
-;    bar -> View -> Game View Screen) instead.
+;    bar -> View -> Game View Screen, or F3) instead.
 ;
 ;Extra bytes settings:
 ;EXB1: Wrap option: %000000VH:
@@ -45,6 +45,17 @@ incsrc "../SSPDef/Defines.asm"
 ; - V = Invert wraparound for top and bottom (hitting
 ;   top/bottom also inverts X position): 0 = no, 1 = yes.
 ;
+;   To get the inverted X position, count how many blocks
+;   between the left pipe and the left edge of the level, that
+;   amount would be the amount of blocks between the right
+;   pipe and the right edge where the screen stops scrolling
+;   past.
+;
+;   For inverted Y position, it would be similar. Except that
+;   if vertical scrolling is disabled, then you would count
+;   the number of blocks from the bottom of the viewable game
+;   screen rather than the bottom edge of a screen boundary or
+;   bottom of the level.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 No: ;Branch out of bounds
@@ -163,7 +174,7 @@ main:
 			+
 			SEP #$20
 			LDA ($8A)
-			AND.b #%0000001
+			AND.b #%0000010
 			REP #$20
 			BNE ....Invert
 			....Normal
@@ -184,7 +195,7 @@ main:
 			STA !Freeram_SSP_DragWarpPipeDestinationXPos
 			SEP #$20
 			LDA ($8A)
-			AND.b #%00000010
+			AND.b #%00000001
 			REP #$20
 			BNE ....Invert
 			....Normal
@@ -201,7 +212,7 @@ main:
 			BMI .Done
 			SEP #$20
 			LDA ($8A)
-			AND.b #%00000001
+			AND.b #%00000010
 			REP #$20
 			BNE ....Invert
 			....Normal
@@ -222,7 +233,7 @@ main:
 			STA !Freeram_SSP_DragWarpPipeDestinationXPos
 			SEP #$20
 			LDA ($8A)
-			AND.b #%00000010
+			AND.b #%00000001
 			REP #$20
 			BNE ....Invert
 			....Normal
