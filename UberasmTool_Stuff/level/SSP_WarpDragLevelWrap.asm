@@ -249,7 +249,7 @@ InvertXPosition:
 	RTS
 InvertYPosition:
 	;YPositionFlipped = Bottom - (MarioYPos - Top)
-	;Simplified to YPositionFlipped = Bottom - MarioYPos + Top + YoshiOffset
+	;Simplified to YPositionFlipped = Bottom - MarioYPos + Top
 	LdA $187A|!addr
 	AND #$00FF
 	ASL
@@ -260,7 +260,11 @@ InvertYPosition:
 	CLC
 	ADC $05
 	CLC
-	ADC YoshiYOffset,x
+	ADC YoshiYOffsetInvert,x
 	STA !Freeram_SSP_DragWarpPipeDestinationYPos
 	RTS
+YoshiYOffsetInvert:
+	dw $0040
+	dw $0030
+	dw $0030
 ;EXLEVEL
