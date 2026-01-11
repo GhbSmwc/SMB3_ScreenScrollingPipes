@@ -248,23 +248,58 @@ InvertXPosition:
 	STA !Freeram_SSP_DragWarpPipeDestinationXPos
 	RTS
 InvertYPosition:
-	;YPositionFlipped = Bottom - (MarioYPos - Top)
-	;Simplified to YPositionFlipped = Bottom - MarioYPos + Top
+	;We don't use $05 and $07 here because then it's possible at certain Y position settings
+	;would calculate incorrectly.
+	wdm
 	LdA $187A|!addr
 	AND #$00FF
 	ASL
 	TAX
-	LDA $07
-	SEC
-	SBC $96
-	CLC
-	ADC $05
-	CLC
-	ADC YoshiYOffsetInvert,x
-	STA !Freeram_SSP_DragWarpPipeDestinationYPos
-	RTS
+	
+	LDA $1412|!addr
+	AND #$00FF
+	BEQ .ScreenBasedWrap
+	;$09~$0A = Top Y position (different from $05~$06 since we do not want offsets.)
+	;$0B~$0C = bottom Y position (different from $07~$08, same as above)
+	.Normal
+		STZ $09
+		LDA $5B
+		LSR
+		BCS ..VerticalLevel
+		
+		..HorizontalLevel
+			if !EXLEVEL == 0
+				LDA #$01B0
+			else
+				LDA $13D7|!addr
+			endif
+			BRA .SetBottom
+		..VerticalLevel
+			LDA $5F-1
+			AND #$FF00
+			BRA .SetBottom
+	.ScreenBasedWrap
+		LDA $1464|!addr
+		STA $09
+		CLC
+		ADC #$00E0
+	.SetBottom
+		STA $0B
+	.Invert
+		;YInverted = BottomY - (YPos - Top) + YoshiOffset
+		;Simplified to YInverted = BottomY - YPos + Top + YoshiOffset
+		LDA $0B
+		SEC
+		SBC $96
+		CLC
+		ADC $09
+		CLC
+		ADC YoshiYOffsetInvert,x
+		STA !Freeram_SSP_DragWarpPipeDestinationYPos
+	.Done
+		RTS
 YoshiYOffsetInvert:
-	dw $0040
-	dw $0030
-	dw $0030
+	dw -$0010
+	dw -$0020
+	dw -$0020
 ;EXLEVEL
