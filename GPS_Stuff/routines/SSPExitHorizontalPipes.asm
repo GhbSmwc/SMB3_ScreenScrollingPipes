@@ -27,6 +27,7 @@ incsrc "../SSPDef/Defines.asm"
 		BRA ?.Exiting
 	?.HeadingLeft
 		JSR ?.GetExitingThreshold
+		BEQ ?.Return
 		BMI ?.Return
 	?.Exiting
 		LDA $00

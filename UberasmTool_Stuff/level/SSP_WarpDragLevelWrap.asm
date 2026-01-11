@@ -5,19 +5,37 @@ incsrc "../SSPDef/Defines.asm"
 ;Run this ASM file as level as "level"
 ;
 ;When Mario goes to the edge of the level during a pipe
-;travel, would activate warp/drag mode to the opposite edge of
-;the level, effectively having a wraparound effect.
+;travel, would automatically activate warp/drag mode to the
+;opposite edge of the level, effectively having a wraparound
+;effect.
 ;
 ;Works both horizontally and vertical, including the level
 ;format.
 ;
-;Note that the triggers for left and right edges of the level
-;are, by default, set at X=$0008 for left edge and X=-$0018
-;for the right edge. Which means that placing pipe triggers
-;(such as turn corners) at the leftmost or rightmost column of
-;the level may have no effect and have this ASM wraparound
-;effect take precedence instead.
-;
+;Notes:
+; - Triggers for left and right edges of the level
+;   are, by default, set at X=$0008 for left edge and X=-$0018
+;   from the right edge. Which means that placing pipe
+;   triggers (such as turn corners) at the leftmost or
+;   rightmost column of the level may have no effect and have
+;   this ASM wraparound effect take precedence instead.
+; - If you have trouble knowing where the player is going, I
+;   would recommend having !Setting_SSP_PipeDebug set to 1 to
+;   see where the player's actual position.
+; - Use Lunar Magic's XY position and
+;   "Selection <BlockWidth>X<BlockHeight>" (when clicking on
+;   nothing and dragging) on the bottom status bar to know if
+;   you have positioned the blocks correctly.
+; - If you have horizontal and/or vertical scrolling disabled
+;   (RAM $1411/$1412 set to #$00), this ASM code will adopt to
+;   camera-based edges on what's disabled instead of level
+;   edges.
+; -- With vertical scrolling disabled, the bottom of where the
+;    warp trigger would be at would be at ScreenY+$00E0, not
+;    ScreenY+$0100. This means you shouldn't count the blocks
+;    on where the LM's screen exit/subscreen boundaries are
+;    at, rather you should use the "Game View Screen" (Menu
+;    bar -> View -> Game View Screen) instead.
 ;
 ;Extra bytes settings:
 ;EXB1: Wrap option: %000000VH:
@@ -82,11 +100,11 @@ main:
 		..SetRightEdgeXPos
 			STA $03
 	.GetTopAndBottom
-		wdm
 		;After this:
 		; - $05~$06: contains the top for the trigger
 		; - $07~$08: contains the bottom for the trigger
 		LDA $1412|!addr
+		AND #$00FF
 		BEQ ..ScreenBasedWrap
 		REP #$20
 		LDA.w #!Setting_SSP_WarpDragLevelWrap_TopTriggerYPosition
@@ -254,6 +272,7 @@ InvertXPosition:
 			BRA .SetXPos
 		..VerticalLevel
 			LDA #$0200
+			BRA .SetXPos
 	.ScreenBasedWrap
 		;XPositionFlipped = (ScreenXPos + #$0100) - (MarioXPos - ScreenXPos) - #$0010
 		;Becomes: XPositionFlipped = ScreenXPos + #$0100 - MarioXPos + ScreenXPos - #$0010
@@ -322,6 +341,16 @@ InvertYPosition:
 		ADC $09
 		CLC
 		ADC YoshiYOffsetInvert,x
+		wdm
+		if !Setting_SSP_YPositionOffset != 0
+			CLC
+			ADC.w #(!Setting_SSP_YPositionOffset*2)
+			;^Now, why is this doubled? Well, when mario's Y position is block-centered plus !Setting_SSP_YPositionOffset
+			;(1 pixel up from block-centered by default), but then this inverter happens, that also gets inverted
+			;(so now he's 1 pixel lower (in the opposite direction) from that default setting). This means simply adding
+			;by !Setting_SSP_YPositionOffset afterwards would just cancel and now he's block centered rather than offset
+			;by !Setting_SSP_YPositionOffset.
+		endif
 		STA !Freeram_SSP_DragWarpPipeDestinationYPos
 	.Done
 		RTS
