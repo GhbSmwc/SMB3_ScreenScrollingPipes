@@ -172,6 +172,7 @@ meaning you don't have to worry about the path being in the way of designing lev
 <li><a href="https://www.smwcentral.net/?p=section&a=details&id=39036">Uberasm Tool</a> (v2.0+ required)</li>
 <li><a href="https://www.smwcentral.net/?p=section&a=details&id=19047">Gopher Popcorn Stew (GPS)</a></li>
 <li>Lunar Magic's map16 page 4 (and/or 5, if you're only going to use the &ldquo;main parts&rdquo;) not used, unless you can <a href="#MoveToDifferentM16Page">move it to another page</a></li>
+<li><a href="https://www.smwcentral.net/?p=section&a=details&id=41329">Lunar Magic v3.0+</a>. The provided levels need to have a version of LM that supports custom level dimensions.</li>
 <li><a href="https://www.smwcentral.net/?p=section&a=details&id=18741">No More Sprite Tile Limits patch</a>. Certain sprites on screen randomly disappear when in pipes. Ignore this if you have SA-1 installed.</li>
 </ul><br>
 <h2>Recommended</h2>
@@ -200,8 +201,8 @@ meaning you don't have to worry about the path being in the way of designing lev
 <li>Simply copy the graphic files and paste them in their respective folder. The file naming should
 be obvious.</li><br>
 
-<li>Open the level file <kbd>demonstration.mwl</kbd>. (MenuBar &gt; File &gt; Open Level from
-file...)</li><br>
+<li>Open the level file <kbd>demonstration.mwl</kbd> (level $0105). (MenuBar &gt; File &gt; Open Level from
+file...). Note that <kbd>demonstration_WrapTest.mwl</kbd> (level $0106) is for testing a level wrap mechanic for <kbd>UberasmTool_Stuff/level/SSP_WarpDragLevelWrap.asm</kbd>.</li><br>
 
 <li>Open your map16 editor, and import <kbd>tilemap.map16</kbd> (Question block with a red left
 arrow on it; <img src="Readme_files/LM_ImportMap16FromFile.png">). After the blocks are imported, hit save.<sup>[<a href="#BlockListRelocatorInfo">Map 16 location note</a>]</sup></li>
@@ -212,7 +213,7 @@ arrow on it; <img src="Readme_files/LM_ImportMap16FromFile.png">). After the blo
 <ol>
 <li>Define note</li>
 <ol>
-<li>Make necessary changes to <kbd>SSPDef/Defines.asm</kbd>. Of course, if you already inserted the ASM
+<li>Make necessary changes to <kbd>SSPDef/Defines.asm</kbd> (including making sure the freeram it uses not conflict with other unrelated ASM resources). Of course, if you already inserted the ASM
 codes and wish to edit and re-insert, make sure you have the copies of it up to date with correct information.
 You must update every time you make changes.</li>
 
@@ -224,14 +225,19 @@ is in, not in any of the subfolder of uberasm tool.</li><br>
 
 <li>Stuff within <kbd>UberasmTool_Stuff</kbd> should be obvious with convenient file names. Thanks to UAT2.0, you can have multiple ASM files for the same level/gamemode/oveworld (separated via commas).</li><br>
 
-<li>On Uberasm tool's <kbd>list.txt</kbd>, under gamemode, just put this:
-
-<div class="CodeBlock" style="width: 295px; height: 18px;"><pre>14	GM14_ScreenScrollingPipes.asm</pre></div></li><br>
+<li>
+	On Uberasm tool's <kbd>list.txt</kbd>, under gamemode, just put this:
+	<div class="CodeBlock" style="width: 295px; height: 18px;"><pre>14	GM14_ScreenScrollingPipes.asm</pre></div>
+	And to test a level wrap mechanic, add this:
+	<div class="CodeBlock" style="width: 336px; height: 19px;"><pre>106	SSP_WarpDragLevelWrap.asm : %00000011</pre></div>
+	Where the extra byte format is, in binary, <kbd>%000000VH</kbd>, that <kbd>H</kbd> and <kbd>V</kbd> is a bit flag to apply an <i>invert</i>, when set (<kbd>1</kbd>) along the longitudinal edge (for <kbd>H</kbd>, it's the left and
+	right edge of the level that would invert the Y position, and for <kbd>V</kbd>, it's the top and bottom that would invert the X position).
+</li><br>
 
 
 <ul><li>Title screen note</li>
 <ol>
-<li>If you are planning to have this also apply on the title screen, create another entry for <kbd>list.txt</kbd>:
+<li>If you are planning to have this also apply on the title screen, create another entry for <kbd>list.txt</kbd> under <kbd>gamemode</kbd>:
 <div class="CodeBlock" style="width: 285px; height: 20px;"><pre>7	GM14_ScreenScrollingPipes.asm</pre></div></li>
 <li>Please note that <kbd>Fixes.asm</kbd> <b>modifies some of the player's vanilla physics for the entire game</b> to check the freeram used by the screen scrolling pipes. Therefore the RAMs are reserved even when
 <kbd>GM14_ScreenScrollingPipes.asm</kbd>'s code is not running.</li>
@@ -302,7 +308,7 @@ not to be required to have any pipe-related blocks in the area in between.</p>
 
 <p>To get this running (when using the warp-drag mode block), see this tutorial <a href="Readme_files/BlocksUsageInLevel2.html#TOC_WarpMode" target="_blank">here</a></p>
 
-<p>I also included a per-level ASM code for uberasm tool, <kbd>SSP_WarpDragLevelWrap.asm</kbd>, that adds a trigger when Mario hits the edge of the level (screen if disabled scrolling) while pipe-traveling, to send him to the opposite of the level with optionally inverting where on the edge
+<p>I also included a per-level ASM code for uberasm tool, <kbd>SSP_WarpDragLevelWrap.asm</kbd>, that adds a trigger when Mario hits the edge of the level (screen if disabled scrolling) while pipe-traveling, to send him to the opposite edge of the level with optionally inverting where on the edge
 the player should emerge from.</p>
 
 <h3><a href="#TOC_CapCannons" id="CapCannons">^</a>Cap cannons</h3>

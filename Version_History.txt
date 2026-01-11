@@ -376,6 +376,9 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	 carried sprite does not turn invisible inside pipes, ideal for glass pipes.
 	-Map16 files for LM's map16 and tile list for GPS for "v2" versions now have page 4 and page 5 merged
 	 rather than having one file per-page.
+	-Depreciated files:
+	--Deleted the old version of the map16 blocks and for the GPS tool.
+	--Got rid of the old level file since it is now depreciated and causing confusion.
 	-Made moving blocks to a different block number for blocks list for GPS much MUCH easier, by including
 	 a tool, "JS_GPSBlockListRelocator.html" which will offset them.
 	-Fixed a missing TopCorner for small pipes that I forgot to include for small-mario-only pipes.
