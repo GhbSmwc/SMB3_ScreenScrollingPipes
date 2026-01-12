@@ -405,6 +405,7 @@ SSPMaincode:
 			BEQ ...Horiz		;>If even number (bit 0 is clear), branch to Horizontal
 	
 			...Vert
+				STZ $73			;>Clear ducking flag
 				LDA $187A|!addr		;\if mario is riding yoshi, then
 				BNE ....YoshiFaceScrn	;/use face screen instead
 				LDA #$0F		;>vertical pipe pose (without regard to powerup status)

@@ -353,6 +353,14 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	-Fixed an oversight where some sprites still interacts with the player while inside a pipe, such as
 	 a boo ring. Give thanks to AmperSam for reporting on it.
 12/26/2025 4.0.4
+	-Bug fixes:
+	--Fixed a missing TopCorner for small pipes that I forgot to include for small-mario-only pipes.
+	--Fixed a problem where sprite interaction with the player during pipe travel still happens (lose yoshi)
+	  when the player is riding yoshi.
+	--Fixed a problem where if player is off yoshi, and enters a pipe and turns invisible, so too will
+	  yoshi. Credit to AmperSam (https://www.smwcentral.net/?p=profile&id=41223)
+	--Fixed a minor visual quirk where if the player crouch-slide into the top of a pipe and enters it,
+	  the player will retain his crouching state throughout the pipe travel.
 	-Player's XY Subpixels position (RAM $13DA and $13DC) updates:
 	--Centering codes now also sets the player's XY subpixel position, thus movement no longer have a 1
 	  pixel variance of the player's XY position upon exiting pipe caps.
@@ -381,19 +389,15 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	--Got rid of the old level file since it is now depreciated and causing confusion.
 	-Made moving blocks to a different block number for blocks list for GPS much MUCH easier, by including
 	 a tool, "JS_GPSBlockListRelocator.html" which will offset them.
-	-Fixed a missing TopCorner for small pipes that I forgot to include for small-mario-only pipes.
+
 	-Facing directions are now corrected when traveling through pipes rather than just when the player
 	 exits horizontal pipe caps, so that the player doesn't appear going backwards in glass pipes.
 	-The uberasm tool code is no longer a library code to be called from a gamemode 14 ASM file, because
 	 UAT2.0 now supports multiple separate ASM files for the same N where N is the level/gamemode/
 	 overworld number to apply its effects on.
-	-Fixed a problem where sprite interaction with the player during pipe travel still happens (lose yoshi)
-	 when the player is riding yoshi.
 	-Added a level wraparound feature for warp-drag mode: If the player pipe traveling heads into the edge
 	 of a level, will send him to the opposite edge of the level. If V/H scrolling disabled, then
 	 wraparound will adjust to be the screen's width.
-	-Fixed a problem where if player is off yoshi, and enters a pipe and turns invisible, so too will
-	 yoshi. Credit to AmperSam (https://www.smwcentral.net/?p=profile&id=41223)
 	-Added a uberasm tool level file that adds wraparound effect for screen scrolling pipes when the
 	 traveling player hits the edge of the level.
 	-Several removed freerams:
