@@ -47,7 +47,11 @@ endif
 ;will maintain his pipe state even after he dies and enters the level. You'll have to initialize them by resetting all these
 ;RAM address.
 ;
-;Note: For boolean operators used in the "ByteUsed" field, it's 0 if the condition fails, 1 otherwise.
+;Note: For boolean operators used in the "ByteUsed" field, it's 0 if the condition fails, 1 otherwise. Example:
+;Equal(0, 0) returns 1
+;Equal(1, 0) returns 0
+;NotEqual(0, 0) returns 0
+;NotEqual(1, 0) returns 1
 
 	if !sa1 == 0
 		!Freeram_SSP_PipeDir		= $7E0060
@@ -115,7 +119,8 @@ endif
 	else
 		!Freeram_BlockedStatBkp	= $79
 	endif
-		;^[1 byte] A backup of $77 to determine if Mario is on the ground.
+		;^[BytesUsed = NotEqual(!Setting_SSP_CopyRAM77, 0)] A backup of $77 to determine if Mario is on the ground.
+		; If !Setting_SSP_CopyRAM77 !=0, would use RAM $8F instead.
 	;Warp mode destination. 2 bytes each. This determines where Mario will
 	;be warped to (via dragging the player towards that location).
 		if !sa1 == 0
@@ -131,6 +136,12 @@ endif
 
 ;Settings. NOTE: There are other defines settings in [SSP_Tiles\caps\enterable\*\cap_defines.asm] (* means any valid filename, including "default")
 ;so that you can multiple blocks with different variations (such as having some pipe caps that allow carrying sprites or allowing yoshi).
+	!Setting_SSP_CopyRAM77		= 0
+		;^0 = Blocks use RAM $8F instead of !Freeram_BlockedStatBkp
+		; 1 = Store a copy of RAM $77 to !Freeram_BlockedStatBkp
+		; Explanation: Prior to patching "Fixes.asm", SMW will only write the updated block state to RAM $77 towards the end of the blocks processing code.
+		; Meaning during blocks code, $77 would be #$00 and thus unreliable to check if the player is on the ground. Later in time, MarioFanGamer discovered
+		; that RAM $8F can be used instead of $72.
 	!Setting_SSP_Hijack_00EA18	= 1
 		;^If you are planning to install the “Walljump/Note Block Glitch Fix” patch, set this to 0, reinstall Fixes.asm, and then patch the WJNB fix patch.
 		; Otherwise set this to 1 to prevent potential pushing the player 1 pixel to the left when entering small pipes facing downwards by hitting their

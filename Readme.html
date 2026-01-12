@@ -228,8 +228,8 @@ is in, not in any of the subfolder of uberasm tool.</li><br>
 <li>
 	On Uberasm tool's <kbd>list.txt</kbd>, under gamemode, just put this:
 	<div class="CodeBlock" style="width: 295px; height: 18px;"><pre>14	GM14_ScreenScrollingPipes.asm</pre></div>
-	And to test a level wrap mechanic, add this:
-	<div class="CodeBlock" style="width: 336px; height: 19px;"><pre>106	SSP_WarpDragLevelWrap.asm : %00000011</pre></div>
+	And to test a level wrap mechanic, add this (under &ldquo;<kbd>level:</kbd>&rdquo;):
+	<div class="CodeBlock" style="width: 327px; height: 16px;"><pre>106	SSP_WarpDragLevelWrap.asm : %00000011</pre></div>
 	Where the extra byte format is, in binary, <kbd>%000000VH</kbd>, that <kbd>H</kbd> and <kbd>V</kbd> is a bit flag to apply an <i>invert</i>, when set (<kbd>1</kbd>) along the longitudinal edge (for <kbd>H</kbd>, it's the left and
 	right edge of the level that would invert the Y position, and for <kbd>V</kbd>, it's the top and bottom that would invert the X position). The provided test level <kbd>demonstration_WrapTest.mwl</kbd> will work regardless of the
 	invert wrap settings.

@@ -148,9 +148,17 @@ endmacro
 	org $01ED44				;\fix getting on yoshi automatically when entering
 		autoclean JML GetOnYoshiExcept	;/horizontal pipes while ovelapping yoshi's saddle.
 	
-	org $00EAA9				;\This is why blocks always assume $77, $13E1 and $13EE
-		autoclean JSL BlockedFix	;/are stored as zero (this runs every frame).
-		nop #1
+	;This is why blocks always assume $77, $13E1 and $13EE
+	;are stored as zero (this runs every frame).
+		org $00EAA9				;
+		if !Setting_SSP_CopyRAM77
+			autoclean JSL BlockedFix
+			nop #1
+		else
+			%RemoveFreespaceCodeFromJMLJSL($00EAA9)
+			STZ $77
+			STZ $13E1|!addr
+		endif
 	if !WalljumpNoteBlockFixPatch == 0
 		;Assuming there only exist SMW's code or my patch code, but not the WJNB fix patch.
 			if !Setting_SSP_Hijack_00EA18 == 0
@@ -325,24 +333,26 @@ GetOnYoshiExcept: ;>JML from $01ED44
 	JML $01ED70		;>Don't get on yoshi.
 
 ;---------------------------------------------------------------------------------
-BlockedFix: ;>JSL from $00EAA9
-;	LDA $13E1|!addr		;\In case you also wanted blocks to detect slope, remove
-;	STA $xxxxxx		;/the semicolons (";") before it and add a freeram in place of xxxxxx
-	STZ $13E1|!addr		;>Restore code (clears slope type)
-
-	LDA $77				;\backup/save block status for use for blocks...
-	STA !Freeram_BlockedStatBkp	;/
-	STZ $77				;>...before its cleared.
-
-	;^This (or both) freeram will get cleared when $77 and/or $13E1
-	; gets cleared on the next frame due to a whole big loop SMW runs.
-	; when mario isn't touching a solid object.
-
-	;So after executing $00EAA9, you should use the freeram that has
-	;the blocked and/or slope status saved in them. If before $00EAA9,
-	;then use the original ($77 and/or $13E1). Do not write a value on
-	;this freeram, it will do nothing, write on those default ram address.
-	RTL
+if !Setting_SSP_CopyRAM77
+	BlockedFix: ;>JSL from $00EAA9
+	;	LDA $13E1|!addr		;\In case you also wanted blocks to detect slope, remove
+	;	STA $xxxxxx		;/the semicolons (";") before it and add a freeram in place of xxxxxx
+		STZ $13E1|!addr		;>Restore code (clears slope type)
+	
+		LDA $77				;\backup/save block status for use for blocks...
+		STA !Freeram_BlockedStatBkp	;/
+		STZ $77				;>...before its cleared.
+	
+		;^This (or both) freeram will get cleared when $77 and/or $13E1
+		; gets cleared on the next frame due to a whole big loop SMW runs.
+		; when mario isn't touching a solid object.
+	
+		;So after executing $00EAA9, you should use the freeram that has
+		;the blocked and/or slope status saved in them. If before $00EAA9,
+		;then use the original ($77 and/or $13E1). Do not write a value on
+		;this freeram, it will do nothing, write on those default ram address.
+		RTL
+endif
 ;---------------------------------------------------------------------------------
 if and(equal(!WalljumpNoteBlockFixPatch, 0), notequal(!Setting_SSP_Hijack_00EA18, 0))
 	DisablePushingPlayer:	;>JML from $00EA18

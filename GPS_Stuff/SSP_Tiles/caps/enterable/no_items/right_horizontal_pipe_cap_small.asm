@@ -35,11 +35,14 @@ enter:
 	+
 	RTL			;>otherwise return
 .SmallNoYoshi
-	LDA !Freeram_BlockedStatBkp		;\If you are not on ground, return
-	AND.b #%00000100		;|
-	BNE +
-	RTL			;/
-	+
+	if !Setting_SSP_CopyRAM77
+		LDA !Freeram_BlockedStatBkp		;\If you are not on ground, return
+		AND.b #%00000100		;|
+		BEQ return			;/
+	else
+		LDA $8F
+		BNE return
+	endif
 if !Setting_SSP_CarryAllowed == 0
 	LDA $1470|!addr		;\no carrying item
 	ORA $148F|!addr		;|

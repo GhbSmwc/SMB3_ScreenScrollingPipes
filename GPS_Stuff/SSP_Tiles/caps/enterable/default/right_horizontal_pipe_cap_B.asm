@@ -37,9 +37,14 @@ enter:
 	BEQ return		;/
 ;	LDA $1471|!addr		;>so vertical centering code works
 ;	BNE return
-	LDA !Freeram_BlockedStatBkp		;\If you are not on ground, return
-	AND.b #%00000100		;|
-	BEQ return			;/
+	if !Setting_SSP_CopyRAM77
+		LDA !Freeram_BlockedStatBkp		;\If you are not on ground, return
+		AND.b #%00000100		;|
+		BEQ return			;/
+	else
+		LDA $8F
+		BNE return
+	endif
 	LDA $15			;\must press left
 	AND #$02		;|
 	BEQ return		;/

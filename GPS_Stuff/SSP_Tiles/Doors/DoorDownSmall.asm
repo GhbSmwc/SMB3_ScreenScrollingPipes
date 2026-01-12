@@ -18,9 +18,14 @@ EnteringDoor:
 	LDA $16				;\Not pressing up
 	BIT.b #%00001000		;|
 	BEQ Done			;/
-	LDA !Freeram_BlockedStatBkp	;\If you are not on ground, return
-	AND.b #%00000100		;|
-	BEQ Done			;/
+	if !Setting_SSP_CopyRAM77
+		LDA !Freeram_BlockedStatBkp		;\If you are not on ground, return
+		AND.b #%00000100		;|
+		BEQ Done			;/
+	else
+		LDA $8F
+		BNE Done
+	endif
 	LDA #$03
 	STA $00
 	%SSPEnterDoor()
