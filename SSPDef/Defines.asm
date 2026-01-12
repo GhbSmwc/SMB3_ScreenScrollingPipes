@@ -110,9 +110,9 @@ endif
 		;^[BytesUsed = Equal(!Setting_SSP_HideDuringPipeStemTravel, 0)] 1 byte used for if you
 		; have !Setting_SSP_HideDuringPipeStemTravel set to 0, otherwise not used at all.
 		;
-		;This RAM determines to hide the player during a pipe stem travel or not. Used to
-		;distinguish between screen scrolling door travel (which supposed to hide the player),
-		;or a pipe stem (shouldn't hide the player for things like glass pipes).
+		;This RAM determines to hide the player (#$01) during a pipe stem travel or not (#$00).
+		;Used to distinguish between screen scrolling door travel (which supposed to hide the
+		;player), or a pipe stem (shouldn't hide the player for things like glass pipes).
 		
 	if !sa1 == 0
 		!Freeram_BlockedStatBkp	= $7E0079

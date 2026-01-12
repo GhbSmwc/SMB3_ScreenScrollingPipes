@@ -396,6 +396,10 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	 yoshi. Credit to AmperSam (https://www.smwcentral.net/?p=profile&id=41223)
 	-Added a uberasm tool level file that adds wraparound effect for screen scrolling pipes when the
 	 traveling player hits the edge of the level.
-	-Late discovery that somebody (MarioFanGamer) found that RAM $8F is a reliable copy of $72 for checking
-	 if Mario is on the ground. Thus, freeram !Freeram_BlockedStatBkp will optionally not be used
-	 (!Setting_SSP_CopyRAM77 set to 0 by default to not use a freeram).
+	-Several removed freerams:
+	--Late discovery that somebody (MarioFanGamer) found that RAM $8F is a reliable copy of $72 for checking
+	  if Mario is on the ground. Thus, freeram !Freeram_BlockedStatBkp will optionally not be used
+	  (!Setting_SSP_CopyRAM77 set to 0 by default to not use a freeram).
+	--Removing !Freeram_SSP_CarrySpr would still works with carried sprites. Thus this is redundant.
+	-Added optional Freeram: !Freeram_SSP_InvisbleFlag, due to having both visible and invisible states for
+	 doors and glass pipe support (will be used if !Setting_SSP_HideDuringPipeStemTravel == 0).
