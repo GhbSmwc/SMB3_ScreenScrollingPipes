@@ -1,4 +1,5 @@
 ;>bytes 1
+%require_uber_ver(2, 0)
 
 incsrc "../SSPDef/Defines.asm"
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
