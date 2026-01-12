@@ -24,6 +24,10 @@ EnteringDoor:
 		LDA $8F
 		BNE Done
 	endif
+	if !Setting_SSP_DoorsProximity
+		%door_approximity()
+		BCS Done
+	endif
 	LDA #$04
 	STA $00
 	%SSPEnterDoor()

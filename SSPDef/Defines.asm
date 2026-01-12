@@ -141,7 +141,7 @@ endif
 		; 1 = Store a copy of RAM $77 to !Freeram_BlockedStatBkp
 		; Explanation: Prior to patching "Fixes.asm", SMW will only write the updated block state to RAM $77 towards the end of the blocks processing code.
 		; Meaning during blocks code, $77 would be #$00 and thus unreliable to check if the player is on the ground. Later in time, MarioFanGamer discovered
-		; that RAM $8F can be used instead of $72.
+		; that RAM $8F can be used instead of $72 or $77 for Mario-is-on-ground check.
 	!Setting_SSP_Hijack_00EA18	= 1
 		;^If you are planning to install the “Walljump/Note Block Glitch Fix” patch, set this to 0, reinstall Fixes.asm, and then patch the WJNB fix patch.
 		; Otherwise set this to 1 to prevent potential pushing the player 1 pixel to the left when entering small pipes facing downwards by hitting their
@@ -228,6 +228,9 @@ endif
 		;^Y position offset after centering vertically (when entering horizontal pipe caps and when switching from vertical to horizontal movement), notes:
 		; - Values $0000 and higher means interacting with tiles below pipes.
 		; - Don't use values outside the -$0003 to $0003 range or it's possible for the player to phase through turn corners and other tiles when he shouldn't.
+	!Setting_SSP_DoorsProximity = 1
+		;^0 = Allow entering doors at the full width
+		; 1 = Allow entering doors only when player is centered enough (Player's X position must be within -4 to +3 relative to the door (0 = exactly centered)).
 	;Settings for "SSP_WarpDragLevelWrap.asm"
 		!Setting_SSP_WarpDragLevelWrap_TopTriggerYPosition = -$0030
 			;^Y position of the top edge of the level (screen if V-scroll disabled) the player would warp. Note that this does not offset up by 1 tile if riding yoshi
