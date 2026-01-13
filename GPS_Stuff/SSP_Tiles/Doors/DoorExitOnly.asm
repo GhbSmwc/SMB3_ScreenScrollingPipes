@@ -14,6 +14,7 @@ TopCorner:
 BodyInside:
 HeadInside:
 Exit:
+	STZ $00
 	%SSPExitDoor()
 ;WallFeet:	; when using db $37
 ;WallBody:

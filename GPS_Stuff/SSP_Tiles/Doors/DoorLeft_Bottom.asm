@@ -7,11 +7,6 @@ JMP SpriteV : JMP SpriteH : JMP MarioCape : JMP MarioFireball
 JMP TopCorner : JMP BodyInside : JMP HeadInside
 ; JMP WallFeet : JMP WallBody ; when using db $37
 
-MarioBelow:
-MarioAbove:
-MarioSide:
-TopCorner:
-HeadInside:
 BodyInside:
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
@@ -33,21 +28,27 @@ EnteringDoor:
 		%door_approximity()
 		BCS Done
 	endif
-	LDA #$01
+	LDA #$04
 	STA $00
+	STZ $01
 	%SSPEnterDoor()
 	RTL
 ExitingDoor:
-	CMP #$03
+	CMP #$02
 	BEQ Exit
-	CMP #$07			;>Failsafe
+	CMP #$06			;>Failsafe
 	BEQ Exit
 	RTL
 Exit:
+	STZ $00
 	%SSPExitDoor()
 ;WallFeet:	; when using db $37
 ;WallBody:
-
+MarioBelow:
+MarioAbove:
+MarioSide:
+TopCorner:
+HeadInside:
 SpriteV:
 SpriteH:
 
@@ -57,5 +58,5 @@ Done:
 RTL
 
 if !Setting_SSP_Description != 0
-	print "An upwards screen-scrolling door. Exits when going downwards."
+	print "An leftwards screen-scrolling door. Exits when going rightwards."
 endif

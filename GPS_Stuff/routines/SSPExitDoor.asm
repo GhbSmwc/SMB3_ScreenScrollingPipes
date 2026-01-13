@@ -1,8 +1,10 @@
 incsrc "../SSPDef/Defines.asm"
 ;Handles exiting the door.
 ;
+;Input:
+; - $00: #$00 = Bottom part of door, #$02 = Top part (for centering positioning purposes)
 ;Destroyed:
-; $00~$01: Used for vertical positioning checks
+; - $01~$02: Used for vertical positioning checks
 ?SSPExitDoor
 	LDA !Freeram_SSP_EntrExtFlg
 	BEQ ?.Done
@@ -60,6 +62,13 @@ incsrc "../SSPDef/Defines.asm"
 			STA $13DA|!addr					;|
 		endif							;/
 		%Set_Player_YPosition_LowerHalf()			;\Center vertically
+		LDX $00							;|
+		REP #$20						;|
+		LDA $96							;|
+		CLC							;|
+		ADC.l ?.DoorPartOffsets,x				;|
+		STA $96							;|
+		SEP #$20						;|
 		if !Setting_SSP_SetXYFractionBits			;|
 			LDA.b #!Setting_SSP_YPositionFractionSetTo	;|
 			STA $13DC|!addr					;|
@@ -77,17 +86,23 @@ incsrc "../SSPDef/Defines.asm"
 	?.Done
 		RTL
 	?.CompareYPositionToCheck
+		LDX $00
 		REP #$20
 		LDA $98
 		AND #$FFF0
+		CLC
+		ADC ?.DoorPartOffsets,x
 		if !Setting_SSP_YPositionOffset != 0
 			CLC
 			ADC.w #!Setting_SSP_YPositionOffset
 		endif
-		STA $00
+		STA $01
 		SEP #$20
 		%Get_Player_YPosition_LowerHalf()
 		REP #$20
-		CMP $00
+		CMP $01
 		SEP #$20
 		RTS
+	?.DoorPartOffsets
+		dw $0000
+		dw $0010

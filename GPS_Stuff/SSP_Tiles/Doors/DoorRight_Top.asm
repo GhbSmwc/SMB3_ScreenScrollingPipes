@@ -13,8 +13,6 @@ BodyInside:
 	BNE ExitingDoor
 	
 EnteringDoor:
-	LDA $19				;\Not big mario
-	BNE Done			;/
 	LDA $16				;\Not pressing up
 	BIT.b #%00001000		;|
 	BEQ Done			;/
@@ -30,19 +28,21 @@ EnteringDoor:
 		%door_approximity()
 		BCS Done
 	endif
-	LDA #$04
+	LDA #$02
 	STA $00
-	STZ $01
+	LDA #$02
+	STA $01
 	%SSPEnterDoor()
 	RTL
 ExitingDoor:
-	CMP #$02
+	CMP #$04
 	BEQ Exit
-	CMP #$06			;>Failsafe
+	CMP #$08			;>Failsafe
 	BEQ Exit
 	RTL
 Exit:
-	STZ $00
+	LDA #$02
+	STA $00
 	%SSPExitDoor()
 ;WallFeet:	; when using db $37
 ;WallBody:
@@ -60,5 +60,5 @@ Done:
 RTL
 
 if !Setting_SSP_Description != 0
-	print "An downwards screen-scrolling door for Small Mario. Exits when going rightwards."
+	print "An rightwards screen-scrolling door. Exits when going leftwards."
 endif

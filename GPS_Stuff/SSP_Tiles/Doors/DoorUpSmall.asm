@@ -7,11 +7,6 @@ JMP SpriteV : JMP SpriteH : JMP MarioCape : JMP MarioFireball
 JMP TopCorner : JMP BodyInside : JMP HeadInside
 ; JMP WallFeet : JMP WallBody ; when using db $37
 
-MarioBelow:
-MarioAbove:
-MarioSide:
-TopCorner:
-HeadInside:
 BodyInside:
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
@@ -37,6 +32,7 @@ EnteringDoor:
 	endif
 	LDA #$01
 	STA $00
+	STZ $01
 	%SSPEnterDoor()
 	RTL
 ExitingDoor:
@@ -46,10 +42,15 @@ ExitingDoor:
 	BEQ Exit
 	RTL
 Exit:
+	STZ $00
 	%SSPExitDoor()
 ;WallFeet:	; when using db $37
 ;WallBody:
-
+MarioBelow:
+MarioAbove:
+MarioSide:
+TopCorner:
+HeadInside:
 SpriteV:
 SpriteH:
 

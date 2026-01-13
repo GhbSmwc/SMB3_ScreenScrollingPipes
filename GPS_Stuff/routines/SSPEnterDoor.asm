@@ -7,6 +7,9 @@ incsrc "../SSPDef/Defines.asm"
 ; -- #$01 = Right
 ; -- #$02 = Down
 ; -- #$03 = Left
+; - $01: Top or bottom part of the regular-sized door?
+; -- #$00 = Bottom
+; -- #$02 = Top (Will place player so his lower 16x16 part of the body is below the block)
 ?SSPEnterDoor:
 	REP #$20						;\Center horizontally
 	LDA $9A							;|
@@ -18,14 +21,17 @@ incsrc "../SSPDef/Defines.asm"
 		STA $13DA|!addr					;|
 	endif							;/
 	%Set_Player_YPosition_LowerHalf()			;\Center vertically
+	LDX $01							;|
+	REP #$20						;|
+	LDA $96							;|
 	if !Setting_SSP_YPositionOffset != 0			;|
-		REP #$20					;|
-		LDA $96						;|
 		CLC						;|
 		ADC.w #!Setting_SSP_YPositionOffset		;|
-		STA $96						;|
-		SEP #$20					;|
 	endif							;|
+	CLC							;|
+	ADC.l ?.DoorPartOffsets,x				;|
+	STA $96							;|
+	SEP #$20						;|
 	if !Setting_SSP_SetXYFractionBits			;|
 		LDA.b #!Setting_SSP_YPositionFractionSetTo	;|
 		STA $13DC|!addr					;|
@@ -45,3 +51,6 @@ incsrc "../SSPDef/Defines.asm"
 		STA !Freeram_SSP_InvisbleFlag			;/
 	endif
 	RTL
+	?.DoorPartOffsets
+		dw $0000
+		dw $0010
