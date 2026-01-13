@@ -4,6 +4,10 @@
 incsrc "../SSPDef/Defines.asm"
 
 main:
+	if !sa1
+		%invoke_sa1(SSPMaincode)
+		RTL
+	endif
 SSPMaincode:
 	PHB					;\Setup banks
 	PHK					;|

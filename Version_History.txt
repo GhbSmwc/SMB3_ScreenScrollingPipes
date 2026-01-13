@@ -361,6 +361,9 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	  yoshi. Credit to AmperSam (https://www.smwcentral.net/?p=profile&id=41223)
 	--Fixed a minor visual quirk where if the player crouch-slide into the top of a pipe and enters it,
 	  the player will retain his crouching state throughout the pipe travel.
+	--Fixed an issue with Warp/Drag mode in SA-1 breaking on accurate emulators (when applied to SA-1 game,
+	  the main pipes code for UAT's gamemode 14 would still run in SNES CPU, runs an aiming routine that
+	  would use SA-1 math registers, which would fail). This now invokes SA-1 when the game is SA-1.
 	-Player's XY Subpixels position (RAM $13DA and $13DC) updates:
 	--Centering codes now also sets the player's XY subpixel position, thus movement no longer have a 1
 	  pixel variance of the player's XY position upon exiting pipe caps.
@@ -389,7 +392,6 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	--Got rid of the old level file since it is now depreciated and causing confusion.
 	-Made moving blocks to a different block number for blocks list for GPS much MUCH easier, by including
 	 a tool, "JS_GPSBlockListRelocator.html" which will offset them.
-
 	-Facing directions are now corrected when traveling through pipes rather than just when the player
 	 exits horizontal pipe caps, so that the player doesn't appear going backwards in glass pipes.
 	-The uberasm tool code is no longer a library code to be called from a gamemode 14 ASM file, because
