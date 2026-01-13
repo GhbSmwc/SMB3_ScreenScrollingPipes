@@ -685,6 +685,8 @@ under uberasm tool to drag the player during warp mode.</li>
 	<a href="https://www.smwcentral.net/?p=profile&id=22951">MarioFanGamer</a> for finding and ripping some of the door codes (RAM <kbd>$8F</kbd> during block processing is a reliable backup of RAM <kbd>$72</kbd>, and a simple code that checks
 	if the player's X position is within a certain range to allow him to enter doors) from SMW.
 </li>
+<li>Screen Scrolling Doors on checking if the player riding on yoshi to enter them works slightly differently than in the original SMW, due to supporting small and regular sized doors, it needed to have all of the <kbd>MarioOffsets</kbd> rather than <kbd>BodyInside</kbd>
+offsets due to how janky the bottom 16x16 tile's collision with blocks when riding yoshi. And even then, to make them perfect, I would need an additional top tile variant of the lower part of the door to be a custom block.</li>
 </ul>
 <script>
 //These makes all <pre>...</pre> have an effect that double-clicking will select all the text
