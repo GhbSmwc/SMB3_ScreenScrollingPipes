@@ -56,13 +56,26 @@ incsrc "../SSPDef/Defines.asm"
 	STA $1DF9|!addr						;/
 	STZ $7B							;\Prevent centering, and then displaced by xy speeds.
 	STZ $7D							;/
-	if !Setting_SSP_YoshiAllowed != 0			;\Set exiting timer
-		LDX $187A|!addr					;|
-		LDA.l ?.YoshiTimersExit,x			;|
-	else							;|
-		LDA.b #!SSP_PipeTimer_Exit_Upwards_OffYoshi	;|
-	endif							;|
-	STA !Freeram_SSP_PipeTmr				;/
+	LDX $187A|!addr	
+	LDA $03
+	CMP #$03
+	BNE ?.CannonExiting
+	
+	?.RegularExiting
+		if !Setting_SSP_YoshiAllowed != 0				;\Set exiting timer
+			LDA.l ?.YoshiTimersExit,x				;|
+		else								;|
+			LDA.b #!SSP_PipeTimer_Exit_Upwards_OffYoshi		;|
+		endif								;|
+		BRA ?.SetTimer
+	?.CannonExiting
+		if !Setting_SSP_YoshiAllowed != 0				;|
+			LDA.l ?.YoshiTimersCannonExit,x				;|
+		else								;|
+			LDA.b #!!SSP_PipeTimer_CannonExit_Upwards_OffYoshi	;|
+		endif								;|
+	?.SetTimer
+		STA !Freeram_SSP_PipeTmr					;/
 	
 	?.AlreadyExiting
 	?.Return
@@ -70,6 +83,8 @@ incsrc "../SSPDef/Defines.asm"
 	if !Setting_SSP_YoshiAllowed != 0
 		?.YoshiTimersExit:
 		db !SSP_PipeTimer_Exit_Upwards_OffYoshi,!SSP_PipeTimer_Exit_Upwards_OnYoshi,!SSP_PipeTimer_Exit_Upwards_OnYoshi		;>Timers: 1st one = on foot, 2nd and 3rd one = on yoshi
+		?.YoshiTimersCannonExit:
+		db !SSP_PipeTimer_CannonExit_Upwards_OffYoshi,!SSP_PipeTimer_CannonExit_Upwards_OnYoshi,!SSP_PipeTimer_CannonExit_Upwards_OnYoshi
 	endif
 	?.CenterHorizontalOffset
 		dw $0008

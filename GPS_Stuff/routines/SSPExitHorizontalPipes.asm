@@ -39,12 +39,19 @@ incsrc "../SSPDef/Defines.asm"
 		AND.b #%11110000		;|>Force low nibble clear
 		ORA ?.ExitingDirections,x	;|>Force low nibble set
 		STA !Freeram_SSP_PipeDir	;/
-		?..NotLongRangeTimers
-			LDA #$04			;\pipe sound
-			STA $1DF9|!addr			;/
-			LDA ?.ExitTimers,x		;>Set exiting timer
-		?..StoreExitTimer
-		STA !Freeram_SSP_PipeTmr	;/
+		LDA #$04			;\pipe sound
+		STA $1DF9|!addr			;/
+		?.SetExitingTimers
+			LDA $01
+			CMP #$03
+			BNE ?..CannonExit
+			?..NormalExiting
+				LDA ?.ExitTimers,x
+				BRA ?..StoreExitTimer
+			?..CannonExit
+				LDA ?.CannonExitTimers,x
+			?..StoreExitTimer
+				STA !Freeram_SSP_PipeTmr
 		STZ $7B				;\Prevent centering, and then displaced by xy speeds.
 		STZ $7D				;/
 		STX $76				;/Face in the correct direction
@@ -91,3 +98,6 @@ incsrc "../SSPDef/Defines.asm"
 	?.ExitTimers
 		db !SSP_PipeTimer_Exit_Leftwards
 		db !SSP_PipeTimer_Exit_Rightwards
+	?.CannonExitTimers
+		db !SSP_PipeTimer_CannonExit_Leftwards
+		db !SSP_PipeTimer_CannonExit_Rightwards

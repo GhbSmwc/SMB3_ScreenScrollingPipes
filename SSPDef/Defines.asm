@@ -299,47 +299,47 @@ endif
 	
 		if !Setting_SSP_FuSoYaSpd == 0
 			;Regular pipe timing
-			!SSP_PipeTimer_Enter_Leftwards			= $3A
-			!SSP_PipeTimer_Enter_Rightwards			= $3C
-			!SSP_PipeTimer_Enter_Upwards_OffYoshi		= $1D
-			!SSP_PipeTimer_Enter_Upwards_OnYoshi			= $27
-			!SSP_PipeTimer_Enter_Downwards_OffYoshi		= $20
-			!SSP_PipeTimer_Enter_Downwards_OnYoshi		= $30
-			!SSP_PipeTimer_Enter_Downwards_SmallPipe		= $1D
-			
-			!SSP_PipeTimer_Exit_Leftwards			= $1B
-			!SSP_PipeTimer_Exit_Rightwards			= $1B
-			!SSP_PipeTimer_Exit_Upwards_OffYoshi			= $1D
-			!SSP_PipeTimer_Exit_Upwards_OnYoshi			= $27
-			!SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario	= $0E
-			!SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario	= $1B
-			!SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario	= $18
-			!SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario	= $25
+				!SSP_PipeTimer_Enter_Leftwards			= $3A
+				!SSP_PipeTimer_Enter_Rightwards			= $3C
+				!SSP_PipeTimer_Enter_Upwards_OffYoshi		= $1D
+				!SSP_PipeTimer_Enter_Upwards_OnYoshi			= $27
+				!SSP_PipeTimer_Enter_Downwards_OffYoshi		= $20
+				!SSP_PipeTimer_Enter_Downwards_OnYoshi		= $30
+				!SSP_PipeTimer_Enter_Downwards_SmallPipe		= $1D
+				
+				!SSP_PipeTimer_Exit_Leftwards			= $1B
+				!SSP_PipeTimer_Exit_Rightwards			= $1B
+				!SSP_PipeTimer_Exit_Upwards_OffYoshi			= $1D
+				!SSP_PipeTimer_Exit_Upwards_OnYoshi			= $27
+				!SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario	= $0E
+				!SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario	= $1B
+				!SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario	= $18
+				!SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario	= $25
 		else
 			;FuSoYa enter and exit timers.
-			!SSP_PipeTimer_Enter_Leftwards			= $06
-			!SSP_PipeTimer_Enter_Rightwards			= $06
-			!SSP_PipeTimer_Enter_Upwards_OffYoshi		= $06
-			!SSP_PipeTimer_Enter_Upwards_OnYoshi		= $0C
-			!SSP_PipeTimer_Enter_Downwards_OffYoshi		= $08
-			!SSP_PipeTimer_Enter_Downwards_OnYoshi		= $0A
-			!SSP_PipeTimer_Enter_Downwards_SmallPipe	= $06
-	
-			!SSP_PipeTimer_Exit_Leftwards				= $04
-			!SSP_PipeTimer_Exit_Rightwards				= $04
-			!SSP_PipeTimer_Exit_Upwards_OffYoshi			= $09
-			!SSP_PipeTimer_Exit_Upwards_OnYoshi			= $09
-			!SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario	= $06
-			!SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario		= $08
-			!SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario	= $07
-			!SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario		= $08
+				!SSP_PipeTimer_Enter_Leftwards			= $06
+				!SSP_PipeTimer_Enter_Rightwards			= $06
+				!SSP_PipeTimer_Enter_Upwards_OffYoshi		= $06
+				!SSP_PipeTimer_Enter_Upwards_OnYoshi		= $0C
+				!SSP_PipeTimer_Enter_Downwards_OffYoshi		= $08
+				!SSP_PipeTimer_Enter_Downwards_OnYoshi		= $0A
+				!SSP_PipeTimer_Enter_Downwards_SmallPipe	= $06
+				
+				!SSP_PipeTimer_Exit_Leftwards				= $04
+				!SSP_PipeTimer_Exit_Rightwards				= $04
+				!SSP_PipeTimer_Exit_Upwards_OffYoshi			= $09
+				!SSP_PipeTimer_Exit_Upwards_OnYoshi			= $09
+				!SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario	= $06
+				!SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario		= $08
+				!SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario	= $07
+				!SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario		= $08
 		endif
 		;Cannon exit timers
-		!SSP_PipeTimer_CannonExit_Leftwards				= $04
-		!SSP_PipeTimer_CannonExit_Rightwards				= $04
-		!SSP_PipeTimer_CannonExit_Upwards_OffYoshi			= $09
-		!SSP_PipeTimer_CannonExit_Upwards_OnYoshi			= $08
-		!SSP_PipeTimer_CannonExit_Downwards_OffYoshi_SmallMario		= $06
-		!SSP_PipeTimer_CannonExit_Downwards_OffYoshi_BigMario		= $09
-		!SSP_PipeTimer_CannonExit_Downwards_OnYoshi_SmallMario		= $09
-		!SSP_PipeTimer_CannonExit_Downwards_OnYoshi_BigMario		= $09
+			!SSP_PipeTimer_CannonExit_Leftwards				= $04
+			!SSP_PipeTimer_CannonExit_Rightwards				= $04
+			!SSP_PipeTimer_CannonExit_Upwards_OffYoshi			= $09
+			!SSP_PipeTimer_CannonExit_Upwards_OnYoshi			= $08
+			!SSP_PipeTimer_CannonExit_Downwards_OffYoshi_SmallMario		= $06
+			!SSP_PipeTimer_CannonExit_Downwards_OffYoshi_BigMario		= $09
+			!SSP_PipeTimer_CannonExit_Downwards_OnYoshi_SmallMario		= $09
+			!SSP_PipeTimer_CannonExit_Downwards_OnYoshi_BigMario		= $09
