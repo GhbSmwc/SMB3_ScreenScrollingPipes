@@ -36,8 +36,9 @@ incsrc "../SSPDef/Defines.asm"
 	AND.b #%11110000					;|
 	ORA $00							;|
 	STA !Freeram_SSP_PipeDir				;/
-	LDA #$01
-	STA !Freeram_SSP_PipeTmr				;>Set timer
+	LDA #$00
+	STA !Freeram_SSP_PipeTmr				;>Set timer (0 frames to prevent noticeable player riding yoshi going behind layer before disappearing)
+	LDA #$02
 	STA !Freeram_SSP_EntrExtFlg				;>And entering mode
 	if !Setting_SSP_HideDuringPipeStemTravel == 0
 		LDA #$01					;\Make player invisible
