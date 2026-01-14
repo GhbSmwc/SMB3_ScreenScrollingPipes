@@ -671,6 +671,8 @@ print "<description>"
 
 <li>Although, you may not use the SSPs on certain levels at your own discretion, and that you could only have the SSP uberasm tool code run at specific levels, be warned that the <kbd>Fixes.asm</kbd>
 patch will apply to all levels, meaning that the freeram addresses the SSPs use are still used even if the uberasm tool code isn't running, which can cause glitches when being set to nonzero values.</li><br>
+
+<li>Regular-szied screen Scrolling doors (ones that are 2-blocks tall) would have the upper tile also be a custom block due to how yoshi collision works.</li>
 </ul>
 
 <hr>
@@ -685,7 +687,6 @@ under uberasm tool to drag the player during warp mode.</li>
 	<a href="https://www.smwcentral.net/?p=profile&id=22951">MarioFanGamer</a> for finding and ripping some of the door codes (RAM <kbd>$8F</kbd> during block processing is a reliable backup of RAM <kbd>$72</kbd>, and a simple code that checks
 	if the player's X position is within a certain range to allow him to enter doors) from SMW.
 </li>
-<li>Regular-szied screen Scrolling doors (ones that are 2-blocks tall) would have the upper tile also be a custom block due to how yoshi collision works.</li>
 </ul>
 <script>
 //These makes all <pre>...</pre> have an effect that double-clicking will select all the text
