@@ -240,6 +240,9 @@ endif
 	!Setting_SSP_DoorsProximity = 1
 		;^0 = Allow entering doors at the full width
 		; 1 = Allow entering doors only when player is centered enough (Player's X position must be within -4 to +3 relative to the door (0 = exactly centered)).
+	!Setting_SSP_HorizontalPipeAnimation = 0
+		; 0 = Walking (same with vanilla exit-enabled horizontal pipes). Note that with fast enough speed (!Setting_SSP_FuSoYaSpd == 1), mario will show his running animation instead.
+		; 1 = Long jump pose (Ideal for fast enough speed)
 	;Settings for "SSP_WarpDragLevelWrap.asm"
 		!Setting_SSP_WarpDragLevelWrap_TopTriggerYPosition = -$0030
 			;^Y position of the top edge of the level (screen if V-scroll disabled) the player would warp. Note that this does not offset up by 1 tile if riding yoshi

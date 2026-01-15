@@ -439,16 +439,32 @@ SSPMaincode:
 			...Horiz
 				LDA $187A|!addr		;\if mario is riding yoshi, then
 				BNE ....YoshiFaceHoriz	;/use "ride yoshi" pose
-				LDA $1470|!addr
-				ORA $148F|!addr
-				BEQ ....NotCarry
-				....Carry
-					LDA #$07
-					BRA ...SetPose
-				....NotCarry
-					LDA #$00
-					BRA ...SetPose
-	
+				if !Setting_SSP_HorizontalPipeAnimation == 0
+					PHB
+					LDA.b #$00|!bank8
+					PHA
+					PLB
+					JSL $00CEB1|!bank
+					JSL $00CFBC|!bank
+					PHK
+					PEA ....JSLRTSReturn-1
+					PEA.w $00D033-1|!bank
+					JML $00D1F4|!bank
+					....JSLRTSReturn
+					PLB
+					BRA ...Skip
+				else
+					LDA $1470|!addr
+					ORA $148F|!addr
+					BEQ ....NotCarry
+					....Carry
+						LDA #$07
+						BRA ...SetPose
+					....NotCarry
+						LDA #$0C
+						BRA ...SetPose
+				endif
+
 				....YoshiFaceHoriz
 					LDA #$1D		;>crouch as entering a horizontal pipe on yoshi.
 	
