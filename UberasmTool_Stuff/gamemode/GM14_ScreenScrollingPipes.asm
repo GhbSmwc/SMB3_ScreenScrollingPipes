@@ -54,14 +54,14 @@ SSPMaincode:
 				;The problem is that this code only runs when PlayerStatus (RAM $71) is set to #$00. We need to set RAM $71 to #$0B so that $00CDE8 does not clear $9D and overrides this code of freezing
 				;the level, and make the camera consistently pan over as if $71 == #$00.
 				PHB
-				LDA #$00			;\Switch data bank so that 2-byte addressing tables use bank $00 and not the bank of here.
+				LDA.b #$00|!bank8			;\Switch data bank so that 2-byte addressing tables use bank $00 and not the bank of here.
 				PHA				;|
 				PLB				;/
 				LDY $1400|!addr
 				PHK				;>Push current program bank
 				PEA ...JSLRTSReturn-1		;>Push a return address so when the subroutine finishes, jumps to after the JML (PHK and first PEA forms the destination of the RTL)
-				PEA.w $00D033-1			;>Push the RTL location (minus 1 because program counter takes the return addresses, add 1, then jump)
-				JML $00CE49			;>Jump to code that ends with RTS (once RTS encountered, jumps to an RTL, then jumps to an instruction after here)
+				PEA.w $00D033-1|!bank		;>Push the RTL location (minus 1 because program counter takes the return addresses, add 1, then jump)
+				JML $00CE49|!bank		;>Jump to code that ends with RTS (once RTS encountered, jumps to an RTL, then jumps to an instruction after here)
 				...JSLRTSReturn
 				PLB
 		endif
