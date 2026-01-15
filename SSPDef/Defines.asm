@@ -228,6 +228,15 @@ endif
 		;^Y position offset after centering vertically (when entering horizontal pipe caps and when switching from vertical to horizontal movement), notes:
 		; - Values $0000 and higher means interacting with tiles below pipes.
 		; - Don't use values outside the -$0003 to $0003 range or it's possible for the player to phase through turn corners and other tiles when he shouldn't.
+	!Setting_SSP_AllowCameraPanningWhenFrozen = 1
+		;^Allow camera to auto-adjust panning as if you're outside the pipe (how the camera moves its static camera region (RAM $142A~$142F) based on your facing direction
+		; when moving the camera, as handled at $00CDDD).
+		; - 0 = no.
+		; - 1 = yes.
+		; Notes:
+		; - That in vanilla SMW, when Mario status (RAM $71) != #$00, the auto-adjust system does not happen, (camera will still follow the player, but not pan in front of him).
+		;   This is evident when entering vanilla horizontal pipes.
+		; - If you have !Setting_SSP_FreezeTime set to 0, then the auto-adjust will apply reguardless of this setting.
 	!Setting_SSP_DoorsProximity = 1
 		;^0 = Allow entering doors at the full width
 		; 1 = Allow entering doors only when player is centered enough (Player's X position must be within -4 to +3 relative to the door (0 = exactly centered)).

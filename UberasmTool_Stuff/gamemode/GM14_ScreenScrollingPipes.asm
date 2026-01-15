@@ -48,6 +48,23 @@ SSPMaincode:
 			JMP ..Pose				;>While the pipe-related code should stop running during a freeze, the pose should still be running (during freeze, he reverts to his normal pose).
 	
 		..GameNotPaused
+		if and(!Setting_SSP_FreezeTime, !Setting_SSP_AllowCameraPanningWhenFrozen)
+			..HandleCameraOrientation
+				;This makes the camera face ahead of the player much like how vanilla SMW handles L/R scrolling (including adjusting the panning based on player's facing direction, which is at $00CDDD)
+				;The problem is that this code only runs when PlayerStatus (RAM $71) is set to #$00. We need to set RAM $71 to #$0B so that $00CDE8 does not clear $9D and overrides this code of freezing
+				;the level, and make the camera consistently pan over as if $71 == #$00.
+				PHB
+				LDA #$00			;\Switch data bank so that 2-byte addressing tables use bank $00 and not the bank of here.
+				PHA				;|
+				PLB				;/
+				LDY $1400|!addr
+				PHK				;>Push current program bank
+				PEA ...JSLRTSReturn-1		;>Push a return address so when the subroutine finishes, jumps to after the JML (PHK and first PEA forms the destination of the RTL)
+				PEA.w $00D033-1			;>Push the RTL location (minus 1 because program counter takes the return addresses, add 1, then jump)
+				JML $00CE49			;>Jump to code that ends with RTS (once RTS encountered, jumps to an RTL, then jumps to an instruction after here)
+				...JSLRTSReturn
+				PLB
+		endif
 		..ForceControlsSetAndClear
 			LDA $15					;\
 			ORA.b #%01000000			;|>Force X and Y on controller to be set for carrying sprites.
