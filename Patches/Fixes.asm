@@ -327,10 +327,10 @@ GetOnYoshiExcept: ;>JML from $01ED44
 	LDA !Freeram_SSP_PipeDir	;\if in pipe mode, don't get on yoshi while entering.
 	AND.b #%00001111		;/
 	BNE .NoYoshi
-	JML $01ED48		;>Get on yoshi
+	JML $01ED48|!bank		;>Get on yoshi
 
 	.NoYoshi
-	JML $01ED70		;>Don't get on yoshi.
+	JML $01ED70|!bank		;>Don't get on yoshi.
 
 ;---------------------------------------------------------------------------------
 if !Setting_SSP_CopyRAM77
@@ -367,14 +367,14 @@ if and(equal(!WalljumpNoteBlockFixPatch, 0), notequal(!Setting_SSP_Hijack_00EA18
 			ADC.w $00E90D,Y
 			STA $94
 		.InPipe
-			JML $00EA20
+			JML $00EA20|!bank
 endif
 ;---------------------------------------------------------------------------------
 SpriteSub_CarryInteractWithOtherSpr: ;>JML from $01A417
 	LDA.w !14C8,x		;>Sprite status
 	CMP.b #$08		;\If sprite is "alive"
 	BCS .CODE_01A421	;/Go to where the loop starts on and handle sprite <-> sprite interaction
-	JML $01A4B0		;>Otherwise go to next sprite to check.
+	JML $01A4B0|!bank	;>Otherwise go to next sprite to check.
 
 	.CODE_01A421
 		..CheckIfSpriteCarredInSSP
@@ -392,9 +392,9 @@ SpriteSub_CarryInteractWithOtherSpr: ;>JML from $01A417
 				BEQ ...OutOfPipe		;/
 			
 			...InPipe
-				JML $01A4B0		;>Ignore interaction should carried sprite is in pipe.
+				JML $01A4B0|!bank		;>Ignore interaction should carried sprite is in pipe.
 			...OutOfPipe
-				JML $01A421
+				JML $01A421|!bank
 ;---------------------------------------------------------------------------------
 SpringBoardAndKeyNoPush:		;>JML from $01AB31
 	;I found a minor bug that keys and springboard can push the player, when placed above small horizontal pipe caps.
@@ -407,12 +407,12 @@ SpringBoardAndKeyNoPush:		;>JML from $01AB31
 		PHK
 		PEA.w ..jslrtsreturn-1
 		PEA.w $01AB98-1
-		JML $01AD30
+		JML $01AD30|!bank
 			..jslrtsreturn
-		JML $01AB36
+		JML $01AB36|!bank
 	
 	.NoPush
-		JML $01AB45
+		JML $01AB45|!bank
 ;---------------------------------------------------------------------------------
 Sprite_Springboard_CancelLaunch:         ;>JML from $01E650
 	LDA !Freeram_SSP_PipeDir
@@ -421,16 +421,16 @@ Sprite_Springboard_CancelLaunch:         ;>JML from $01E650
 
 	.InPipe
 	STZ !1540,x
-	JML $01E6B0
+	JML $01E6B0|!bank
 
 	.NotInPipe
 	LDA !1540,x
 	BEQ .Addr_01E6B0
 
-	JML $01E655
+	JML $01E655|!bank
 
 	.Addr_01E6B0
-	JML $01E6B0
+	JML $01E6B0|!bank
 ;---------------------------------------------------------------------------------
 Sprite_springboard_Pos:         ;>JML from $01E666
 
@@ -442,10 +442,10 @@ Sprite_springboard_Pos:         ;>JML from $01E666
 	BNE .DontSetPos			;/
 
 	.SetPos
-	JML $01E66C
+	JML $01E66C|!bank
 
 	.DontSetPos
-	JML $01E683
+	JML $01E683|!bank
 ;---------------------------------------------------------------------------------
 Sprite_Springboard_ImageFix:     ;>JSL from $01E6F0
 	LDA !Freeram_SSP_PipeDir
@@ -465,38 +465,38 @@ Sprite_Key_pos:                 ;>JML from $01AAD8
 	AND.b #%00001111
 	BEQ .Restore
 
-	JML $01AAF1
+	JML $01AAF1|!bank
 
 	.Restore
 	LDA #$1F
 	LDY $187A|!addr
-	JML $01AADD
+	JML $01AADD|!bank
 ;---------------------------------------------------------------------------------
 Sprite_TurnBlockHV_pos:         ;>JML from $01B882
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
 
-	JML $01B8B1
+	JML $01B8B1|!bank
 
 	.Restore
 	LDA $0D
 	CLC
 	ADC #$1F
-	JML $01B887 ;>Continue onwards
+	JML $01B887|!bank ;>Continue onwards
 ;---------------------------------------------------------------------------------
 Sprite_TurnBlockHV_SideSolidFix:     ;>JML from $01B8D5
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
 	
-	JML $01B8FE
+	JML $01B8FE|!bank
 	
 	.Restore
 	LDA $0E
 	CLC
 	ADC.b #$10
-	JML $01B8DA
+	JML $01B8DA|!bank
 	
 ;---------------------------------------------------------------------------------
 Sprite_Peabounceer_FirstFrameBounce:           ;>JML from $02CDD5
@@ -507,88 +507,88 @@ Sprite_Peabounceer_FirstFrameBounce:           ;>JML from $02CDD5
 	;STZ !151C,x		;\State that indicates should mario launch upwards
 	STZ !1534,x		;|
 	;STZ !1528,x		;|
-	JML $02CDF1		;/
+	JML $02CDF1|!bank	;/
 
 	.Restore
 	LDA !1534,x
 	BEQ ..CODE_02CDF1
-	JML $02CDDA
+	JML $02CDDA|!bank
 
 	..CODE_02CDF1
-	JML $02CDF1
+	JML $02CDF1|!bank
 ;---------------------------------------------------------------------------------
 Sprite_Peabouncer_pos:          ;>JML from $02CFA5
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
 
-	JML $02CFFD
+	JML $02CFFD|!bank
 
 	.Restore
 	LDA #$1F
 	PHX
 	LDX $187A|!addr
-	JML $02CFAB
+	JML $02CFAB|!bank
 ;---------------------------------------------------------------------------------
 Sprite_InvisibleBlock_pos:         ;>JML from $01B47F
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
 
-	JML $01B4B1
+	JML $01B4B1|!bank
 
 	.Restore
 	LDA #$1F
 	LDY $187A|!addr
-	JML $01B484
+	JML $01B484|!bank
 ;---------------------------------------------------------------------------------
 Sprite_ChainedPlatform_pos:        ;>JML from $01CA3C
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
 
-	JML $01CA6E
+	JML $01CA6E|!bank
 
 	.Restore
 	LDA #$28
 	LDY $187A|!addr
-	JML $01CA41
+	JML $01CA41|!bank
 ;---------------------------------------------------------------------------------
 Sprite_SkullRaft_pos:              ;>JML from $02EE77
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
 
-	JML $02EEA8
+	JML $02EEA8|!bank
 
 	.Restore
 	LDA #$1C
 	LDY $187A|!addr
-	JML $02EE7C
+	JML $02EE7C|!bank
 ;---------------------------------------------------------------------------------
 Sprite_Megamole_pos:               ;>JML from $0387F6
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
 
-	JML $03881D
+	JML $03881D|!bank
 
 	.Restore
 	LDA #$D6
 	LDY $187A|!addr
-	JML $0387FB
+	JML $0387FB|!bank
 ;---------------------------------------------------------------------------------
 Sprite_CarrotLft_Pos:              ;>JML from $038CA7
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
 	BEQ .Restore
 
-	JML $038CE3
+	JML $038CE3|!bank
 
 	.Restore
 		LDA $187A|!addr
 		CMP #$01
-		JML $038CAC
+		JML $038CAC|!bank
 ;---------------------------------------------------------------------------------
 Layer3TideDisablePush:             ;>JML from $00DA6C
 	LDA !Freeram_SSP_PipeDir
@@ -599,9 +599,9 @@ Layer3TideDisablePush:             ;>JML from $00DA6C
 	.Restore
 	LDA $1403|!addr
 	BEQ +
-	JML $00DA71
+	JML $00DA71|!bank
 	+
-	JML $00DA79
+	JML $00DA79|!bank
 ;---------------------------------------------------------------------------------
 MakeShellsInvisible:            ;>JSL from $01981B
 	.Restore
@@ -615,7 +615,7 @@ MakeShellsInvisible:            ;>JSL from $01981B
 		PHK
 		PEA.w ...jslrtsreturn-1
 		PEA.w $9D66-1
-		JML $019F0D
+		JML $019F0D|!bank
 		...jslrtsreturn
 	RTL
 ;---------------------------------------------------------------------------------
@@ -624,7 +624,7 @@ MakeKeyInvisible:                  ;>JSL from $01A1F3 (key)
 		PHK
 		PEA.w ..jslrtsreturn-1
 		PEA.w $9D66-1
-		JML $01A169
+		JML $01A169|!bank
 		..jslrtsreturn
 	.CheckPipeState
 		JSL SSPCheckShouldCarriedSpriteTurnInvisible
@@ -635,7 +635,7 @@ MakeKeyInvisible:                  ;>JSL from $01A1F3 (key)
 			PHK
 			PEA.w ...jslrtsreturn-1
 			PEA.w $9D66-1
-			JML $019F0D
+			JML $019F0D|!bank
 			...jslrtsreturn
 		RTL
 ;---------------------------------------------------------------------------------
@@ -646,7 +646,7 @@ MakeMechaKoopaInvisible:           ;>JSL from $01A162
 	.Invisible
 		RTL
 	.Visible
-		JSL $03B307
+		JSL $03B307|!bank
 		RTL
 ;---------------------------------------------------------------------------------
 MakeGoombaInvisible:    ;>JML from $01A14D
@@ -655,9 +655,9 @@ MakeGoombaInvisible:    ;>JML from $01A14D
 	
 	.Visible
 		LDA #$80
-		JML $019F09
+		JML $019F09|!bank
 	.Invisible
-		JML $019F5A
+		JML $019F5A|!bank
 ;---------------------------------------------------------------------------------
 ;SubSprGfx2Invisible:   ;>JML from $019F0F
 ;	JSL SSPCheckShouldCarriedSpriteTurnInvisible
@@ -667,13 +667,13 @@ MakeGoombaInvisible:    ;>JML from $01A14D
 ;		PHK
 ;		PEA.w ..jslrtsreturn-1
 ;		PEA.w $9D66-1
-;		JML $01A365		;>Stack leaking issues (GetDrawInfoBnk1)
+;		JML $01A365|!bank		;>Stack leaking issues (GetDrawInfoBnk1)
 ;		..jslrtsreturn
 ;
 ;		LDA !157C,x
-;		JML $019F15
+;		JML $019F15|!bank
 ;	.Invisible
-;		JML $019F5A
+;		JML $019F5A|!bank
 ;---------------------------------------------------------------------------------
 MakeBobOmbInvisible:       ;>JSL from $01A1EC
 	JSL SSPCheckShouldCarriedSpriteTurnInvisible
@@ -683,7 +683,7 @@ MakeBobOmbInvisible:       ;>JSL from $01A1EC
 		PHK
 		PEA.w ..jslrtsreturn-1
 		PEA.w $9D66-1
-		JML $019F0D
+		JML $019F0D|!bank
 		..jslrtsreturn
 		LDA #$CA
 	.Invisible
@@ -697,11 +697,11 @@ MakeBabyYoshiInvisible:     ;>JSL from $01A352
 		PHK
 		PEA.w ..jslrtsreturn-1
 		PEA.w $9D66-1
-		JML $019F0D
+		JML $019F0D|!bank
 		..jslrtsreturn
 	.Invisible
 	.Restore
-		JSL $02EA25
+		JSL $02EA25|!bank
 		RTL
 ;---------------------------------------------------------------------------------
 MakeSpringBoardInvisible:          ;>JSL from $01E6F7
@@ -713,7 +713,7 @@ MakeSpringBoardInvisible:          ;>JSL from $01E6F7
 		PHK
 		PEA.w ..jslrtsreturn-1
 		PEA.w $9D66-1
-		JML $019CF5
+		JML $019CF5|!bank
 		..jslrtsreturn
 	.Invisible
 	.Restore
@@ -728,7 +728,7 @@ MakePSwitchesInvisible:       ;>$JSL from $01A21D
 		PHK
 		PEA.w ..jslrtsreturn-1
 		PEA.w $9D66-1
-		JML $019F0D
+		JML $019F0D|!bank
 		..jslrtsreturn
 	.Invisible
 	.Restore
@@ -760,12 +760,12 @@ MakeThrowBlockInvisible:        ;>JML from $01A1D4
 		PHK
 		PEA.w ...jslrtsreturn-1
 		PEA.w $9D66-1
-		JML $019F0D
+		JML $019F0D|!bank
 		...jslrtsreturn
 	
 	.Done
 	.Invisible
-		JML $01A1EB
+		JML $01A1EB|!bank
 ;---------------------------------------------------------------------------------
 DontUnstunInPipes:   ;>$JML from $0196A1
 	JSL SSPDetectSpriteCarriedInPipe
@@ -786,10 +786,10 @@ DontUnstunInPipes:   ;>$JML from $0196A1
 	LDA !1540,x
 	CMP #$03
 	BEQ .Unstun
-	JML $0196A5
+	JML $0196A5|!bank
 	
 	.Unstun
-		JML $0196A9
+		JML $0196A9|!bank
 ;---------------------------------------------------------------------------------
 if !Setting_SSP_SetXYFractionBits
 	ClearYPosFractionOnLayer1Platforms: ;>JSL from $00EEDD
