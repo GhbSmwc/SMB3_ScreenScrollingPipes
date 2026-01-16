@@ -439,21 +439,31 @@ SSPMaincode:
 			...Horiz
 				LDA $187A|!addr		;\if mario is riding yoshi, then
 				BNE ....YoshiFaceHoriz	;/use "ride yoshi" pose
-				if !Setting_SSP_HorizontalPipeAnimation == 0
-					PHB
-					LDA.b #$00|!bank8
-					PHA
-					PLB
-					JSL $00CEB1|!bank
-					JSL $00CFBC|!bank
-					PHK
-					PEA ....JSLRTSReturn-1
-					PEA.w $00D033-1|!bank
-					JML $00D1F4|!bank
-					....JSLRTSReturn
-					PLB
+				LDA !Freeram_SSP_EntrExtFlg
+				CMP #$02
+				BEQ ....StemPose
+				
+				....Walking
+					LDA $7B				;\Preserve X speed
+					PHA				;/
+					LDA #$08			;\Fake the player's X speed so he isn't showing his running animation
+					STA $7B				;/
+					PHB				;\Similar to a code at $00D19D that handles walking animation when entering horizontal exit-enabled pipes
+					LDA.b #$00|!bank8		;|
+					PHA				;|
+					PLB				;|
+					JSL $00CEB1|!bank		;|
+					JSL $00CFBC|!bank		;|
+					PHK				;|
+					PEA ....JSLRTSReturn-1		;|
+					PEA.w $00D033-1|!bank		;|
+					JML $00D1F4|!bank		;|
+					....JSLRTSReturn		;|
+					PLB				;/
+					PLA				;\Restore X speed (so that when $00DC2D executes, would not use the faked speed)
+					STA $7B				;/
 					BRA ...Skip
-				else
+				....StemPose
 					LDA $1470|!addr
 					ORA $148F|!addr
 					BEQ ....NotCarry
@@ -463,7 +473,6 @@ SSPMaincode:
 					....NotCarry
 						LDA #$0C
 						BRA ...SetPose
-				endif
 
 				....YoshiFaceHoriz
 					LDA #$1D		;>crouch as entering a horizontal pipe on yoshi.
