@@ -347,7 +347,6 @@ corners and exit caps without interacting them, causing the player to continue i
 
 <h2><a href="#TOC_Notes" id="Notes">^</a>Notes</h2>
 <ul>
-
 	<li>
 		If you carry any <b>custom</b> sprites through these pipes, they will not go behind the layer;
 		appearing superimpose of the pipe as mario is being behind the layer. Unless you can
@@ -394,16 +393,17 @@ SSPPriority:
 	SkipGFX:</pre></div>
 		And that will cause the sprite to skip the entire graphics routines folder when carried fully into the pipe.</li></ul>
 	</li><br>
-<li>When the player enters the pipe, he ignores most sprites and any carried sprites with him will also ignore them too,
-combined with the above info that the player (and carried sprite) turns invisible, the fact that you actually don't need connectors besides caps, turn corners, and (maybe) dragmode block,
-to keep the player in pipe state (because it is handled by uberasm tool, most non-changing-state-blocks are <kbd>pass_if_in_pipe.asm</kbd> which becomes passible if in pipe and does nothing
-beyond that), it also means you can have SSPs setups like this:<br>
-<img src="Readme_files/DisconnectedStraightPipe.png"><br>
-Just remember that:
-<ul>
-	<li>The player will keep going in whatever last sets his direction state.</li>
 	<li>
-		Unlike warp/drag mode, blocks in his path must not be interactable as they can interfere with the pipe traveling movement (best case is to make blocks act as <kbd>#$0025</kbd> when <kbd>!Freeram_SSP_PipeDir</kbd>'s <abbr title="bits 0~3 of a byte; the Xs in %****XXXX">low nybble</abbr> is set):
+		When the player enters the pipe, he ignores most sprites and any carried sprites with him will also ignore them too,
+		combined with the above info that the player (and carried sprite) turns invisible, the fact that you actually don't need connectors besides caps, turn corners, and (maybe) dragmode block,
+		to keep the player in pipe state (because it is handled by uberasm tool, most non-changing-state-blocks are <kbd>pass_if_in_pipe.asm</kbd> which becomes passible if in pipe and does nothing
+		beyond that), it also means you can have SSPs setups like this:<br>
+		<img src="Readme_files/DisconnectedStraightPipe.png"><br>
+		Just remember that:
+		<ul>
+			<li>The player will keep going in whatever last sets his direction state.</li>
+			<li>
+				Unlike warp/drag mode, blocks in his path must not be interactable as they can interfere with the pipe traveling movement (best case is to make blocks act as <kbd>#$0025</kbd> when <kbd>!Freeram_SSP_PipeDir</kbd>'s <abbr title="bits 0~3 of a byte; the Xs in %****XXXX">low nybble</abbr> is set):
 <div class="CodeBlock"><pre>incsrc "../SSPDef/Defines.asm" ;&gt;This to obtain a define that points to a RAM address use for the checking
 
 db $42 ; or db $37
@@ -446,66 +446,70 @@ MarioFireball:
 print "A simple test block that behaves differently depending on if the player is pipe traveling or not."
 
 </pre></div>
-	</li>
+			</li>
+			<li>
+				Same goes for custom sprites and other third-party ASM resources. Use <kbd>incsrc "&lt;path_to_SSP_defines&gt;"</kbd> (file paths must be wrapped in quotes if it has spaces) to obtain <kbd>!Freeram_SSP_PipeDir</kbd>, use it for checking its low nybble, and ignore when nonzero.
+			</li>
+			<li>If you have <kbd>!Setting_SSP_HideDuringPipeStemTravel</kbd> set to <kbd>0</kbd> in the defines, the player remains visible even when he is in the gap he's passing through. The exception of that is entering through screen scrolling doors or using warp/drag mode.</li>
+		</ul>
+	<li>If you enter a pipe, while yoshi exist, yoshi will also turn invisible (with some 8x8 pieces still visible), I couldn't fix that.</li><br>
+	<li>The routine file is also SA-1 hybrid, no need to worry about yoshi issues about it. However, you must use RAM address in banks $40/$41 should you need to use 3-byte addressing ($4XXXXX)</li><br>
 	<li>
-		Same goes for custom sprites and other third-party ASM resources. Use <kbd>incsrc "&lt;path_to_SSP_defines&gt;"</kbd> (file paths must be wrapped in quotes if it has spaces) to obtain <kbd>!Freeram_SSP_PipeDir</kbd>, use it for checking its low nybble, and ignore when nonzero.
-	</li>
-	<li>If you have <kbd>!Setting_SSP_HideDuringPipeStemTravel</kbd> set to <kbd>0</kbd> in the defines, the player remains visible even when he is in the gap he's passing through. The exception of that is entering through screen scrolling doors or using warp/drag mode.</li>
-</ul>
-
-<li>If you enter a pipe, while yoshi exist, yoshi will also turn invisible (with some 8x8
- pieces still visible), I couldn't fix that.</li><br>
-
-<li>The routine file is also SA-1 hybrid, no need to worry about yoshi issues about it. However, you
-must use RAM address in banks $40/$41 should you need to use 3-byte addressing ($4XXXXX)</li><br>
-
-<li>If Mario gets on a p-balloon, Mario will keep facing the same direction prior
- grabbing it even when moving the opposite direction (so if he grabs it facing left,
- he'll keep facing left, evidence is that the screen orientates in the same direction
- regardless of which left or right direction Mario is going), until the balloon wears
- off. If you try entering horizontal pipe caps that way, Mario won't enter the pipes if
- he's facing away from the cap (so he doesn't enter backwards), so if you are using this,
- you should download the &ldquo;<a href="https://www.smwcentral.net/?p=section&a=details&id=16550">P-balloon timer fix</a>&rdquo; by
- me, that will fix the error and always allow Mario to enter. Do note that
- being under the effect of the balloon counts as &ldquo;carrying something&rdquo;.</li><br>
-
-<li><s>Don't make it possible for the player to to be inside these pipes while in layer
- 3 tides, because since the tides still runs while freeze flag is still set ($7E:009D,
- except when taking damage, its the player animation trigger ($7E:0071)), it will push
- mario while in the pipe and causes glitches like coming out of the pipe out of nowhere
- or even &ldquo;escape&rdquo; the pipe and leaving the player's still in &ldquo;pipe physics mode&rdquo;,
- softlocking the game.</s> EDIT: This is fixed. You can now use the pipes in the tide freely.</li><br>
- 
-<li>I had to store #$0B into $7E0071 so that when setting $7E:009D to freeze time works
-properly; most sprites don't freeze (excluding ones that doesn't check $9D (the freeze flag),
-like birds/puff of smoke on yoshi's house). Address $00CDE8 is responsible for this problem,
-this runs every frame when $7E0071 = #$00. I'll keep the store #$0B to $7E0071 in case if
-uberasm could not disable the controls properly just in case. It's also needed to prevent
-player controls during pipe movement.</li><br>
-
-<li><s>For some reasons, SSP_Tiles $40D-$411, $413, $16, $417, $41C, $41E, $41F, $423, $425-$428,
-$42B-$42F, $436, $437, $43B-$43E, $440, $44B-$44F, $45E, $45F, $46F, $47E, $47F, and
-$48E uses the wrong discriptions of another block when viewed on LM, even though the
-discriptions in the asm blocks are correct, it might be a glitch with LM viewing or
-GPS's discription, I can't really fix that, so if this bothers you, simply disable it
-in the definition file, that way, it will only show up its name correctly without any
-errors. Hopefully this gets fixed, if it was, please PM me or update the file (by
-editing the files (like the if statement containing the print commands) in this package
-and removing this notice). In the future, they may be fixed due to the bugs happening in the tool itself.</s>
-EDIT: It's fixed. This is due to using a backslash character or other reserved characters.</li><br>
+		If Mario gets on a p-balloon, Mario will keep facing the same direction prior
+		grabbing it even when moving the opposite direction (so if he grabs it facing left,
+		he'll keep facing left, evidence is that the screen orientates in the same direction
+		regardless of which left or right direction Mario is going), until the balloon wears
+		off. If you try entering horizontal pipe caps that way, Mario won't enter the pipes if
+		he's facing away from the cap (so he doesn't enter backwards), so if you are using this,
+		you should download the &ldquo;<a href="https://www.smwcentral.net/?p=section&a=details&id=16550">P-balloon timer fix</a>&rdquo; by
+		me, that will fix the error and always allow Mario to enter. Do note that
+		being under the effect of the balloon counts as &ldquo;carrying something&rdquo;.
+	</li><br>
+		
+	<li>
+		<s>Don't make it possible for the player to to be inside these pipes while in layer
+		3 tides, because since the tides still runs while freeze flag is still set ($7E:009D,
+		except when taking damage, its the player animation trigger ($7E:0071)), it will push
+		mario while in the pipe and causes glitches like coming out of the pipe out of nowhere
+		or even &ldquo;escape&rdquo; the pipe and leaving the player's still in &ldquo;pipe physics mode&rdquo;,
+		softlocking the game.</s> EDIT: This is fixed. You can now use the pipes in the tide freely.
+	</li><br>
+	<li>
+		I had to store #$0B into $7E0071 so that when setting $7E:009D to freeze time works
+		properly; most sprites don't freeze (excluding ones that doesn't check $9D (the freeze flag),
+		like birds/puff of smoke on yoshi's house). Address $00CDE8 is responsible for this problem,
+		this runs every frame when $7E0071 = #$00. I'll keep the store #$0B to $7E0071 in case if
+		uberasm could not disable the controls properly just in case. It's also needed to prevent
+		player controls during pipe movement.
+	</li><br>
+	<li>
+		<s>For some reasons, SSP_Tiles $40D-$411, $413, $16, $417, $41C, $41E, $41F, $423, $425-$428,
+		$42B-$42F, $436, $437, $43B-$43E, $440, $44B-$44F, $45E, $45F, $46F, $47E, $47F, and
+		$48E uses the wrong discriptions of another block when viewed on LM, even though the
+		discriptions in the asm blocks are correct, it might be a glitch with LM viewing or
+		GPS's discription, I can't really fix that, so if this bothers you, simply disable it
+		in the definition file, that way, it will only show up its name correctly without any
+		errors. Hopefully this gets fixed, if it was, please PM me or update the file (by
+		editing the files (like the if statement containing the print commands) in this package
+		and removing this notice). In the future, they may be fixed due to the bugs happening in the tool itself.</s>
+		EDIT: It's fixed. This is due to using a backslash character or other reserved characters.
+	</li><br>
 
 
-<li id="MarioInPipeInteractWithCustomSprites">While most sprites don't interact with the player in any way when the player is traveling through pipes,
-be aware that some sprites still do interact with the player:</li><br>
+	<li id="MarioInPipeInteractWithCustomSprites">
+		While most sprites don't interact with the player in any way when the player is traveling through pipes,
+be aware that some sprites still do interact with the player:
+	</li><br>
 
-<ul>
+	<ul>
 
-<li>All smw's solid sprites (mainly platforms) that sets the player character's position when standing on them
-are hijacked to prevent misaligned entering horizontal pipes. But not some <b>custom</b> sprites (depending how
-$9D was handled if it should still interact with the player, when <kbd>!Setting_SSP_FreezeTime</kbd> not enabled by the SSP settings).
-To fix that, simply look for a code that writes (STA) to an address $94-$97 (these are the player's XY position
-in the level, $94-$95 = X position, $96-$97 = Y position), and add this to skip over setting the player's
-coordinates, and also writing $1471:
+		<li>
+			All smw's solid sprites (mainly platforms) that sets the player character's position when standing on them
+			are hijacked to prevent misaligned entering horizontal pipes. But not some <b>custom</b> sprites (depending how
+			$9D was handled if it should still interact with the player, when <kbd>!Setting_SSP_FreezeTime</kbd> not enabled by the SSP settings).
+			To fix that, simply look for a code that writes (STA) to an address $94-$97 (these are the player's XY position
+			in the level, $94-$95 = X position, $96-$97 = Y position), and add this to skip over setting the player's
+			coordinates, and also writing $1471:
 
 <div class="CodeBlock" style="width: 963px; height: 201px;"><pre>incsrc "../SSPDef/Defines.asm"
 ;^This at the top, and must be up to date (as in match) with all of them used by blocks, patch and uberasm tool.
@@ -520,50 +524,60 @@ coordinates, and also writing $1471:
 	;number from it, and writes to $94-$97, and writing to $1471*
 
 	.DontSetPos			;>Must skip ALL position-related code</pre></div>
+			<li>
+				Also, in case other codes that sets the player's X and Y speed or positions ($7A-$7B, $7D $13DA, $13DC
+				$94-$95, and $96-$97), make sure you don't write them during pipe movement. Otherwise it will override
+				and misalign Mario from the pipe. An example of this can happen is patches like wind and gravity generators
+				may cause this to happen.
+			</li>
+		</li>
+	</ul><br>
+	<li>While inside the pipe:<br>
 
-<ul><li>Also, in case other codes that sets the player's X and Y speed or positions ($7A-$7B, $7D $13DA, $13DC
-$94-$95, and $96-$97), make sure you don't write them during pipe movement. Otherwise it will override
-and misalign Mario from the pipe. An example of this can happen is patches like wind and gravity generators
-may cause this to happen.</li></ul></ul><br>
+		<ul>
+			<li>The player is behind the layer (<kbd>$7E13F9</kbd> is <kbd>#$02</kbd>). When his entering timer hits 0 (<kbd>!Freeram_SSP_PipeTmr</kbd>), the player (and carried sprite) turns invisible</li><br>
 
-<li>While inside the pipe:<br>
+			<li>
+				RAM address <kbd>$7E0071</kbd> is set to <kbd>#$0B</kbd> when freezing is enabled (have <kbd>!Setting_SSP_FreezeTime</kbd> set to 1)
+				(due to the fact that if you set $9D to a non-zero value without setting $7E0071 to <kbd>#$0B</kbd> on an uberasm code, the freezing
+				gets nullified and some stuff will ignore the freeze effect thanks to address <kbd>$00CDE8</kbd> clearing the freeze flag every frame).
+			</li>
+			Thus, if a sprite doesn't check those or coded in a way that interacts with the player <i>reguardless</i> of his state (including
+			doing things during $9D or $71 being set), it can mess up his pipe travel and causes glitches. Things like wind generator, or wind generated
+			by a sprite can push mario out of a pipe path and cause a softlock as he misses an exit or a change-direction-corner. To avoid this
+			issue, a simple code mentioned earlier will solve this.
+		</ul>
+	</li><br>
 
-<ul>
-<li>The player is behind the layer (<kbd>$7E13F9</kbd> is <kbd>#$02</kbd>). When his entering timer hits 0 (<kbd>!Freeram_SSP_PipeTmr</kbd>), the player (and carried sprite) turns invisible</li><br>
-
-<li>RAM address <kbd>$7E0071</kbd> is set to <kbd>#$0B</kbd> when freezing is enabled (have <kbd>!Setting_SSP_FreezeTime</kbd> set to 1)
-(due to the fact that if you set $9D to a non-zero value without setting $7E0071 to <kbd>#$0B</kbd> on an uberasm code, the freezing
-gets nullified and some stuff will ignore the freeze effect thanks to address <kbd>$00CDE8</kbd> clearing the freeze flag every frame).</li><br>
-
-Thus, if a sprite doesn't check those or coded in a way that interacts with the player <i>reguardless</i> of his state (including
-doing things during $9D or $71 being set), it can mess up his pipe travel and causes glitches. Things like wind generator, or wind generated
-by a sprite can push mario out of a pipe path and cause a softlock as he misses an exit or a change-direction-corner. To avoid this
-issue, a simple code mentioned earlier will solve this.</li></ul></li><br>
-
-<li>When traveling downwards and hits a corner that changes the player's direction to horizontal (left or right), the blocks below the turn corner
-may be interacted. Be careful not to put instant kill, teleport, or any other such blocks there, unless you add a check to not interfere
-with the player traveling:
+	<li>
+		When traveling downwards and hits a corner that changes the player's direction to horizontal (left or right), the blocks below the turn corner
+		may be interacted. Be careful not to put instant kill, teleport, or any other such blocks there, unless you add a check to not interfere
+		with the player traveling:
 <div class="CodeBlock" style="height: 49px; width: 983px;"><pre>	LDA !Freeram_SSP_PipeDir		;\If inside a pipe, return.
 	AND.b #%00001111			;|
 	BNE InsidePipe				;/>Don't do anything as the player travel through pipes
-</pre></div></li><br>
+</pre></div>
+	</li><br>
 
-<li><a name="SpeedClipping">To add to the note above, be careful with setting the travel speeds to make the player travel very fast, he may phase through
-the interaction fields of the turn corners and pipe caps (he'll pass through without triggering them). This is because SMW (and pretty much all video games, even in 3D) handles
-movement as movement broken up into &ldquo;individual step of positions&rdquo; each frame (movement isn't continuous). Each position
-of movement handles collision, but not in between these points, thus the faster the player moves, the more wider-apart these interactable positions are, and the more
-likely he'll phase and overshoot through them should the next position the player moves ends up on the other side of the interaction field:<br>
-<img src="Readme_files/CollisionPositionInteractions.png"><br>
-The player is essentially teleporting from point to point, here is what it looks like (augmented):<br>
-<img src="Readme_files/MovementFramesGif.gif"><br>
-Mario actually moves up to <u class="DottedUnderline" title="RAM address $7B and $7D contains a signed value measuring the displacement, in units of 1/16th of a pixel, so a value of #$80 is 8 pixels (#$7F may displace 8 pixels due to accumulation of fractional coordinates).">8 pixels per frame</u>, and the blocks runs a position check (if the player is centered enough within a certain range to alter his pipe
-state and snap him centered in a short distance) and &ldquo;pseudo collision points&rdquo;, therefore, the area range to trigger Mario to change direction or state
-is not a full 16x16 pixels block.</li><br>
+	<li>
+		<a name="SpeedClipping">To add to the note above, be careful with setting the travel speeds to make the player travel very fast, he may phase through
+		the interaction fields of the turn corners and pipe caps (he'll pass through without triggering them). This is because SMW (and pretty much all video games, even in 3D) handles
+		movement as movement broken up into &ldquo;individual step of positions&rdquo; each frame (movement isn't continuous). Each position
+		of movement handles collision, but not in between these points, thus the faster the player moves, the more wider-apart these interactable positions are, and the more
+		likely he'll phase and overshoot through them should the next position the player moves ends up on the other side of the interaction field:<br>
+		<img src="Readme_files/CollisionPositionInteractions.png"><br>
+		The player is essentially teleporting from point to point, here is what it looks like (augmented):<br>
+		<img src="Readme_files/MovementFramesGif.gif"><br>
+		Mario actually moves up to <u class="DottedUnderline" title="RAM address $7B and $7D contains a signed value measuring the displacement, in units of 1/16th of a pixel, so a value of #$80 is 8 pixels (#$7F may displace 8 pixels due to accumulation of fractional coordinates).">8 pixels per frame</u>, and the blocks runs a position check (if the player is centered enough within a certain range to alter his pipe
+		state and snap him centered in a short distance) and &ldquo;pseudo collision points&rdquo;, therefore, the area range to trigger Mario to change direction or state
+		is not a full 16x16 pixels block.
+	</li><br>
 
-<li>Turn corners, and &ldquo;prep-turns&rdquo; utilize a &ldquo;pseudo collision points&rdquo; system to pick only one block at a given pixel coordinate to interact with when the player touches multiple. This is to prevent bugs when two different turn corners or other pipe parts, especially small ones, are touching each other, which
-causes the player to be able to interact with both at the same time, causing a potential softlock. The points are located here:<br>
-<img src="Readme_files/SMW_PseudoCollisionPoints.png"><br>
-It works like this:
+	<li>
+		Turn corners, and &ldquo;prep-turns&rdquo; utilize a &ldquo;pseudo collision points&rdquo; system to pick only one block at a given pixel coordinate to interact with when the player touches multiple. This is to prevent bugs when two different turn corners or other pipe parts, especially small ones, are touching each other, which
+		causes the player to be able to interact with both at the same time, causing a potential softlock. The points are located here:<br>
+		<img src="Readme_files/SMW_PseudoCollisionPoints.png"><br>
+		It works like this:
 <div class="CodeBlock" style="height: 175px; width: 889px;"><pre>
 	BlockXPosition_In_Pixels = floor((XPosition + 8 + XOffset) / 16) * 16
 	BlockYPosition_In_Pixels = floor((YPosition + ToPlayerBottomTile + YOffset) / 16) * 16
@@ -576,53 +590,61 @@ It works like this:
 	- ToPlayerBottomTile is either:
 	-- #$0018 if not riding yoshi
 	-- #$0028 if riding yoshi</pre></div>
-GPS subroutine <kbd>CheckIfPlayerBottom16x16CenterIsInBlock</kbd> handle this to determine if the point is within the currently processed block. Now note: When the player is horizontally centered in-between 2 adjacent blocks,
-using the exact horizontal center (<kbd>XOffset = 8</kbd>) point of the player would end up picking the block to the right rather than the left. In this case, left block's code would call the subroutine with <kbd>XOffset = 6</kbd> instead.
-</li>
+		GPS subroutine <kbd>CheckIfPlayerBottom16x16CenterIsInBlock</kbd> handle this to determine if the point is within the currently processed block. Now note: When the player is horizontally centered in-between 2 adjacent blocks,
+		using the exact horizontal center (<kbd>XOffset = 8</kbd>) point of the player would end up picking the block to the right rather than the left. In this case, left block's code would call the subroutine with <kbd>XOffset = 6</kbd> instead.
+	</li>
 
-<li>If you're not using custom sprites, RAM address <kbd>$7FAB10</kbd> (<kbd>$400040</kbd> SA-1) aren't initialized, thus
-can cause issues like yoshi keeping his facing direction from when you enter after exiting a
-horizontal pipe. This can be fixed by opening <kbd>SSPDef/Defines.asm</kbd>, and setting <kbd>!Setting_SSP_UsingCustomSprites</kbd> to <kbd>0</kbd>. This is due to the fact that this ASM package assumes
-you've installed spritetool/pixi.</li><br>
+	<li>
+		If you're not using custom sprites, RAM address <kbd>$7FAB10</kbd> (<kbd>$400040</kbd> SA-1) aren't initialized, thus
+		can cause issues like yoshi keeping his facing direction from when you enter after exiting a
+		horizontal pipe. This can be fixed by opening <kbd>SSPDef/Defines.asm</kbd>, and setting <kbd>!Setting_SSP_UsingCustomSprites</kbd> to <kbd>0</kbd>. This is due to the fact that this ASM package assumes
+		you've installed spritetool/pixi.
+	</li><br>
 
-<li><a name="SmallMarioCannotInteractAboveAndBelowHorizPipes">When traveling through horizontal small pipes, Mario will interact with the &ldquo;bottom&rdquo; offset of any blocks placed above the horizontal
-pipe. It is possible to prevent that by positing Mario lower, but he will interact with  the &ldquo;above&rdquo; offset of blocks below the pipe.
-Because of how small Mario's object collision points are <b>exactly</b> 16 pixels (full block, 15 pixels in between exclusively) tall, there is no
-Y position that interacts neither, as Mario is too tall to avoid triggering any blocks placed above and below the horizontal small pipe:
-<table>
-<tr><td><center><img src="Readme_files/SSP_SmallHorizPipeTopInter.gif"></center><br>
-If Mario is 1 pixel up (default Y position, <kbd>Player_Y_Position = Block_Y_Position - 1</kbd>) from the block he is directly inside of.</td>
+	<li>
+		<a name="SmallMarioCannotInteractAboveAndBelowHorizPipes">When traveling through horizontal small pipes, Mario will interact with the &ldquo;bottom&rdquo; offset of any blocks placed above the horizontal
+		pipe. It is possible to prevent that by positing Mario lower, but he will interact with  the &ldquo;above&rdquo; offset of blocks below the pipe.
+		Because of how small Mario's object collision points are <b>exactly</b> 16 pixels (full block, 15 pixels in between exclusively) tall, there is no
+		Y position that interacts neither, as Mario is too tall to avoid triggering any blocks placed above and below the horizontal small pipe:
+		<table>
+			<tr><td><center><img src="Readme_files/SSP_SmallHorizPipeTopInter.gif"></center><br>
+			If Mario is 1 pixel up (default Y position, <kbd>Player_Y_Position = Block_Y_Position - 1</kbd>) from the block he is directly inside of.</td>
+	
+			<td><center><img src="Readme_files/SSP_SmallHorizPipeBottomInter.gif"></center><br>
+			If Mario's Y position is exactly the same Y position as the block.</td></tr>
+	
+			<tr><td colspan="2"><center>Small Mario's Collision  points:</center><br>
+			<img src="Readme_files/MarioCollisionPoints.png"></td></tr>
+			<tr><td colspan="2">Just to let you know, I've enabled debug mode (the define <kbd>!Setting_SSP_PipeDebug</kbd>) to make Mario visible when traveling through pipes.</td></tr>
+		</table><br>
+		However, this can be mitigated by editing small Mario's collision points location via <a href="https://www.smwcentral.net/?p=section&a=details&id=15234">interaction editor</a>,
+		by moving either one of small Mario's collision points (top and bottom) closer to Mario's middle by at least 1 pixel. If you haven't edit any of the vertical centering
+		caused by horizontal small pipe caps, small turn corners (and the special turn corner), you can simply just move the head interaction down by 1 pixel. I wouldn't recommend 
+		moving the foot part of the collision points upwards and have the player's Y position moved downward (+1 from default Y position) else the player will be slightly be lower
+		into the ground.
+	</li><br><br>
 
-<td><center><img src="Readme_files/SSP_SmallHorizPipeBottomInter.gif"></center><br>
-If Mario's Y position is exactly the same Y position as the block.</td></tr>
+	<li>
+		<s>If Mario stands on a key sprite (sprite number <kbd>$80</kbd>), and enters a horizontal pipe cap the same time he picks the key up, he will carry the key as normal (albeit
+		his pose is acting like he isn't carrying anything), but upon exiting the pipe, Mario may (depends on the timing of picking up the key and entering) forcibly drop the key
+		(even if the player holds the dash button) due to the carrying sprites through pipe (<kbd>!Freeram_SSP_CarrySpr</kbd>) flag not being set prior entering.<br><br>
+		
+		It may be possible that this happens in a sequence within a frame:
+		<ol>
+			<li>
+				The game first handles the player entering the pipe (sets his pipe status; <kbd>!Freeram_SSP_PipeDir</kbd>) with the pickup flags (RAM address
+				<kbd>$7E1470</kbd> and <kbd>$7E148F</kbd>) being zero (thinks that the player isn't carrying anything)<br><br>
+			</li>
 
-<tr><td colspan="2"><center>Small Mario's Collision  points:</center><br>
-<img src="Readme_files/MarioCollisionPoints.png"></td></tr>
-<tr><td colspan="2">Just to let you know, I've enabled debug mode (the define <kbd>!Setting_SSP_PipeDebug</kbd>) to make Mario visible when traveling through pipes.</td></tr>
-</table><br>
-However, this can be mitigated by editing small Mario's collision points location via <a href="https://www.smwcentral.net/?p=section&a=details&id=15234">interaction editor</a>,
-by moving either one of small Mario's collision points (top and bottom) closer to Mario's middle by at least 1 pixel. If you haven't edit any of the vertical centering
-caused by horizontal small pipe caps, small turn corners (and the special turn corner), you can simply just move the head interaction down by 1 pixel. I wouldn't recommend 
-moving the foot part of the collision points upwards and have the player's Y position moved downward (+1 from default Y position) else the player will be slightly be lower
-into the ground.
-</li><br><br>
-
-<li><s>If Mario stands on a key sprite (sprite number <kbd>$80</kbd>), and enters a horizontal pipe cap the same time he picks the key up, he will carry the key as normal (albeit
-his pose is acting like he isn't carrying anything), but upon exiting the pipe, Mario may (depends on the timing of picking up the key and entering) forcibly drop the key
-(even if the player holds the dash button) due to the carrying sprites through pipe (<kbd>!Freeram_SSP_CarrySpr</kbd>) flag not being set prior entering.<br><br>
-
-It may be possible that this happens in a sequence within a frame:
-<ol>
-<li>The game first handles the player entering the pipe (sets his pipe status; <kbd>!Freeram_SSP_PipeDir</kbd>) with the pickup flags (RAM address
-<kbd>$7E1470</kbd> and <kbd>$7E148F</kbd>) being zero (thinks that the player isn't carrying anything)<br><br></li>
-
-<li>Then later, the game handles the key being picked up, it registers that the player is picking up the key since the controller being read (checks if you are holding dash)
-is before the controller gets disabled by the code handling pipe traveling from Uberasm tool.</s> EDIT: This bug is fixed as of version 3.2.8.</li><br>
-
-</ol>
-
-<li>If you want blocks to be passable while the player is in his pipe state (such as a pipe that goes into a solid object for scenery), I provided you this code (see below)
-Make sure all offsets must be passable during pipe travel.
+			<li>
+				Then later, the game handles the key being picked up, it registers that the player is picking up the key since the controller being read (checks if you are holding dash)
+				is before the controller gets disabled by the code handling pipe traveling from Uberasm tool.</s> EDIT: This bug is fixed as of version 3.2.8.
+			</li><br>
+		</ol>
+	</li>
+	<li>
+		If you want blocks to be passable while the player is in his pipe state (such as a pipe that goes into a solid object for scenery), I provided you this code (see below)
+		Make sure all offsets must be passable during pipe travel.
 <div class="CodeBlock"><pre>
 
 incsrc "../SSPDef/Defines.asm"
@@ -666,13 +688,20 @@ RTL
 
 print "<description>"
 </pre></div>
+	</li><br>
 
-</li><br>
+	<li>
+		Although, you may not use the SSPs on certain levels at your own discretion, and that you could only have the SSP uberasm tool code run at specific levels, be warned that the <kbd>Fixes.asm</kbd>
+		patch will apply to all levels, meaning that the freeram addresses the SSPs use are still used even if the uberasm tool code isn't running, which can cause glitches when being set to nonzero values.
+	</li><br>
 
-<li>Although, you may not use the SSPs on certain levels at your own discretion, and that you could only have the SSP uberasm tool code run at specific levels, be warned that the <kbd>Fixes.asm</kbd>
-patch will apply to all levels, meaning that the freeram addresses the SSPs use are still used even if the uberasm tool code isn't running, which can cause glitches when being set to nonzero values.</li><br>
-
-<li>Regular-szied screen Scrolling doors (ones that are 2-blocks tall) would have the upper tile also be a custom block due to how yoshi collision works.</li>
+	<li>
+		Regular-szied screen Scrolling doors (ones that are 2-blocks tall) would have the upper tile also be a custom block due to how yoshi collision works.
+	</li>
+	<li>
+		Due to how RAM <kbd>$78</kbd> (the RAM containing the hide player bits settings) works, bit 4 controls both hiding the player's cape tile <b>and</b> yoshi. This is a problem where if I want to hide the player and its cape tile but not
+		hide yoshi that isn't ridden, Yoshi will have to disappear.
+	</li>
 </ul>
 
 <hr>

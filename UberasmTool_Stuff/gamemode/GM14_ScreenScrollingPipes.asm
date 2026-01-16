@@ -99,12 +99,28 @@ SSPMaincode:
 				endif
 			...Hide
 				if !Setting_SSP_PipeDebug == 0
-					LDA #$EF			;>%11101111
-					LDY $187A|!addr
-					BEQ +
-					LDA #$FF
-					+
-					STA $78				;>Make player invisible
+					;LDA #$EF			;>%11101111
+					;LDY $187A|!addr			;>Riding yoshi
+					;BEQ +
+					;LDY $19
+					;CPY #$02
+					;BNE +
+					;LDA #$FF
+					;+
+					;STA $78				;>Make player invisible
+					
+					LDA $187A|!addr
+					BNE ....FullyInvisible
+					LDA $19
+					CMP #$02
+					BEQ ....FullyInvisible
+					....DontHideYoshi
+						LDA #$EF			;>%11101111
+						BRA ....WriteHideFlag
+					....FullyInvisible
+						LDA #$FF
+					....WriteHideFlag
+						STA $78
 				endif
 			...NoHide
 		..YoshiImage
