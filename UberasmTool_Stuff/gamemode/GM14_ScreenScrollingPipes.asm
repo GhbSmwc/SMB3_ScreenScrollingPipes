@@ -460,6 +460,8 @@ SSPMaincode:
 				BEQ ....StemPose
 				
 				....Walking
+					STZ $72
+					STZ $14A2|!addr
 					LDA $7B				;\Preserve X speed
 					PHA				;/
 					LDA #$08			;\Fake the player's X speed so he isn't showing his running animation
