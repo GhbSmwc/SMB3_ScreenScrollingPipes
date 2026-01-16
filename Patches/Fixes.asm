@@ -305,6 +305,11 @@ endmacro
 	org $01F668
 	autoclean JML RidingYoshiInPipeIgnoreSprContact
 	NOP #2 ;Just in case for debugging display
+	
+	;This could've fixed an issue where not riding yoshi makes him not invisible and have the cape tile invisible as intended for doors,
+	;but SA-1's "level_mode.asm" hijacks that spot.
+	;org $00E2C0
+	;autoclean JSL HideCapeButNotUnMountedYoshi
 freecode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 FixHDMA: ;>JSL from $00C5CE
@@ -816,6 +821,21 @@ RidingYoshiInPipeIgnoreSprContact: ;>JML from $01F668
 
 	.Return
 		JML $01F667|!bank
+;---------------------------------------------------------------------------------
+;HideCapeButNotUnMountedYoshi: ;>JSL from $00E2C0
+;	;Should return with zero flag set to skip drawing yoshi.
+;	LDA $187A|!addr			;\If not riding yoshi, he shouldn't disappear by bit 4 of $78.
+;	BEQ .DrawYoshi			;/
+;	LDA $78
+;	CMP #$FF
+;	RTL
+;	
+;	.DontDraw
+;		LDA #$00
+;		RTL
+;	.DrawYoshi
+;		LDA #$01
+;		RTL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Subroutines.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

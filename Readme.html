@@ -700,7 +700,19 @@ print "<description>"
 	</li>
 	<li>
 		Due to how RAM <kbd>$78</kbd> (the RAM containing the hide player bits settings) works, bit 4 controls both hiding the player's cape tile <b>and</b> yoshi. This is a problem where if I want to hide the player and its cape tile but not
-		hide yoshi that isn't ridden, Yoshi will have to disappear.
+		hide yoshi that isn't ridden, Yoshi will have to disappear. I tried hijacking <kbd>$00E2C0</kbd> but the SA-1 patch also hijacks at <kbd>$00E2BD</kbd>, causing conflicts:
+<div class="CodeBlock" style="width: 904px; height: 153px;"><pre>
+$00E2BD                                ;\SA-1's "level_mode.asm" hijacks here.
+$00E2BE                                ;|
+$00E2BF                                ;|
+$00E2C0 ;\I tried hijacking here       ;/ &gt;An overlap of the 2 ranges here at $00E2C0, causing a crash.
+$00E2C1 ;|
+$00E2C2 ;|
+$00E2C3 ;/
+$00E2C4
+$00E2C5
+$00E2C6
+</pre></div>
 	</li>
 </ul>
 
