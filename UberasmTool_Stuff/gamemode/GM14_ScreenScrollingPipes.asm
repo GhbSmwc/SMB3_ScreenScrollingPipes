@@ -471,7 +471,7 @@ SSPMaincode:
 					PHA				;|
 					PLB				;|
 					JSL $00CEB1|!bank		;|
-					JSL $00CFBC|!bank		;|
+					;JSL $00CFBC|!bank		;|
 					PHK				;|
 					PEA ....JSLRTSReturn-1		;|
 					PEA.w $00D033-1|!bank		;|
@@ -480,6 +480,15 @@ SSPMaincode:
 					PLB				;/
 					PLA				;\Restore X speed (so that when $00DC2D executes, would not use the faked speed)
 					STA $7B				;/
+					if !Setting_SSP_FreezeTime
+						.....CapeAniTimerCount
+							;Similarly to $00D1F4
+							LDA $14A2|!addr
+							BEQ ......Zero
+							DEC
+							STA $14A2|!addr
+							......Zero
+					endif
 					BRA ...Skip
 				....StemPose
 					LDA $1470|!addr
