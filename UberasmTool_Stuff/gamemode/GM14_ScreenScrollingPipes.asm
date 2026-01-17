@@ -453,6 +453,29 @@ SSPMaincode:
 					BRA ...SetPose
 	
 			...Horiz
+				;Most of the handling of animations here are by Fixes.asm's hijack at $00CEB9 and $00CF9D. They will
+				;make mario act as if he's on the ground.
+				if !Setting_SSP_FreezeTime
+					;debug
+						LDA #$00
+						STA $40FFFF
+					....CapeAniTimerCount
+						;Similarly to $00D1F4 (specifically at $00D1F9, which runs when entering horizontal pipe caps) we
+						;need to decrement the timer despite $9D set, $14A2 doesn't automatically decrement (there's a
+						;check at $00C500 that makes it not decrement during a freeze).
+						LDA $14A2|!addr
+						BEQ .....Zero
+						DEC
+						STA $14A2|!addr
+						.....Zero
+					....WalkAniTimerCount
+						;Yep, same as above, with decrement during a freeze at $00D13C.
+						LDA $1496|!addr
+						BEQ .....Zero
+						DEC
+						STA $1496|!addr
+						.....Zero
+				endif
 				LDA $187A|!addr		;\if mario is riding yoshi, then
 				BNE ....YoshiFaceHoriz	;/use "ride yoshi" pose
 				LDA !Freeram_SSP_EntrExtFlg
@@ -460,42 +483,6 @@ SSPMaincode:
 				BEQ ....StemPose
 				
 				....Walking
-;					STZ $72
-;					LDA $7B				;\Preserve X speed
-;					PHA				;/
-;					LDA #$08			;\Fake the player's X speed so he isn't showing his running animation
-;					STA $7B				;/
-;					PHB				;\Similar to a code at $00D19D that handles walking animation when entering horizontal exit-enabled pipes
-;					LDA.b #$00|!bank8		;|
-;					PHA				;|
-;					PLB				;|
-;					JSL $00CEB1|!bank		;|
-;					PHK				;|
-;					PEA ....JSLRTSReturn-1		;|
-;					PEA.w $00D033-1|!bank		;|
-;					JML $00D1F4|!bank		;|
-;					....JSLRTSReturn		;|
-;					PLB				;/
-;					PLA				;\Restore X speed (so that when $00DC2D executes, would not use the faked speed)
-;					STA $7B				;/
-					if !Setting_SSP_FreezeTime
-						.....CapeAniTimerCount
-							;Similarly to $00D1F4 (specifically at $00D1F9, which runs when entering horizontal pipe caps) we
-							;need to decrement the timer despite $9D set, $14A2 doesn't automatically decrement (there's a
-							;check at $00C500 that makes it not decrement during a freeze).
-							LDA $14A2|!addr
-							BEQ ......Zero
-							DEC
-							STA $14A2|!addr
-							......Zero
-						.....WalkAniTimerCount
-							;Yep, same as above, with decrement during a freeze at $00D13C.
-							LDA $1496|!addr
-							BEQ ......Zero
-							DEC
-							STA $1496|!addr
-							......Zero
-					endif
 					BRA ...Skip
 				....StemPose
 					LDA $1470|!addr
@@ -505,12 +492,11 @@ SSPMaincode:
 						LDA #$07
 						BRA ...SetPose
 					....NotCarry
-						LDA #$0C
+						LDA #$0C		;\Long jump pose
+						STA $72			;/
 						BRA ...SetPose
-
 				....YoshiFaceHoriz
 					LDA #$1D		;>crouch as entering a horizontal pipe on yoshi.
-	
 			...SetPose
 				STA $13E0|!addr		;>set player pose
 			...Skip
