@@ -323,7 +323,7 @@ endif
 				!SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario	= $0E
 				!SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario		= $1B
 				!SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario	= $18
-				!SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario		= $25
+				!SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario		= $1D
 		else
 			;FuSoYa enter and exit timers.
 				!SSP_PipeTimer_Enter_Leftwards			= $06
