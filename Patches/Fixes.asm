@@ -310,6 +310,12 @@ endmacro
 	;but SA-1's "level_mode.asm" hijacks that spot.
 	;org $00E2C0
 	;autoclean JSL HideCapeButNotUnMountedYoshi
+	
+	org $00CEB9
+	autoclean JML WalkingCapeAnimationForHorizPipes
+	
+	org $00CF9D
+	autoclean JML WalkingMarioAnimationForHorizPipes
 freecode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 FixHDMA: ;>JSL from $00C5CE
@@ -822,6 +828,35 @@ RidingYoshiInPipeIgnoreSprContact: ;>JML from $01F668
 	.Return
 		JML $01F667|!bank
 ;---------------------------------------------------------------------------------
+WalkingCapeAnimationForHorizPipes: ;>JML from $00CEB9
+	LDA !Freeram_SSP_PipeDir
+	AND.b #%00001111
+	BEQ .Restore
+	BRA .Restore_MarioAnimGround
+	
+	.Restore
+		LDA $72
+		BEQ ..MarioAnimGround
+		..MarioAnimAir
+			JML $00CEBD|!bank
+		..MarioAnimGround
+			JML $00CEDE|!bank
+WalkingMarioAnimationForHorizPipes: ;>JML from $00CF9D
+	LDA !Freeram_SSP_PipeDir
+	AND.b #%00001111
+	BEQ .Restore
+	BRA .Restore_MarioAnimGround
+	
+	.Restore
+		LDA $72
+		BEQ ..MarioAnimGround
+		..MarioAnimAir
+			JML $00CFA1|!bank
+		..MarioAnimGround
+			JML $00CFB7|!bank
+
+
+
 ;HideCapeButNotUnMountedYoshi: ;>JSL from $00E2C0
 ;	;Should return with zero flag set to skip drawing yoshi.
 ;	LDA $187A|!addr			;\If not riding yoshi, he shouldn't disappear by bit 4 of $78.

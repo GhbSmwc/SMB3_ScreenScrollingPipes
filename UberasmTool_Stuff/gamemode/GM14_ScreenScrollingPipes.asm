@@ -460,29 +460,29 @@ SSPMaincode:
 				BEQ ....StemPose
 				
 				....Walking
-					STZ $72
-					STZ $14A2|!addr
-					LDA $7B				;\Preserve X speed
-					PHA				;/
-					LDA #$08			;\Fake the player's X speed so he isn't showing his running animation
-					STA $7B				;/
-					PHB				;\Similar to a code at $00D19D that handles walking animation when entering horizontal exit-enabled pipes
-					LDA.b #$00|!bank8		;|
-					PHA				;|
-					PLB				;|
-					JSL $00CEB1|!bank		;|
-					;JSL $00CFBC|!bank		;|
-					PHK				;|
-					PEA ....JSLRTSReturn-1		;|
-					PEA.w $00D033-1|!bank		;|
-					JML $00D1F4|!bank		;|
-					....JSLRTSReturn		;|
-					PLB				;/
-					PLA				;\Restore X speed (so that when $00DC2D executes, would not use the faked speed)
-					STA $7B				;/
+;					STZ $72
+;					LDA $7B				;\Preserve X speed
+;					PHA				;/
+;					LDA #$08			;\Fake the player's X speed so he isn't showing his running animation
+;					STA $7B				;/
+;					PHB				;\Similar to a code at $00D19D that handles walking animation when entering horizontal exit-enabled pipes
+;					LDA.b #$00|!bank8		;|
+;					PHA				;|
+;					PLB				;|
+;					JSL $00CEB1|!bank		;|
+;					PHK				;|
+;					PEA ....JSLRTSReturn-1		;|
+;					PEA.w $00D033-1|!bank		;|
+;					JML $00D1F4|!bank		;|
+;					....JSLRTSReturn		;|
+;					PLB				;/
+;					PLA				;\Restore X speed (so that when $00DC2D executes, would not use the faked speed)
+;					STA $7B				;/
 					if !Setting_SSP_FreezeTime
 						.....CapeAniTimerCount
-							;Similarly to $00D1F4
+							;Similarly to $00D1F4 (specifically at $00D1F9, which runs when entering horizontal pipe caps) we
+							;need to decrement the timer despite $9D set, $14A2 doesn't automatically decrement (there's a
+							;check at $00C500 that makes it not decrement during a freeze).
 							LDA $14A2|!addr
 							BEQ ......Zero
 							DEC
