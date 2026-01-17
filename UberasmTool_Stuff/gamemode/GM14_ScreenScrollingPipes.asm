@@ -488,6 +488,13 @@ SSPMaincode:
 							DEC
 							STA $14A2|!addr
 							......Zero
+						.....WalkAniTimerCount
+							;Yep, same as above, with decrement during a freeze at $00D13C.
+							LDA $1496|!addr
+							BEQ ......Zero
+							DEC
+							STA $1496|!addr
+							......Zero
 					endif
 					BRA ...Skip
 				....StemPose
