@@ -841,6 +841,7 @@ WalkingCapeAnimationForHorizPipes: ;>JML from $00CEB9
 			JML $00CEBD|!bank
 		..MarioAnimGround
 			JML $00CEDE|!bank
+;---------------------------------------------------------------------------------
 WalkingMarioAnimationForHorizPipes: ;>JML from $00CF9D
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111

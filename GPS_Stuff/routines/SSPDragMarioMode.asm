@@ -136,7 +136,7 @@ incsrc "../SSPDef/Defines.asm"
 			?CorrectDirection
 				;Keep all your numbers in between the label [?CorrectDirection] and [?.End]. This is needed to determine
 				;during assembly on how may indexes, which determines what number the index will start at to count down.
-					db $01			;>Index 0
+					db $02			;>Index 0
 					db $03			;>Index 1
 					db $02			;>Index 2
 					db $03			;>Index 3
@@ -157,7 +157,7 @@ incsrc "../SSPDef/Defines.asm"
 		;These is the current block position (block coordinates, in units of 16x16, not pixels)
 		;where Mario comes from.
 			?StartPositionX
-				dw $0003		;>Index 0 (Index 0 * 2)
+				dw $0013		;>Index 0 (Index 0 * 2)
 				dw $009A		;>Index 2 (Index 1 * 2)
 				dw $009A		;>Index 4 (Index 2 * 2)
 				dw $00B9		;>Index 6 (Index 3 * 2)
@@ -165,7 +165,7 @@ incsrc "../SSPDef/Defines.asm"
 				dw $00C2		;>Index 10 (Index 5 * 2)
 				dw $00D4		;>Index 12 (Index 6 * 2)
 			?StartPositionY
-				dw $0013		;>Index 0 (Index 0 * 2)
+				dw $0022		;>Index 0 (Index 0 * 2)
 				dw $0022		;>Index 2 (Index 1 * 2)
 				dw $0022		;>Index 4 (Index 2 * 2)
 				dw $001E		;>Index 6 (Index 3 * 2)
@@ -198,7 +198,7 @@ incsrc "../SSPDef/Defines.asm"
 	; touching, assuming you are using the [(BlockPos*$10)+HalfBlock] formula.
 		?EndPositionX
 			dw ($009A*$10)+$08	;>Index 0 (Index 0 * 2)
-			dw ($0003*$10)+$08	;>Index 2 (Index 1 * 2)
+			dw ($0012*$10)+$08	;>Index 2 (Index 1 * 2)
 			dw ($00AC*$10)+$00	;>Index 4 (Index 2 * 2)
 			dw ($00AF*$10)+$08	;>Index 6 (Index 3 * 2)
 			dw ($00B9*$10)+$08	;>Index 8 (Index 4 * 2)
@@ -206,7 +206,7 @@ incsrc "../SSPDef/Defines.asm"
 			dw ($00C2*$10)+$00	;>Index 12 (Index 6 * 2)
 		?EndPositionY
 			dw ($0022*$10)+!Setting_SSP_YPositionOffset	;>Index 0 (Index 0 * 2)
-			dw ($0013*$10)+!Setting_SSP_YPositionOffset	;>Index 2 (Index 1 * 2)
+			dw ($0022*$10)+!Setting_SSP_YPositionOffset	;>Index 2 (Index 1 * 2)
 			dw ($0019*$10)+!Setting_SSP_YPositionOffset	;>Index 4 (Index 2 * 2)
 			dw ($0008*$10)+!Setting_SSP_YPositionOffset	;>Index 6 (Index 3 * 2)
 			dw ($001E*$10)+!Setting_SSP_YPositionOffset	;>Index 8 (Index 4 * 2)
@@ -222,7 +222,7 @@ incsrc "../SSPDef/Defines.asm"
 	;-$40 = left
 		?DestinationDirection
 			db $10			;>Index 0
-			db $30			;>Index 1
+			db $40			;>Index 1
 			db $20			;>Index 2
 			db $10			;>Index 3
 			db $10			;>Index 4
