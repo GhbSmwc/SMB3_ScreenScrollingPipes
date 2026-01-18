@@ -519,13 +519,13 @@ SSPMaincode:
 				....Walking
 					BRA ...Skip
 				....StemPose
-;					LDA $1470|!addr
-;					ORA $148F|!addr
-;					BEQ ....NotCarry
-;					....Carry
-;						LDA #$07
-;						BRA ...SetPose
-;					....NotCarry
+					LDA $1470|!addr
+					ORA $148F|!addr
+					BEQ ....NotCarry
+					....Carry
+						;LDA #$07
+						BRA ...Skip
+					....NotCarry
 						LDA #$0C		;\Long jump pose
 						STA $72			;/
 						BRA ...SetPose
