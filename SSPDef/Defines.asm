@@ -165,7 +165,7 @@ endif
 		;^0 = off, 1 = on.
 		
 	!Setting_SSP_FreezeTime	= 0
-		;^0 = FuSoYa's pipe to not freeze stuff, 1 = freeze stuff.
+		;^0 = FuSoYa's pipe to not freeze stuff, 1 = freeze stuff ($71 = #$0B and $9D = Any_nonzero_value).
 		
 	!Setting_SSP_FuSoYaSpd		= 1
 		;^0 = SMW styled speed (pipe caps recreated from SMW's exit-enabled pipes, but with fast stem speed by default), 1 = FuSoYa's SSP speed.
@@ -212,10 +212,10 @@ endif
 		; initialized (this can cause yoshi to sometimes fail to update his facing direction).
 	!Setting_SSP_SetXYFractionBits = 1
 		;^0 = no
-		; 1 = yes (this writes to the factional/subpixel components of the player's XY position used for RAM $7B and $7D's speed to change position, RAM $13DA and
-		;     $13DC). With this option, you'll have consistent positioning (rather than sometimes 1 pixel off) for things like exiting pipes. Note that Fixes.asm
-		;     would also make layer 1 and 2 platforms also write the player's Y position fraction component (original game, the Y fraction bits keeps incrementing
-		;     while on the ground every frame).
+		; 1 = yes (this writes to the factional/subpixel components of the player's XY position used for RAM $7B and $7D's speed to change position (see routine at
+		;     $00DC2D), RAM $13DA and $13DC). With this option, you'll have consistent positioning (rather than sometimes 1 pixel off) for things like exiting pipes.
+		;     Note that Fixes.asm would also make layer 1 and 2 platforms also write the player's Y position fraction component (original game, the Y fraction bits
+		;     keeps incrementing while on the ground every frame).
 	!Setting_SSP_HideDuringPipeStemTravel = 0
 		;^Turn the player, yoshi that the player is riding, and carried sprite invisible during pipe travel:
 		; 0 = no (will only hide if drag-player mode or traveling through doors). Use this option if you wanted glass pipes.
@@ -227,6 +227,7 @@ endif
 	!Setting_SSP_YPositionOffset = -$0001
 		;^Y position offset after centering vertically (when entering horizontal pipe caps and when switching from vertical to horizontal movement), notes:
 		; - Values $0000 and higher means interacting with tiles below pipes.
+		; - Negative values would interact with blocks above small horizontal pipes.
 		; - Don't use values outside the -$0003 to $0003 range or it's possible for the player to phase through turn corners and other tiles when he shouldn't.
 	!Setting_SSP_AllowCameraPanningWhenFrozen = 1
 		;^Allow camera to auto-adjust panning as if you're outside the pipe (how the camera moves its static camera region (RAM $142A~$142F) based on your facing direction
@@ -240,6 +241,11 @@ endif
 	!Setting_SSP_DoorsProximity = 1
 		;^0 = Allow entering doors at the full width
 		; 1 = Allow entering doors only when player is centered enough (Player's X position must be within -4 to +3 relative to the door (0 = exactly centered)).
+	!Setting_SSP_DragModeSpeedUpLongDistance = $0080
+		;Speed up during warp/drag mode if the destination from Mario is too far away:
+		; - $0000 = No, stay the same speed
+		; - $0001+ = Yes, move faster when further than this amount.
+		; Note: Distance check uses a taxicab distance, forming a regular polygon diamond, that when outside of, will move faster.
 	;Settings for "SSP_WarpDragLevelWrap.asm"
 		!Setting_SSP_WarpDragLevelWrap_TopTriggerYPosition = -$0030
 			;^Y position of the top edge of the level (screen if V-scroll disabled) the player would warp. Note that this does not offset up by 1 tile if riding yoshi
@@ -252,7 +258,10 @@ endif
 			; does not offset by 1 block when riding yoshi.
 ;Pipe travel speeds:
 ;Use only values $01-$7F (negative speeds already calculated). Values here are subpixels, 1/16th of a pixel, per frame ($10 means a full pixel).
-;Note that high speed values means longer distances traveled per frame, and have a tendency of Mario overshooting and causing him to interact with stuff past a point he should change his pipe state.
+;Notes:
+; - High speed values means longer distances traveled per frame, and have a tendency of Mario overshooting and causing him to interact with stuff past a point he should change his pipe state.
+; - If Mario moves vertically fast enough, he can catch up with the screen border, moving at most 3 pixels per frame upwards and 4 pixels per frame downwards. If Mario moves down fast and
+;   long enough, he may trigger the death barrier. If this is a problem, you'll need a patch that enhances the vertical scrolling: https://www.smwcentral.net/?p=section&a=list&s=smwpatches&u=0&g=1&f%5Bname%5D=scroll
 	if !Setting_SSP_FuSoYaSpd == 0		;>Don't change this if statement.
 		;SMW styled speed
 		!SSP_HorizontalSpd		= $40 ;\Stem speed (changing this does not affect the timing of the entering/exiting)
@@ -260,6 +269,7 @@ endif
 		!SSP_HorizontalSpdPipeCap	= $08 ;\cap speed (if changed, you must change the timers below this section)
 		!SSP_VerticalSpdPipeCap		= $10 ;/
 		!SSP_DragSpd			= $40 ;>Speed mario travels when using warp mode. Remember, high speeds and the player could overshoot and softlock oscillating around his target position!
+		!SSP_DragSpdFastFar		= $7F ;>Same as above but if !Setting_SSP_DragModeSpeedUpLongDistance != 0 and Mario is outside the radus of that
 	else
 		;FuSoYa styled speed.
 		!SSP_HorizontalSpd		= $40 ;\Duplicate of above, but for fusoya style speeds.
@@ -267,6 +277,7 @@ endif
 		!SSP_HorizontalSpdPipeCap	= $40 ;|
 		!SSP_VerticalSpdPipeCap	= $40 ;/
 		!SSP_DragSpd			= $40 ;>Speed mario travels when using warp mode. Remember, high speeds and the player could overshoot and softlock oscillating around his target position!
+		!SSP_DragSpdFastFar		= $7F ;>Same as above but if !Setting_SSP_DragModeSpeedUpLongDistance != 0 and Mario is outside the radus of that
 	endif
 	;Cannon launcher speeds (special pipe caps that fire the player out of the caps with momentum):
 		!SSP_Cannon_HorizontalSpd	= $40		;>Use only $01-$7F, this covers both left and right speeds
