@@ -18,8 +18,16 @@ HeadInside:
 	LDY #$00			;\Become passable when in pipe.
 	LDX #$25			;|
 	STX $1693|!addr			;/
+	CMP #$05
+	BCC .Direction
+	SEC
+	SBC #$04
+	.Direction
+	ASL
+	TAX
 	REP #$20
-	STZ $00
+	LDA.l BlockPickXPos-2,x
+	STA $00
 	STZ $02
 	SEP #$20
 	%CheckIfPlayerBottom16x16CenterIsInBlock()
@@ -37,5 +45,11 @@ MarioCape:
 MarioFireball:
 Done:
 RTL
+
+BlockPickXPos: ;Need to offset depending on left or right because Mario turns invisible after "peeking" out the other side.
+	dw $0000
+	dw $0002
+	dw $0000
+	dw $FFFE
 
 print "Makes the player become invisible when pass through during a screen scrolling pipe travel."
