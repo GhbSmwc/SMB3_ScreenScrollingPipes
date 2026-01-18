@@ -81,8 +81,7 @@ incsrc "../SSPDef/Defines.asm"
 	?.Left
 		JSR ?.CompareXPositionToCheck
 		BEQ ?.SwitchDirection
-		BMI ?.SwitchDirection
-		RTL
+		BPL ?.Done
 
 	?.SwitchDirection
 		LDA !Freeram_SSP_PipeDir			;\Change direction

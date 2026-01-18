@@ -449,7 +449,10 @@ print "A simple test block that behaves differently depending on if the player i
 			<li>
 				Same goes for custom sprites and other third-party ASM resources. Use <kbd>incsrc "&lt;path_to_SSP_defines&gt;"</kbd> (file paths must be wrapped in quotes if it has spaces) to obtain <kbd>!Freeram_SSP_PipeDir</kbd>, use it for checking its low nybble, and ignore when nonzero.
 			</li>
-			<li>If you have <kbd>!Setting_SSP_HideDuringPipeStemTravel</kbd> set to <kbd>0</kbd> in the defines, the player remains visible even when he is in the gap he's passing through. The exception of that is entering through screen scrolling doors or using warp/drag mode.</li>
+			<li>
+				If you have <kbd>!Setting_SSP_HideDuringPipeStemTravel</kbd> set to <kbd>0</kbd> in the defines, the player remains visible even when he is in the gap he's passing through. The exception of that is entering through screen scrolling doors or using warp/drag mode. Otherwise you can use
+				<kbd>set_visibility_off.asm</kbd> to hide the player just before the gap and <kbd>set_visibility_on.asm</kbd> to force the player to be visible after traversing the gap.
+			</li>
 		</ul>
 	<li>If you enter a pipe, while yoshi exist, yoshi will also turn invisible (with some 8x8 pieces still visible), I couldn't fix that.</li><br>
 	<li>The routine file is also SA-1 hybrid, no need to worry about yoshi issues about it. However, you must use RAM address in banks $40/$41 should you need to use 3-byte addressing ($4XXXXX)</li><br>
