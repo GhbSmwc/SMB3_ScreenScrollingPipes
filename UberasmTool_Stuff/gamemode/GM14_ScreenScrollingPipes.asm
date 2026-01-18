@@ -470,6 +470,7 @@ SSPMaincode:
 ;code that controls mario's pose
 ;-----------------------------------------
 		..Pose
+			STZ $1499|!addr		;>Make mario not have his  turning around pose with an item on his hands when entering/exiting pipe caps
 			LDA !Freeram_SSP_PipeDir
 			AND.b #%00001111
 			CMP #$09
@@ -492,7 +493,6 @@ SSPMaincode:
 				;Most of the handling of animations here are by Fixes.asm's hijack at $00CEB9 and $00CF9D. They will
 				;make mario act as if he's on the ground.
 				if !Setting_SSP_FreezeTime
-					STZ $1499|!addr		;>Make mario not have his  turning around pose with an item on his hands when entering horizontal pipe caps
 					....CapeAniTimerCount
 						;Similarly to $00D1F4 (specifically at $00D1F9, which runs when entering horizontal pipe caps) we
 						;need to decrement the timer despite $9D set, $14A2 doesn't automatically decrement (there's a
