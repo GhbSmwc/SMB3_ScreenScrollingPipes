@@ -422,7 +422,11 @@ SSPMaincode:
 					STA $15				;/
 			...RevertPipeStatus
 				if !Setting_SSP_FreezeTime != 0
+					LDA $71				;\Prevent abrupt fade-out during death sequence.
+					CMP #$09			;|
+					BEQ ....DontReset9D		;/
 					STZ $9D			;>back in motion
+					....DontReset9D
 				endif
 				STZ $1497|!addr		;>make vulnerable
 				STZ $13F9|!addr			;>go in front

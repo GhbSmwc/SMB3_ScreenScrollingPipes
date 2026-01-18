@@ -364,6 +364,8 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	--Fixed an issue with Warp/Drag mode in SA-1 breaking on accurate emulators (when applied to SA-1 game,
 	  the main pipes code for UAT's gamemode 14 would still run in SNES CPU, runs an aiming routine that
 	  would use SA-1 math registers, which would fail). This now invokes SA-1 when the game is SA-1.
+	--Fixed a slight error where dying the same frame the player enters a pipe with !Setting_SSP_FreezeTime
+	  set to 1 would cause an abrupt fade out on the dying animation.
 	-Added an optional fix for camera panning to allow the camera to pan in the direction the player is
 	 facing when enabling freezing during pipe travel (previously, the camera would pan in front of
 	 player's facing when the freeze setting is off, but does not do so when on).
