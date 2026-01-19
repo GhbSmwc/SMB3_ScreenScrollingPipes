@@ -710,8 +710,9 @@ print "<description>"
 		Regular-szied screen Scrolling doors (ones that are 2-blocks tall) would have the upper tile also be a custom block due to how yoshi collision works.
 	</li>
 	<li>
-		Due to how RAM <kbd>$78</kbd> (the RAM containing the hide player bits settings) works, bit 4 controls both hiding the player's cape tile <b>and</b> yoshi. This is a problem where if I want to hide the player and its cape tile but not
-		hide yoshi that isn't ridden, Yoshi will have to disappear. I tried hijacking <kbd>$00E2C0</kbd> but the SA-1 patch also hijacks at <kbd>$00E2BD</kbd>, causing conflicts:
+		Due to how RAM <kbd>$78</kbd> (the RAM containing the hide player bits settings) works, bit 4 controls both hiding the player's cape tile <b>and</b> if all 8 bits are set (a value of <kbd>#$FF</kbd>),
+		yoshi will be invisible. This is a problem where if I want to hide the player and its cape tile but not hide yoshi that isn't ridden, Yoshi will have to disappear. I tried hijacking <kbd>$00E2C0</kbd>
+		to add a riding yoshi check (<kbd>$187A|!addr</kbd>), but the SA-1 patch also hijacks at <kbd>$00E2BD</kbd>, causing conflicts at <kbd>$00E2C0</kbd> where the two 4-byte ranges overlap:
 <div class="CodeBlock" style="width: 904px; height: 153px;"><pre>
 $00E2BD                                ;\SA-1's "level_mode.asm" hijacks here.
 $00E2BE                                ;|
