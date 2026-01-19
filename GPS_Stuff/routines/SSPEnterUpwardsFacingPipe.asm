@@ -29,10 +29,6 @@ incsrc "../SSPDef/Defines.asm"
 	STA !Freeram_SSP_PipeDir				;/
 	LDA #$01						;\set flag to "entering"
 	STA !Freeram_SSP_EntrExtFlg				;/
-	if !Setting_SSP_HideDuringPipeStemTravel == 0
-		LDA #$00						;\Make player visible
-		STA !Freeram_SSP_InvisbleFlag				;/
-	endif
 	LDX $00							;\Center horizontally
 	REP #$20						;|
 	LDA $9A							;|

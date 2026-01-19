@@ -7,37 +7,31 @@ incsrc "../SSPDef/Defines.asm"
 ; Carry: Set = Turn invisible, Clear = Remain visible.
 ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-?SSPCheckShouldCarriedSpriteTurnInvisible:
-	;Carry: Clear if outside pipe, Set if inside pipe. This will determine should
-	;the sprite being carried turn invisible with the player traveling through SSP.
-	?.PlayerPipeStatus
-		LDA !Freeram_SSP_PipeDir	;\Get player pipe direction
-		AND.b #%00001111		;/
-		BEQ ?.Visible			;>If player is outside...
-		XBA				;>Move the pipe directions to A's high byte for later
-		LDA !14C8,x			;\...or if sprite not carried
-		CMP #$0B			;|then make sprite visible.
-		BNE ?.Visible			;/
-		if !Setting_SSP_HideDuringPipeStemTravel
-			LDA !Freeram_SSP_EntrExtFlg	;\If transitioning between pipe and outside-of-pipe state, or just outside the pipe,
-			CMP #$02			;|draw.
+	?SSPCheckShouldCarriedSpriteTurnInvisible:
+		;Determines should a carried sprite skip drawing during pipe travel (through stem) should draw to OAM or not:
+		;Carry clear = No, Set = yes.
+		?.PlayerPipeStatus
+			LDA !14C8,x			;\If not carried, always be visible, regardless of !Freeram_SSP_InvisbleFlag
+			CMP #$0B			;|
 			BNE ?.Visible			;/
-		endif
-	?.CarriedAndTraveling
-		if !Setting_SSP_HideDuringPipeStemTravel == 0
-			XBA				
-			CMP #$09			;\
-			BNE ?.CheckIfDoorPassing	;/>Not in drag mode
-			BRA ?.Invisible			;>Regardless if door or not, if dragmode is on, don't render the sprite.
-		endif
-	?.CheckIfDoorPassing
-		if !Setting_SSP_HideDuringPipeStemTravel == 0
-			LDA !Freeram_SSP_InvisbleFlag
-			BEQ ?.Visible
-		endif
-	?.Invisible
-		SEC
-		RTL
-	?.Visible
-		CLC
-		RTL
+			?..Carried
+				LDA !Freeram_SSP_PipeDir		;\If during warp/drag mode, always be invisible, regardless of !Freeram_SSP_InvisbleFlag
+				AND.b #%00001111			;|
+				CMP #$09				;|
+				BEQ ?.Invisible				;/
+				?...NotWarpDragMode
+					LDA !Freeram_SSP_EntrExtFlg	;\If during entering/exiting animation (non-stem animation), always be visible, regardless of !Freeram_SSP_InvisbleFlag
+					CMP #$02			;|
+					BNE ?.Visible			;/
+					?....InStemTraveling
+						;While carried, not in warp/drag mode, and in-stem animation, now we do regard with !Freeram_SSP_InvisbleFlag if configured to disable hiding.
+						if !Setting_SSP_HideDuringPipeStemTravel == 0
+							LDA !Freeram_SSP_InvisbleFlag
+							BEQ ?.Visible
+						endif
+		?.Invisible
+			SEC
+			RTL
+		?.Visible
+			CLC
+			RTL

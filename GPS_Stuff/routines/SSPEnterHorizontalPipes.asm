@@ -28,10 +28,6 @@ incsrc "../SSPDef/Defines.asm"
 	STA !Freeram_SSP_PipeDir				;/
 	LDA #$01						;\set flag to "entering"
 	STA !Freeram_SSP_EntrExtFlg				;/
-	if !Setting_SSP_HideDuringPipeStemTravel == 0
-		LDA #$00						;\Make player visible
-		STA !Freeram_SSP_InvisbleFlag				;/
-	endif
 	LDX $00
 	REP #$20						;\Position horizontally (places mario horizontally next to cap should something like sprite pushes player into cap then entering)
 	LDA $9A							;|(this keeps the player turning invisible at a consistent spot)
