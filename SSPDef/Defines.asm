@@ -241,7 +241,7 @@ endif
 	!Setting_SSP_DoorsProximity = 1
 		;^0 = Allow entering doors at the full width
 		; 1 = Allow entering doors only when player is centered enough (Player's X position must be within -4 to +3 relative to the door (0 = exactly centered)).
-	!Setting_SSP_DragModeSpeedUpLongDistance = $0080
+	!Setting_SSP_DistanceSpeedUp = $0080
 		;Speed up during warp/drag mode if the destination from Mario is too far away:
 		; - $0000 = No, stay the same speed
 		; - $0001+ = Yes, move faster when further than this amount.
@@ -269,7 +269,7 @@ endif
 		!SSP_HorizontalSpdPipeCap	= $08 ;\cap speed (if changed, you must change the timers below this section)
 		!SSP_VerticalSpdPipeCap		= $10 ;/
 		!SSP_DragSpd			= $40 ;>Speed mario travels when using warp mode. Remember, high speeds and the player could overshoot and softlock oscillating around his target position!
-		!SSP_DragSpdFastFar		= $7F ;>Same as above but if !Setting_SSP_DragModeSpeedUpLongDistance != 0 and Mario is outside the radus of that
+		!SSP_DragSpdFastFar		= $7F ;>Same as above but if !Setting_SSP_DistanceSpeedUp != 0 and Mario is outside the radus of that
 	else
 		;FuSoYa styled speed.
 		!SSP_HorizontalSpd		= $40 ;\Duplicate of above, but for fusoya style speeds.
@@ -277,7 +277,7 @@ endif
 		!SSP_HorizontalSpdPipeCap	= $40 ;|
 		!SSP_VerticalSpdPipeCap	= $40 ;/
 		!SSP_DragSpd			= $40 ;>Speed mario travels when using warp mode. Remember, high speeds and the player could overshoot and softlock oscillating around his target position!
-		!SSP_DragSpdFastFar		= $7F ;>Same as above but if !Setting_SSP_DragModeSpeedUpLongDistance != 0 and Mario is outside the radus of that
+		!SSP_DragSpdFastFar		= $7F ;>Same as above but if !Setting_SSP_DistanceSpeedUp != 0 and Mario is outside the radus of that
 	endif
 	;Cannon launcher speeds (special pipe caps that fire the player out of the caps with momentum):
 		!SSP_Cannon_HorizontalSpd	= $40		;>Use only $01-$7F, this covers both left and right speeds

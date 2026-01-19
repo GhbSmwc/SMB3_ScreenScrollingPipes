@@ -295,7 +295,7 @@ SSPMaincode:
 						STA $02
 						SEP #$20
 					.....Aim
-						if !Setting_SSP_DragModeSpeedUpLongDistance == 0
+						if or(equal(!SSP_DragSpd, !SSP_DragSpdFastFar), equal(!Setting_SSP_DistanceSpeedUp. 0))
 							LDA.b #!SSP_DragSpd
 						else
 							;Calculate taxicab distance:
@@ -310,7 +310,7 @@ SSPMaincode:
 							%GetAbsoluteDifference16Bit(!Freeram_SSP_DragWarpPipeDestinationYPos, $96)
 							CLC
 							ADC $04
-							CMP.w #!Setting_SSP_DragModeSpeedUpLongDistance
+							CMP.w #!Setting_SSP_DistanceSpeedUp
 							SEP #$20
 							BCC ......Close
 							......Far
