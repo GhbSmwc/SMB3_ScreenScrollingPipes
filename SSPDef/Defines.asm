@@ -220,8 +220,8 @@ endif
 	!Setting_SSP_HideDuringPipeStemTravel = 0
 		;^Turn the player, yoshi that the player is riding, and carried sprite invisible during pipe travel:
 		; - 0 = no (will only hide if drag-player mode or traveling through doors). Use this option if you wanted glass pipes.
-		;       NOTE: Make sure you remove these from your blocks list and it being used in the test level (in screen boundaries $08, $0A, and $0B) since they are no
-		;       longer needed:
+		;       NOTE: Make sure you remove these from your blocks list and it being used in the test level (the blue connector pipe connectors in screen boundaries
+		;       $08, $0A, and $0B) since they are no longer needed:
 		;        - "SSP_Tiles/set_visibility_on.asm"
 		;        - "SSP_Tiles/set_visibility_off.asm"
 		; - 1 = yes
