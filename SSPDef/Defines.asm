@@ -220,9 +220,10 @@ endif
 	!Setting_SSP_HideDuringPipeStemTravel = 0
 		;^Turn the player, yoshi that the player is riding, and carried sprite invisible during pipe travel:
 		; - 0 = no (will only hide if drag-player mode or traveling through doors). Use this option if you wanted glass pipes.
-		;       NOTE: Make sure you remove these from your blocks list since they are no longer needed:
-		;     - "SSP_Tiles/set_visibility_on.asm"
-		;     - "SSP_Tiles/set_visibility_off.asm"
+		;       NOTE: Make sure you remove these from your blocks list and it being used in the test level (in screen boundaries $08, $0A, and $0B) since they are no
+		;       longer needed:
+		;        - "SSP_Tiles/set_visibility_on.asm"
+		;        - "SSP_Tiles/set_visibility_off.asm"
 		; - 1 = yes
 	!Setting_SSP_XPositionFractionSetTo = $00
 		;^Fractional amount to set $13DA. It's format is $X0, where X is a value from 0 to F, representing X/16 fraction. Not used if !Setting_SSP_SetXYFractionBits == 0
