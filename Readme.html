@@ -175,11 +175,12 @@ meaning you don't have to worry about the path being in the way of designing lev
 <li><a href="https://www.smwcentral.net/?p=section&a=details&id=41329">Lunar Magic v3.0+</a>. The provided levels need to have a version of LM that supports custom level dimensions.</li>
 <li><a href="https://www.smwcentral.net/?p=section&a=details&id=18741">No More Sprite Tile Limits patch</a>. Certain sprites on screen randomly disappear when in pipes. Ignore this if you have SA-1 installed.</li>
 <li>
-	<a href="https://www.smwcentral.net/?p=section&a=list&s=smwpatches&u=0&g=1&f%5Bname%5D=scroll">Screen scrolling patches</a> that allows faster scrolling with the player if you are planning to have any form of
-	fast downwards speed (more than 4 pixels down per frame). If the player continues to move down at such a speed long enough, the player may catch the death barrier and triggers a death sequence. Including but not limited to:
+	<a href="https://www.smwcentral.net/?p=section&a=list&s=smwpatches&u=0&g=1&f%5Bname%5D=scroll">Screen scrolling patches</a> that allows faster vertical scrolling with the player if you are planning to have any form of
+	fast vertical speed. If the player moves down more than 4 pixels per frame long enough, the player may catch the death barrier and triggers a death sequence. Going upwards, the screen caps the player to 3 pixels per
+	frame once the player reaches the top barrier (at <kbd>PlayerYPosScrn = #$FF80</kbd>, or -128 (set at <kbd>$00F597</kbd>)). Patches including but not limited to:
 	<ul>
 		<li><a href="https://www.smwcentral.net/?p=section&a=details&id=19676">Blind Devil's Reprogrammed Vertical Scroll</a></li>
-		<li><a href="https://www.smwcentral.net/?p=section&a=details&id=26861">My center scroll patch</a>, with <kbd>!Setting_CenterScroll_ScrollType</kbd> set to 1 and using <kbd>Vertical Scroll at Will</kbd> setting.</li>
+		<li><a href="https://www.smwcentral.net/?p=section&a=details&id=26861">My center scroll patch</a>, with <kbd>!Setting_CenterScroll_ScrollType</kbd> set to 1 and using &ldquo;Vertical Scroll at Will&rdquo; setting.</li>
 	</ul>
 </li>
 </ul><br>
