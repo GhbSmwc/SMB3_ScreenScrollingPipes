@@ -105,11 +105,6 @@ passable:
 	LDA #$25		;|
 	STA $1693|!addr		;/
 	RTS
-
-if !Setting_SSP_YoshiAllowed != 0
-	YoshiTimersEnter:
-	db !SSP_PipeTimer_Enter_Upwards_OffYoshi,!SSP_PipeTimer_Enter_Upwards_OnYoshi,!SSP_PipeTimer_Enter_Upwards_OnYoshi	;>Timers: 1st one = on foot, 2nd and 3rd one = on yoshi
-endif
 if !Setting_SSP_Description != 0
 	print "Bottom-right cap piece of vertical 2-way pipe."
 endif

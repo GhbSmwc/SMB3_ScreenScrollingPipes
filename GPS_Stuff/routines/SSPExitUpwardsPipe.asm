@@ -65,7 +65,7 @@ incsrc "../SSPDef/Defines.asm"
 		if !Setting_SSP_YoshiAllowed != 0				;\Set exiting timer
 			LDA.l ?.YoshiTimersExit,x				;|
 		else								;|
-			LDA.b #!SSP_PipeTimer_Exit_Upwards_OffYoshi		;|
+			LDA.b #!Setting_SSP_PipeTimer_Exit_Upwards_OffYoshi		;|
 		endif								;|
 		BRA ?.SetTimer
 	?.CannonExiting
@@ -82,7 +82,7 @@ incsrc "../SSPDef/Defines.asm"
 	RTL
 	if !Setting_SSP_YoshiAllowed != 0
 		?.YoshiTimersExit:
-		db !SSP_PipeTimer_Exit_Upwards_OffYoshi,!SSP_PipeTimer_Exit_Upwards_OnYoshi,!SSP_PipeTimer_Exit_Upwards_OnYoshi		;>Timers: 1st one = on foot, 2nd and 3rd one = on yoshi
+		db !Setting_SSP_PipeTimer_Exit_Upwards_OffYoshi,!Setting_SSP_PipeTimer_Exit_Upwards_OnYoshi,!Setting_SSP_PipeTimer_Exit_Upwards_OnYoshi		;>Timers: 1st one = on foot, 2nd and 3rd one = on yoshi
 		?.YoshiTimersCannonExit:
 		db !SSP_PipeTimer_CannonExit_Upwards_OffYoshi,!SSP_PipeTimer_CannonExit_Upwards_OnYoshi,!SSP_PipeTimer_CannonExit_Upwards_OnYoshi
 	endif

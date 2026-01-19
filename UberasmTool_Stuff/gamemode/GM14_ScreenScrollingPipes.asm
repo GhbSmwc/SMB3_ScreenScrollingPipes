@@ -295,8 +295,8 @@ SSPMaincode:
 						STA $02
 						SEP #$20
 					.....Aim
-						if or(equal(!SSP_DragSpd, !SSP_DragSpdFastFar), equal(!Setting_SSP_DistanceSpeedUp. 0))
-							LDA.b #!SSP_DragSpd
+						if or(equal(!Setting_SSP_Speed_Drag_FastClose, !Setting_SSP_Speed_Drag_FastFar), equal(!Setting_SSP_DistanceSpeedUp, 0))
+							LDA.b #!Setting_SSP_Speed_Drag_FastClose
 						else
 							;Calculate taxicab distance:
 							;DistanceTaxicab = abs(B_XPos - A_Xpos) + abs(B_YPos - A_YPos)
@@ -543,38 +543,38 @@ SSPMaincode:
 ;Cap and stem speeds:
 	SSP_PipeXSpeed:
 		;X speed table
-		db $00                            ;>$01 = Stem upwards
-		db !SSP_HorizontalSpd             ;>$02 = Stem rightwards
-		db $00                            ;>$03 = Stem downwards
-		db $100-!SSP_HorizontalSpd        ;>$04 = Sten leftwards
-		db $00                            ;>$05 = Pipe cap upwards
-		db !SSP_HorizontalSpdPipeCap      ;>$06 = Pipe cap rightwards
-		db $00                            ;>$07 = Pipe cap downwards
-		db $100-!SSP_HorizontalSpdPipeCap ;>$08 = Pipe cap leftwards
+		db $00                                       ;>$01 = Stem upwards
+		db !Setting_SSP_Speed_Horizontal             ;>$02 = Stem rightwards
+		db $00                                       ;>$03 = Stem downwards
+		db $100-!Setting_SSP_Speed_Horizontal        ;>$04 = Sten leftwards
+		db $00                                       ;>$05 = Pipe cap upwards
+		db !Setting_SSP_Speed_HorizontalPipeCap      ;>$06 = Pipe cap rightwards
+		db $00                                       ;>$07 = Pipe cap downwards
+		db $100-!Setting_SSP_Speed_HorizontalPipeCap ;>$08 = Pipe cap leftwards
 	SSP_PipeYSpeed:
 		;Y speed table
-		db $100-!SSP_VerticalSpd          ;>$01 = Stem upwards
-		db $00                            ;>$02 = Stem rightwards
-		db !SSP_VerticalSpd               ;>$03 = Stem downwards
-		db $00                            ;>$04 = Stem leftwards
-		db $100-!SSP_VerticalSpdPipeCap   ;>$05 = Pipe cap upwards
-		db $00                            ;>$06 = Pipe cap rightwards
-		db !SSP_VerticalSpdPipeCap        ;>$07 = Pipe cap downwards
-		db $00                            ;>$08 = Pipe cap leftwards
+		db $100-!Setting_SSP_Speed_Vertical          ;>$01 = Stem upwards
+		db $00                                       ;>$02 = Stem rightwards
+		db !Setting_SSP_Speed_Vertical               ;>$03 = Stem downwards
+		db $00                                       ;>$04 = Stem leftwards
+		db $100-!Setting_SSP_Speed_VerticalPipeCap   ;>$05 = Pipe cap upwards
+		db $00                                       ;>$06 = Pipe cap rightwards
+		db !Setting_SSP_Speed_VerticalPipeCap        ;>$07 = Pipe cap downwards
+		db $00                                       ;>$08 = Pipe cap leftwards
 	SSPWarpDragSpeed:
-		db !SSP_DragSpd              ;>When close
-		db !SSP_DragSpdFastFar       ;>When far
+		db !Setting_SSP_Speed_Drag_FastClose              ;>When close
+		db !Setting_SSP_Speed_Drag_FastFar       ;>When far
 ;Cannon fire exit speeds:
 	SSP_CannonExitXSpeed:
-		db $00					;>$01 = upwards
-		db !SSP_Cannon_HorizontalSpd		;>$02 = rightwards
-		db $00					;>$03 = downwards
-		db $100-!SSP_Cannon_HorizontalSpd	;>$04 = leftwards
+		db $00						;>$01 = upwards
+		db !Setting_SSP_Cannon_HorizontalSpd		;>$02 = rightwards
+		db $00						;>$03 = downwards
+		db $100-!Setting_SSP_Cannon_HorizontalSpd	;>$04 = leftwards
 	SSP_CannonExitYSpeed:
-		db !SSP_Cannon_UpwardsSpd		;>$01 = upwards
-		db $00					;>$02 = rightwards
-		db !SSP_Cannon_DownwardsSpd		;>$03 = downwards
-		db $00					;>$04 = leftwards
+		db !Setting_SSP_Cannon_UpwardsSpd		;>$01 = upwards
+		db $00						;>$02 = rightwards
+		db !Setting_SSP_Cannon_DownwardsSpd		;>$03 = downwards
+		db $00						;>$04 = leftwards
 ; first number = force button held when not carrying sprites, second is when carrying.
 ; a set bit here means a bit is forced to be enabled (button will be held down):
 	SSP_CarryControlsForceSet:

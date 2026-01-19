@@ -96,8 +96,8 @@ incsrc "../SSPDef/Defines.asm"
 		db %00001000
 		db %00000110
 	?.ExitTimers
-		db !SSP_PipeTimer_Exit_Leftwards
-		db !SSP_PipeTimer_Exit_Rightwards
+		db !Setting_SSP_PipeTimer_Exit_Leftwards
+		db !Setting_SSP_PipeTimer_Exit_Rightwards
 	?.CannonExitTimers
 		db !SSP_PipeTimer_CannonExit_Leftwards
 		db !SSP_PipeTimer_CannonExit_Rightwards

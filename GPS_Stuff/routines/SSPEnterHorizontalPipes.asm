@@ -64,8 +64,8 @@ incsrc "../SSPDef/Defines.asm"
 		dw $000D		;>Mario at X = +$000D (13) pixels to the right from the block he's touching without clipping
 		dw $FFF2		;>Mario at X = -$000E (-14) pixels to the left from the block he's touching without clipping
 	?.EnteringTimers
-		db !SSP_PipeTimer_Enter_Leftwards
-		db !SSP_PipeTimer_Enter_Rightwards
+		db !Setting_SSP_PipeTimer_Enter_Leftwards
+		db !Setting_SSP_PipeTimer_Enter_Rightwards
 	?.EnteringDirections
 		db %00001000
 		db %00000110

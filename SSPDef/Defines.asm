@@ -205,21 +205,25 @@ endif
 		; could enter. I wouldn't recommend higher than $000B as it is possible the player could snap to be centered at such a long distance may feel jerky and
 		; could potentially result the screen jolting and revealing a layer 1 column of glitch graphics.
 	!Setting_SSP_UsingCustomSprites = 1
-		;^0 = only using vanilla sprites in your entire hack
-		; 1 = using custom sprites (pixi).
+		;^Are you using custom sprites?
+		; - 0 = only using vanilla sprites in your entire hack
+		; - 1 = using custom sprites (pixi).
 		; This is only used during setting the player's facing direction upon exiting horizontal pipe caps while riding yoshi.
 		; NOTE: If you didn't install custom sprites and have this option == 1, this may cause issues on some emulators because RAM $7FAB10 ($400040 if SA-1) isn't
 		; initialized (this can cause yoshi to sometimes fail to update his facing direction).
 	!Setting_SSP_SetXYFractionBits = 1
-		;^0 = no
-		; 1 = yes (this writes to the factional/subpixel components of the player's XY position used for RAM $7B and $7D's speed to change position (see routine at
-		;     $00DC2D), RAM $13DA and $13DC). With this option, you'll have consistent positioning (rather than sometimes 1 pixel off) for things like exiting pipes.
-		;     Note that Fixes.asm would also make layer 1 and 2 platforms also write the player's Y position fraction component (original game, the Y fraction bits
-		;     keeps incrementing while on the ground every frame).
+		;^Set player's XY position fractional component (see routine at $00DC2D, stored in RAM $13DA and $13DC).
+		; - 0 = No
+		; - 1 = Yes, with this option, you'll have consistent positioning (rather than sometimes 1 pixel off) for things like exiting pipes.
+		;       Note that Fixes.asm would also make layer 1 and 2 platforms also write the player's Y position fraction component (original game, the Y fraction bits
+		;       keeps incrementing while on the ground every frame).
 	!Setting_SSP_HideDuringPipeStemTravel = 0
 		;^Turn the player, yoshi that the player is riding, and carried sprite invisible during pipe travel:
-		; 0 = no (will only hide if drag-player mode or traveling through doors). Use this option if you wanted glass pipes.
-		; 1 = yes
+		; - 0 = no (will only hide if drag-player mode or traveling through doors). Use this option if you wanted glass pipes.
+		;       NOTE: Make sure you remove these from your blocks list since they are no longer needed:
+		;     - "SSP_Tiles/set_visibility_on.asm"
+		;     - "SSP_Tiles/set_visibility_off.asm"
+		; - 1 = yes
 	!Setting_SSP_XPositionFractionSetTo = $00
 		;^Fractional amount to set $13DA. It's format is $X0, where X is a value from 0 to F, representing X/16 fraction. Not used if !Setting_SSP_SetXYFractionBits == 0
 	!Setting_SSP_YPositionFractionSetTo = $00
@@ -264,25 +268,25 @@ endif
 ;   long enough, he may trigger the death barrier. If this is a problem, you'll need a patch that enhances the vertical scrolling: https://www.smwcentral.net/?p=section&a=list&s=smwpatches&u=0&g=1&f%5Bname%5D=scroll
 	if !Setting_SSP_FuSoYaSpd == 0		;>Don't change this if statement.
 		;SMW styled speed
-		!SSP_HorizontalSpd		= $40 ;\Stem speed (changing this does not affect the timing of the entering/exiting)
-		!SSP_VerticalSpd		= $40 ;/
-		!SSP_HorizontalSpdPipeCap	= $08 ;\cap speed (if changed, you must change the timers below this section)
-		!SSP_VerticalSpdPipeCap		= $10 ;/
-		!SSP_DragSpd			= $40 ;>Speed mario travels when using warp mode. Remember, high speeds and the player could overshoot and softlock oscillating around his target position!
-		!SSP_DragSpdFastFar		= $7F ;>Same as above but if !Setting_SSP_DistanceSpeedUp != 0 and Mario is outside the radus of that
+		!Setting_SSP_Speed_Horizontal		= $40 ;\Stem speed (changing this does not affect the timing of the entering/exiting)
+		!Setting_SSP_Speed_Vertical		= $40 ;/
+		!Setting_SSP_Speed_HorizontalPipeCap	= $08 ;\cap speed (if changed, you must change the timers below this section)
+		!Setting_SSP_Speed_VerticalPipeCap	= $10 ;/
+		!Setting_SSP_Speed_Drag_FastClose	= $40 ;>Speed mario travels when using warp mode. Remember, high speeds and the player could overshoot and softlock oscillating around his target position!
+		!Setting_SSP_Speed_Drag_FastFar		= $7F ;>Same as above but if !Setting_SSP_DistanceSpeedUp != 0 and Mario is outside the radus of that
 	else
 		;FuSoYa styled speed.
-		!SSP_HorizontalSpd		= $40 ;\Duplicate of above, but for fusoya style speeds.
-		!SSP_VerticalSpd		= $40 ;|
-		!SSP_HorizontalSpdPipeCap	= $40 ;|
-		!SSP_VerticalSpdPipeCap	= $40 ;/
-		!SSP_DragSpd			= $40 ;>Speed mario travels when using warp mode. Remember, high speeds and the player could overshoot and softlock oscillating around his target position!
-		!SSP_DragSpdFastFar		= $7F ;>Same as above but if !Setting_SSP_DistanceSpeedUp != 0 and Mario is outside the radus of that
+		!Setting_SSP_Speed_Horizontal		= $40 ;\Duplicate of above, but for fusoya style speeds.
+		!Setting_SSP_Speed_Vertical		= $40 ;|
+		!Setting_SSP_Speed_HorizontalPipeCap	= $40 ;|
+		!Setting_SSP_Speed_VerticalPipeCap	= $40 ;/
+		!Setting_SSP_Speed_Drag_FastClose	= $40 ;>Speed mario travels when using warp mode. Remember, high speeds and the player could overshoot and softlock oscillating around his target position!
+		!Setting_SSP_Speed_Drag_FastFar		= $7F ;>Same as above but if !Setting_SSP_DistanceSpeedUp != 0 and Mario is outside the radus of that
 	endif
 	;Cannon launcher speeds (special pipe caps that fire the player out of the caps with momentum):
-		!SSP_Cannon_HorizontalSpd	= $40		;>Use only $01-$7F, this covers both left and right speeds
-		!SSP_Cannon_UpwardsSpd		= $B0		;>Use only $80-$FF, fires the player upwards
-		!SSP_Cannon_DownwardsSpd	= $40		;>Use only $01-$7F, fires the player downwards.
+		!Setting_SSP_Cannon_HorizontalSpd	= $40		;>Use only $01-$7F, this covers both left and right speeds
+		!Setting_SSP_Cannon_UpwardsSpd		= $B0		;>Use only $80-$FF, fires the player upwards
+		!Setting_SSP_Cannon_DownwardsSpd	= $40		;>Use only $01-$7F, fires the player downwards.
 			;^Note: The downwards speed, once initially exiting the cap and returning to normal state, you'll lose your additional speed,
 			; and will revert to your normal maximum downwards Y speed. If you don't want this, install “Same Fall Acceleration Speed”
 			; from the patch section: https://www.smwcentral.net/?p=section&a=details&id=24286 and you can fall faster gained from the
@@ -319,40 +323,40 @@ endif
 	
 		if !Setting_SSP_FuSoYaSpd == 0
 			;Regular pipe timing
-				!SSP_PipeTimer_Enter_Leftwards				= $3A
-				!SSP_PipeTimer_Enter_Rightwards				= $3C
-				!SSP_PipeTimer_Enter_Upwards_OffYoshi			= $1D
-				!SSP_PipeTimer_Enter_Upwards_OnYoshi			= $27
-				!SSP_PipeTimer_Enter_Downwards_OffYoshi			= $20
-				!SSP_PipeTimer_Enter_Downwards_OnYoshi			= $30
-				!SSP_PipeTimer_Enter_Downwards_SmallPipe		= $1D
+				!Setting_SSP_PipeTimer_Enter_Leftwards				= $3A
+				!Setting_SSP_PipeTimer_Enter_Rightwards				= $3C
+				!Setting_SSP_PipeTimer_Enter_Upwards_OffYoshi			= $1D
+				!Setting_SSP_PipeTimer_Enter_Upwards_OnYoshi			= $27
+				!Setting_SSP_PipeTimer_Enter_Downwards_OffYoshi			= $20
+				!Setting_SSP_PipeTimer_Enter_Downwards_OnYoshi			= $30
+				!Setting_SSP_PipeTimer_Enter_Downwards_SmallPipe		= $1D
 				
-				!SSP_PipeTimer_Exit_Leftwards				= $1B
-				!SSP_PipeTimer_Exit_Rightwards				= $1B
-				!SSP_PipeTimer_Exit_Upwards_OffYoshi			= $1D
-				!SSP_PipeTimer_Exit_Upwards_OnYoshi			= $1E
-				!SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario	= $0E
-				!SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario		= $1B
-				!SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario	= $18
-				!SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario		= $1D
+				!Setting_SSP_PipeTimer_Exit_Leftwards				= $1B
+				!Setting_SSP_PipeTimer_Exit_Rightwards				= $1B
+				!Setting_SSP_PipeTimer_Exit_Upwards_OffYoshi			= $1D
+				!Setting_SSP_PipeTimer_Exit_Upwards_OnYoshi			= $1E
+				!Setting_SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario	= $0E
+				!Setting_SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario		= $1B
+				!Setting_SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario	= $18
+				!Setting_SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario		= $1D
 		else
 			;FuSoYa enter and exit timers.
-				!SSP_PipeTimer_Enter_Leftwards			= $06
-				!SSP_PipeTimer_Enter_Rightwards			= $06
-				!SSP_PipeTimer_Enter_Upwards_OffYoshi		= $06
-				!SSP_PipeTimer_Enter_Upwards_OnYoshi		= $0C
-				!SSP_PipeTimer_Enter_Downwards_OffYoshi		= $08
-				!SSP_PipeTimer_Enter_Downwards_OnYoshi		= $0A
-				!SSP_PipeTimer_Enter_Downwards_SmallPipe	= $06
+				!Setting_SSP_PipeTimer_Enter_Leftwards			= $06
+				!Setting_SSP_PipeTimer_Enter_Rightwards			= $06
+				!Setting_SSP_PipeTimer_Enter_Upwards_OffYoshi		= $06
+				!Setting_SSP_PipeTimer_Enter_Upwards_OnYoshi		= $0C
+				!Setting_SSP_PipeTimer_Enter_Downwards_OffYoshi		= $08
+				!Setting_SSP_PipeTimer_Enter_Downwards_OnYoshi		= $0A
+				!Setting_SSP_PipeTimer_Enter_Downwards_SmallPipe	= $06
 				
-				!SSP_PipeTimer_Exit_Leftwards				= $04
-				!SSP_PipeTimer_Exit_Rightwards				= $04
-				!SSP_PipeTimer_Exit_Upwards_OffYoshi			= $09
-				!SSP_PipeTimer_Exit_Upwards_OnYoshi			= $09
-				!SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario	= $06
-				!SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario		= $08
-				!SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario	= $07
-				!SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario		= $08
+				!Setting_SSP_PipeTimer_Exit_Leftwards				= $04
+				!Setting_SSP_PipeTimer_Exit_Rightwards				= $04
+				!Setting_SSP_PipeTimer_Exit_Upwards_OffYoshi			= $09
+				!Setting_SSP_PipeTimer_Exit_Upwards_OnYoshi			= $09
+				!Setting_SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario	= $06
+				!Setting_SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario		= $08
+				!Setting_SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario	= $07
+				!Setting_SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario		= $08
 		endif
 		;Cannon exit timers
 			!SSP_PipeTimer_CannonExit_Leftwards				= $04

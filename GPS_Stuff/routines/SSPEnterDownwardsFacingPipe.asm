@@ -16,7 +16,7 @@ incsrc "../SSPDef/Defines.asm"
 		LDY $187A|!addr
 		LDA.l ?.YoshiTimersEnter,x
 	else
-		LDA.b #!SSP_PipeTimer_Enter_Upwards_OffYoshi
+		LDA.b #!Setting_SSP_PipeTimer_Enter_Upwards_OffYoshi
 	endif
 	STA !Freeram_SSP_PipeTmr
 	LDA #$04			;\pipe sound
@@ -95,5 +95,5 @@ incsrc "../SSPDef/Defines.asm"
 			dw $FFF0 ;>$19 = #$03 (*2 = #$06)
 if !Setting_SSP_YoshiAllowed != 0
 	?.YoshiTimersEnter
-	db !SSP_PipeTimer_Enter_Upwards_OffYoshi,!SSP_PipeTimer_Enter_Upwards_OnYoshi,!SSP_PipeTimer_Enter_Upwards_OnYoshi	;>Timers: 1st one = on foot, 2nd and 3rd one = on yoshi
+	db !Setting_SSP_PipeTimer_Enter_Upwards_OffYoshi,!Setting_SSP_PipeTimer_Enter_Upwards_OnYoshi,!Setting_SSP_PipeTimer_Enter_Upwards_OnYoshi	;>Timers: 1st one = on foot, 2nd and 3rd one = on yoshi
 endif

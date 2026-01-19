@@ -51,4 +51,6 @@ BlockPickXPos: ;Need to offset depending on left or right because Mario turns in
 	dw $0000
 	dw $FFFE
 
+assert !Setting_SSP_HideDuringPipeStemTravel == 0, "Remove me from the blocks list. Player will always be invisible."
+
 print "Makes the player become visible when pass through during a screen scrolling pipe travel."

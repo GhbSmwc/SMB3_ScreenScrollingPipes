@@ -1,6 +1,5 @@
 incsrc "../SSPDef/Defines.asm"
 
-assert !Setting_SSP_HideDuringPipeStemTravel == 0, "Blocks toggling visibility is not needed if player will always turn invisible."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Sets Mario visibility when centered into the block enough (avoids jarring player
 ;appearing/disappearing at edge of block) during a pipe travel.

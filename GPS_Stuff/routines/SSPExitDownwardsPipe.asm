@@ -71,7 +71,7 @@ incsrc "../SSPDef/Defines.asm"
 			
 			?..SmallMario
 				if !Setting_SSP_YoshiAllowed == 0
-					LDA.b #!SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario
+					LDA.b #!Setting_SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario
 					BRA ?.StoreTimer
 				else
 					LDA ?.SmallMarioRegularExitTimes,x
@@ -79,7 +79,7 @@ incsrc "../SSPDef/Defines.asm"
 				endif
 			?..BigMario
 				if !Setting_SSP_YoshiAllowed == 0
-					LDA.b #!SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario
+					LDA.b #!Setting_SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario
 					BRA ?.StoreTimer
 				else
 					LDA ?.BigMarioRegularExitTimes,x
@@ -121,13 +121,13 @@ incsrc "../SSPDef/Defines.asm"
 		dw $0000
 	if !Setting_SSP_YoshiAllowed != 0
 		?.SmallMarioRegularExitTimes
-			db !SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario
-			db !SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario
-			db !SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario
+			db !Setting_SSP_PipeTimer_Exit_Downwards_OffYoshi_SmallMario
+			db !Setting_SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario
+			db !Setting_SSP_PipeTimer_Exit_Downwards_OnYoshi_SmallMario
 		?.BigMarioRegularExitTimes
-			db !SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario
-			db !SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario
-			db !SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario
+			db !Setting_SSP_PipeTimer_Exit_Downwards_OffYoshi_BigMario
+			db !Setting_SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario
+			db !Setting_SSP_PipeTimer_Exit_Downwards_OnYoshi_BigMario
 		?.SmallMarioCannonExitTimes
 			db !SSP_PipeTimer_CannonExit_Downwards_OffYoshi_SmallMario
 			db !SSP_PipeTimer_CannonExit_Downwards_OnYoshi_SmallMario
