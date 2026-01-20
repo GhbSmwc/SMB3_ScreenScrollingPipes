@@ -183,7 +183,7 @@ meaning you don't have to worry about the path being in the way of designing lev
 		<li><a href="https://www.smwcentral.net/?p=section&a=details&id=26861">My center scroll patch</a>, with <kbd>!Setting_CenterScroll_ScrollType</kbd> set to 1 and using &ldquo;Vertical Scroll at Will&rdquo; setting.</li>
 	</ul>
 </li>
-</ul><br>
+</ul>
 <h2>Recommended</h2>
 <ul>
 	<li>
@@ -193,6 +193,10 @@ meaning you don't have to worry about the path being in the way of designing lev
 	<li>
 		<a href="https://www.smwcentral.net/?p=section&a=details&id=30127">Yoshi Pipe Animation Fix</a>, by Kevin. Fixes a visual bug where if RAM <a href="https://smwc.me/m/smw/ram/7E1419"><kbd>$7E1419</kbd></a> is set
 		to any nonzero value, yoshi will act as if he's entering a pipe reguardless if the player is on yoshi or not.
+	</li>
+	<li>
+		<a href="https://www.smwcentral.net/?p=section&a=details&id=16550">P-balloon fix</a>. One of the major bugs is that the player's facing direction is locked during a p-balloon (last set prior to grabbing the balloon), and
+		that the horizontal pipes only allow entry when facing towards them (in vanilla SMW, if you crouch and try to enter a horizontal exit-enabled pipe, it will not work if you're facing away, same with riding yoshi).
 	</li>
 </ul>
 <h2>Tools provided</h2>
@@ -468,12 +472,13 @@ print "A simple test block that behaves differently depending on if the player i
 	<li>
 		If Mario gets on a p-balloon, Mario will keep facing the same direction prior
 		grabbing it even when moving the opposite direction (so if he grabs it facing left,
-		he'll keep facing left, evidence is that the screen orientates in the same direction
+		he'll keep facing left, evidence is that the screen pans in the same direction
 		regardless of which left or right direction Mario is going), until the balloon wears
 		off. If you try entering horizontal pipe caps that way, Mario won't enter the pipes if
 		he's facing away from the cap (so he doesn't enter backwards), so if you are using this,
-		you should download the &ldquo;<a href="https://www.smwcentral.net/?p=section&a=details&id=16550">P-balloon timer fix</a>&rdquo; by
-		me, that will fix the error and always allow Mario to enter. Do note that
+		you should download the
+		&ldquo;<a href="https://www.smwcentral.net/?p=section&a=details&id=16550">P-balloon timer fix</a>&rdquo;
+		(linked in the recommended patches), that will fix the error and always allow Mario to enter. Do note that
 		being under the effect of the balloon counts as &ldquo;carrying something&rdquo;.
 	</li><br>
 		
