@@ -71,6 +71,9 @@ screen-fading to the next level, the player will move through the pipes (along w
 	<li>
 		<a href="#Insertion" id="TOC_Insertion">How to insert</a>
 	</li>
+	<ul>
+		<li><a href="#LevelUsage" id="TOC_LevelUsage">Level usage</a></li>
+	</ul>
 	<li>
 		<a href="#ExtraFeatures" id="TOC_ExtraFeatures">Extra features</a>
 		<ol>
@@ -209,97 +212,89 @@ meaning you don't have to worry about the path being in the way of designing lev
 <h3>Instructions to apply to your game.</h3>
 
 <ol>
-<li>Lunar Magic (Everything related to this is located in <kbd>LM_Stuff</kbd> folder.)</li><br>
-<ol>
-<li>Simply copy the graphic files and paste them in their respective folder. The file naming should
-be obvious.</li><br>
-
-<li>Open the level file <kbd>demonstration.mwl</kbd> (level $0105). (MenuBar &gt; File &gt; Open Level from
-file...). Note that <kbd>demonstration_WrapTest.mwl</kbd> (level $0106) is for testing a level wrap mechanic for <kbd>UberasmTool_Stuff/level/SSP_WarpDragLevelWrap.asm</kbd>.</li><br>
-
-<li>Open your map16 editor, and import <kbd>tilemap.map16</kbd> (Question block with a red left
-arrow on it; <img src="Readme_files/LM_ImportMap16FromFile.png">). After the blocks are imported, hit save.<sup>[<a href="#BlockListRelocatorInfo">Map 16 location note</a>]</sup></li>
-
+	<li>Lunar Magic (Everything related to this is located in <kbd>LM_Stuff</kbd> folder.)</li><br>
+	<ol>
+		<li>Simply copy the graphic files and paste them in their respective folder. The file naming should
+		be obvious.</li><br>
+	
+		<li>Open the level file <kbd>demonstration.mwl</kbd> (level $0105). (MenuBar &gt; File &gt; Open Level from
+		file...). Note that <kbd>demonstration_WrapTest.mwl</kbd> (level $0106) is for testing a level wrap mechanic for <kbd>UberasmTool_Stuff/level/SSP_WarpDragLevelWrap.asm</kbd>.</li><br>
+	
+		<li>Open your map16 editor, and import <kbd>tilemap.map16</kbd> (Question block with a red left
+		arrow on it; <img src="Readme_files/LM_ImportMap16FromFile.png">). After the blocks are imported, hit save.<sup>[<a href="#BlockListRelocatorInfo">Map 16 location note</a>]</sup></li>
+	</ol>
+	<li>ASM</li>
+	<ol>
+		<li>Define note</li>
+		<ol>
+			<li>Make necessary changes to <kbd>SSPDef/Defines.asm</kbd> (including making sure the freeram it uses not conflict with other unrelated ASM resources). And make sure you read the comments. Of course, if you already inserted the ASM
+			codes and wish to edit and re-insert, make sure you have the copies of it up to date with correct information and reinsert to update. You must update every time you make changes.</li>
+		</ol>
+		<li>Uberasm Tool (inside <kbd>UberasmTool_Stuff</kbd> folder)</li>
+		<ol>
+			<li>Copy the folder (the folder itself) <kbd>SSPDef</kbd> and paste it in the same directory as uberasm tool.exe
+			is in, not in any of the subfolder of uberasm tool.</li><br>
+	
+			<li>Stuff within <kbd>UberasmTool_Stuff</kbd> should be obvious with convenient file names. Thanks to UAT2.0, you can have multiple ASM files for the same level/gamemode/oveworld (separated via commas).</li><br>
+	
+			<li>
+				On Uberasm tool's <kbd>list.txt</kbd>, under gamemode, just put this:
+				<div class="CodeBlock" style="width: 295px; height: 18px;"><pre>14	GM14_ScreenScrollingPipes.asm</pre></div>
+				And to test a level wrap mechanic, add this (under &ldquo;<kbd>level:</kbd>&rdquo;):
+				<div class="CodeBlock" style="width: 327px; height: 16px;"><pre>106	SSP_WarpDragLevelWrap.asm : %00000011</pre></div>
+				Where the extra byte format is, in binary, <kbd>%000000VH</kbd>, that <kbd>H</kbd> and <kbd>V</kbd> is a bit flag to apply an <i>invert</i>, when set (<kbd>1</kbd>) along the longitudinal edge (for <kbd>H</kbd>, it's the left and
+				right edge of the level that would invert the Y position, and for <kbd>V</kbd>, it's the top and bottom that would invert the X position). The provided test level <kbd>demonstration_WrapTest.mwl</kbd> will work regardless of the
+				invert wrap settings.
+			</li><br>
+	
+	
+			<ul><li>Title screen note</li>
+				<ol>
+					<li>If you are planning to have this also apply on the title screen, create another entry for <kbd>list.txt</kbd> under <kbd>gamemode</kbd>:
+						<div class="CodeBlock" style="width: 285px; height: 20px;"><pre>7	GM14_ScreenScrollingPipes.asm</pre></div></li>
+					<li>Please note that <kbd>Fixes.asm</kbd> <b>modifies some of the player's vanilla physics for the entire game</b> to check the freeram used by the screen scrolling pipes. Therefore the RAMs are reserved even when
+					<kbd>GM14_ScreenScrollingPipes.asm</kbd>'s code is not running.</li>
+				</ol>
+			</ul>
+			<li>Now insert the code by running uberasm tool.</li>
+		</ol>
+	
+		<li>GPS (in <kbd>GPS_Stuff</kbd> folder)</li>
+		<ol>
+			<li>Copy the <i>folder</i> of <kbd>SSP_Tiles</kbd>, and paste that in GPS's <kbd>blocks</kbd> folder. After doing that, then
+			paste another copy of <kbd>SSPDef</kbd> in the main directory of GPS (where the exe program is at, not in the subfolder/subdirectory).
+			Also paste the asm file(s) in <kbd>BlockRoutines</kbd> in GPS's routines folder.</li><br>
+	
+			<li>Copy the text from one of the two files in <kbd>blocks_list</kbd> folder and paste it in GPS's list file. Now run GPS to insert the blocks.*
+			Both the tile lists and the map16 blocks provided must match.</li><br>
+		</ol>
+	
+		<li>Patches (in <kbd>Patches</kbd> folder)</li>
+		<ol>
+			<li>Before you install <kbd>Fixes.asm</kbd>, I want to warn you that patch also includes a hijack at <kbd>$00EA18</kbd> (this is normally the code that pushes the player leftwards
+			if he is embedded inside a block, such as Big Mario inside a 1-tile tall space, his head clips inside the ceiling block) to prevent this small bug: If small mario tries to enter
+			the downwards-facing small pipe cap by hitting the bottom corners, he'll enter 1 pixel to the left than where he supposed to be positioned:<br>
+			<img src="Readme_files/PushedLeftFromCenterSmallPipeDownwardsCap.gif"><br>
+			Unfortunately, the “<a href="https://www.smwcentral.net/?p=section&a=details&id=19932">WJNB fix patch</a>” also hijacks that spot (a range from <kbd>$00EA16</kbd> to <kbd>$00EA21</kbd>). It is okay to patch Fixes.asm AFTER patching
+			the WJNB because Fixes.asm will auto-detect that and will not modify WJNB's hijack in any way. But if you installed Fixes.asm first, and wanted to install the WJNB fix patch afterwards, open Defines.asm, and set <kbd>!Setting_SSP_Hijack_00EA18</kbd>
+			to 0, reinstall Fixes.asm, <b>and then</b> install the WJNB fix patch. And whatever you do, DON'T install the WJNB patch with Fixes.asm being installed with <kbd>!Setting_SSP_Hijack_00EA18</kbd> set to 1, or a potential freespace may have been leaked.</li>
+	
+			<li>Not much to say, simply install <kbd>Fixes.asm</kbd> via asar. This patch fixes various bugs relating with the pipes and sprites to not interact with the player during a pipe travel. Make sure you do not move the file, else you have to edit the
+			<kbd>incsrc "&ltpath to the defines file&gt;"</kbd> to get it to work.</li><br>
+		</ol><br>
+		<li>Pixi (in <kbd>Pixi</kbd> folder). This mainly deals with making custom sprites be compatible with the SSPs. Mainly the fact that custom sprites may interact with the player in ways they shouldn't, and they should be rendered invisible
+		with the player (by skipping the graphics code/routine) when dragged into the pipe.</li><br>
+		<ol>
+			<li>The first thing you want to do is similar to Uberasm tool and GPS-- Paste a copy of <kbd>SSPDef</kbd> in the same directory as <kbd>pixi.exe</kbd> is located.</li><br>
+			<li>Paste all ASM files in this package's <kbd>Pixi/routines</kbd> in pixi's <kbd>routines</kbd> folder.</li><br>
+		</ol>
+	</ol>
+	<li><a href="#TOC_LevelUsage" id="LevelUsage">^</a>Level usage</li>
+	<ol>
+		<li>See <a name="UseBlocksInLevel2" href="Readme_files/BlocksUsageInLevel2.html">here</a> for up-to-date information.</li>
+	</ol>
 </ol>
 
-<li>ASM</li>
-<ol>
-<li>Define note</li>
-<ol>
-<li>Make necessary changes to <kbd>SSPDef/Defines.asm</kbd> (including making sure the freeram it uses not conflict with other unrelated ASM resources). And make sure you read the comments. Of course, if you already inserted the ASM
-codes and wish to edit and re-insert, make sure you have the copies of it up to date with correct information and reinsert to update. You must update every time you make changes.</li>
-
-</ol>
-<li>Uberasm Tool (inside <kbd>UberasmTool_Stuff</kbd> folder)</li>
-<ol>
-<li>Copy the folder (the folder itself) <kbd>SSPDef</kbd> and paste it in the same directory as uberasm tool.exe
-is in, not in any of the subfolder of uberasm tool.</li><br>
-
-<li>Stuff within <kbd>UberasmTool_Stuff</kbd> should be obvious with convenient file names. Thanks to UAT2.0, you can have multiple ASM files for the same level/gamemode/oveworld (separated via commas).</li><br>
-
-<li>
-	On Uberasm tool's <kbd>list.txt</kbd>, under gamemode, just put this:
-	<div class="CodeBlock" style="width: 295px; height: 18px;"><pre>14	GM14_ScreenScrollingPipes.asm</pre></div>
-	And to test a level wrap mechanic, add this (under &ldquo;<kbd>level:</kbd>&rdquo;):
-	<div class="CodeBlock" style="width: 327px; height: 16px;"><pre>106	SSP_WarpDragLevelWrap.asm : %00000011</pre></div>
-	Where the extra byte format is, in binary, <kbd>%000000VH</kbd>, that <kbd>H</kbd> and <kbd>V</kbd> is a bit flag to apply an <i>invert</i>, when set (<kbd>1</kbd>) along the longitudinal edge (for <kbd>H</kbd>, it's the left and
-	right edge of the level that would invert the Y position, and for <kbd>V</kbd>, it's the top and bottom that would invert the X position). The provided test level <kbd>demonstration_WrapTest.mwl</kbd> will work regardless of the
-	invert wrap settings.
-</li><br>
-
-
-<ul><li>Title screen note</li>
-<ol>
-<li>If you are planning to have this also apply on the title screen, create another entry for <kbd>list.txt</kbd> under <kbd>gamemode</kbd>:
-<div class="CodeBlock" style="width: 285px; height: 20px;"><pre>7	GM14_ScreenScrollingPipes.asm</pre></div></li>
-<li>Please note that <kbd>Fixes.asm</kbd> <b>modifies some of the player's vanilla physics for the entire game</b> to check the freeram used by the screen scrolling pipes. Therefore the RAMs are reserved even when
-<kbd>GM14_ScreenScrollingPipes.asm</kbd>'s code is not running.</li>
-</ol>
-</ul>
-<li>Now insert the code by running uberasm tool.</li>
-</ol>
-
-<li>GPS (in <kbd>GPS_Stuff</kbd> folder)</li>
-<ol>
-<li>Copy the <i>folder</i> of <kbd>SSP_Tiles</kbd>, and paste that in GPS's <kbd>blocks</kbd> folder. After doing that, then
-paste another copy of <kbd>SSPDef</kbd> in the main directory of GPS (where the exe program is at, not in the subfolder/subdirectory).
-Also paste the asm file(s) in <kbd>BlockRoutines</kbd> in GPS's routines folder.</li><br>
-
-<li>Copy the text from one of the two files in <kbd>blocks_list</kbd> folder and paste it in GPS's list file. Now run GPS to insert the blocks.*
-Both the tile lists and the map16 blocks provided must match.</li><br>
-</ol>
-
-<li>Patches (in <kbd>Patches</kbd> folder)</li>
-<ol>
-<li>Before you install <kbd>Fixes.asm</kbd>, I want to warn you that patch also includes a hijack at <kbd>$00EA18</kbd> (this is normally the code that pushes the player leftwards
-if he is embedded inside a block, such as Big Mario inside a 1-tile tall space, his head clips inside the ceiling block) to prevent this small bug: If small mario tries to enter
-the downwards-facing small pipe cap by hitting the bottom corners, he'll enter 1 pixel to the left than where he supposed to be positioned:<br>
-<img src="Readme_files/PushedLeftFromCenterSmallPipeDownwardsCap.gif"><br>
-Unfortunately, the “<a href="https://www.smwcentral.net/?p=section&a=details&id=19932">WJNB fix patch</a>” also hijacks that spot (a range from <kbd>$00EA16</kbd> to <kbd>$00EA21</kbd>). It is okay to patch Fixes.asm AFTER patching
-the WJNB because Fixes.asm will auto-detect that and will not modify WJNB's hijack in any way. But if you installed Fixes.asm first, and wanted to install the WJNB fix patch afterwards, open Defines.asm, and set <kbd>!Setting_SSP_Hijack_00EA18</kbd>
-to 0, reinstall Fixes.asm, <b>and then</b> install the WJNB fix patch. And whatever you do, DON'T install the WJNB patch with Fixes.asm being installed with <kbd>!Setting_SSP_Hijack_00EA18</kbd> set to 1, or a potential freespace may have been leaked.</li>
-
-<li>Not much to say, simply install <kbd>Fixes.asm</kbd> via asar. This patch fixes various bugs relating with the pipes and sprites to not interact with the player during a pipe travel. Make sure you do not move the file, else you have to edit the
-<kbd>incsrc "&ltpath to the defines file&gt;"</kbd> to get it to work.</li><br>
-</ol><br>
-<li>Pixi (in <kbd>Pixi</kbd> folder). This mainly deals with making custom sprites be compatible with the SSPs. Mainly the fact that custom sprites may interact with the player in ways they shouldn't, and they should be rendered invisible
-with the player (by skipping the graphics code/routine) when dragged into the pipe.</li><br>
-<ol>
-<li>The first thing you want to do is similar to Uberasm tool and GPS-- Paste a copy of <kbd>SSPDef</kbd> in the same directory as <kbd>pixi.exe</kbd> is located.</li><br>
-<li>Paste all ASM files in this package's <kbd>Pixi/routines</kbd> in pixi's <kbd>routines</kbd> folder.</li><br>
-</ol>
-</ol>
-
-<li>Level usage</li>
-
-<ol>
-Click <a name="UseBlocksInLevel" href="Readme_files/BlocksUsageInLevel.html">here</a> for how to use in levels. Note that some info are out of date due to the rearragement of blocks since the 4.0.0 update. I kept this info,
-along with the old map16 blocks (list and a <kbd>.map16</kbd> file), for in case you wanted to port your blocks to a newer version without tedious remapping.<br><br>
-
-See <a name="UseBlocksInLevel2" href="Readme_files/BlocksUsageInLevel2.html">here</a> for up-to-date information.
-</ol>
-
-</ol>
 
 <span id="MoveToDifferentM16Page">*If you need to move the pipes or your other blocks to a different map16 page, use <a href="Readme_files/JS_GPSBlockListRelocator.html" id="BlockListRelocatorInfo">this tool</a> to move to a different page number.</span>
 
