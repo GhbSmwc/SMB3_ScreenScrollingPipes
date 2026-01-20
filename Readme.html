@@ -330,8 +330,8 @@ fix patch because of a quirk with SMW's horizontal speed handling that if you ar
 <ul>
 
 <li>How do I set the freeram and settings?
-<ul><li>Look in <kbd>SSPDef/Defines.asm</kbd>. If you make changes to it, you MUST update the other copies of it in GPS and uberasm
-tool so they use updated information.</li></ul></li><br>
+<ul><li>Open <kbd>SSPDef/Defines.asm</kbd>. If you make changes to it, you MUST update all other copies of it in GPS, pixi and uberasm
+tool so they use updated information, then reinsert all of them to apply the changes.</li></ul></li><br>
 
 <li>When Mario enters a pipe, Mario passes through them as if they turned into air tiles!
 <ul><li>You've forgot to insert the uberasm tool code <kbd>GM14_ScreenScrollingPipes.asm</kbd> as gamemode 14, which is needed as blocks have certain limitations.</li></ul><br>
