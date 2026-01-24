@@ -52,6 +52,7 @@ incsrc "../SSPDef/Defines.asm"
 		LDA.b #!Setting_SSP_YPositionFractionSetTo	;|
 		STA $13DC|!addr					;|
 	endif							;/
+	%SSPCancelYoshiActions()
 	?.Done
 	RTL
 

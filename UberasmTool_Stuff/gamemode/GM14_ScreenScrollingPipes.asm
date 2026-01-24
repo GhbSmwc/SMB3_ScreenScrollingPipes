@@ -681,8 +681,9 @@ CorrectFacing:
 			CMP #$35	;|
 			BNE ..Next	;/
 			...IsYoshi
-				LDa $00
+				LDA $00
 				STA !157C,x
+				STZ !15AC,x	;>Cancel turning around animation.
 		..Next
 			DEX
 			BPL ..Loop

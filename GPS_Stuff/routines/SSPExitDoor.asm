@@ -30,7 +30,8 @@ incsrc "../SSPDef/Defines.asm"
 	dw ?.Right
 	dw ?.Down
 	dw ?.Left
-	
+	?.Done
+		RTL
 	?.Up
 		JSR ?.CompareYPositionToCheck
 		BEQ ?.ReachedToExit
@@ -83,7 +84,7 @@ incsrc "../SSPDef/Defines.asm"
 			LDA #$00
 			STA !Freeram_SSP_InvisbleFlag
 		endif
-	?.Done
+		%SSPCancelYoshiActions()
 		RTL
 	?.CompareYPositionToCheck
 		LDX $00

@@ -56,6 +56,7 @@ incsrc "../SSPDef/Defines.asm"
 	STA $1DF9|!addr						;/
 	STZ $7B							;\Prevent centering, and then displaced by xy speeds.
 	STZ $7D							;/
+	%SSPCancelYoshiActions()
 	LDX $187A|!addr	
 	LDA $03
 	CMP #$03

@@ -7,6 +7,7 @@ incsrc "../SSPDef/Defines.asm"
 ; -- #$01 = Right
 ; -- #$02 = Down
 ; -- #$03 = Left
+; -- #$09 = Warp/drag mode
 ; - $01: Top or bottom part of the regular-sized door?
 ; -- #$00 = Bottom
 ; -- #$02 = Top (Will place player so his lower 16x16 part of the body is below the block)
@@ -50,6 +51,7 @@ incsrc "../SSPDef/Defines.asm"
 		LDA #$01					;\Make player invisible
 		STA !Freeram_SSP_InvisbleFlag			;/
 	endif
+	%SSPCancelYoshiActions()
 	RTL
 	?.DoorPartOffsets
 		dw $0000
