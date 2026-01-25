@@ -366,6 +366,7 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	  would use SA-1 math registers, which would fail). This now invokes SA-1 when the game is SA-1.
 	--Fixed a slight error where dying the same frame the player enters a pipe with !Setting_SSP_FreezeTime
 	  set to 1 would cause an abrupt fade out on the dying animation.
+	--Fixed a bug where yoshi turning around animation persists when traveling through vertical pipes.
 	-Added an optional fix for camera panning to allow the camera to pan in the direction the player is
 	 facing when enabling freezing during pipe travel (previously, the camera would pan in front of
 	 player's facing when the freeze setting is off, but does not do so when on).
@@ -373,7 +374,7 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	--Centering codes now also sets the player's XY subpixel position, thus movement no longer have a 1
 	  pixel variance of the player's XY position upon exiting pipe caps.
 	--Made an extremely minor change on "Fixes.asm" to include clearing the player's Y position subpixel
-	  when standing on layer 1 platforms.
+	  when standing on layer 1 & 2 platforms.
 	 -Moved several block codes to subroutines:
 	--Vertical centering code (accounting for whether or not riding yoshi or powerup states) now moved
 	  to subroutines.
@@ -386,7 +387,7 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	 "screen scrolling pipes") in so that (1) reduce the risk of filename conflicts, and (2) be more
 	 informative that it is resource-specific).
 	-Vertical regular-sized pipe caps and turn corners will now check if the player is centered enough to
-	 exit. This allows setups like seen here:
+	 trigger them. This allows setups like seen here:
 	 "Readme_files/VerticalExitCapsRequirePlayerCenteredHorizontally.png"
 	-Added an option !Setting_SSP_HideDuringPipeStemTravel, which can be set to 0 so that the player and
 	 carried sprite does not turn invisible inside pipes, ideal for glass pipes.
@@ -396,15 +397,16 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	--Deleted the old version of the map16 blocks and for the GPS tool.
 	--Got rid of the old level file since it is now depreciated and causing confusion.
 	-Made moving blocks to a different block number for blocks list for GPS much MUCH easier, by including
-	 a tool, "JS_GPSBlockListRelocator.html" which will offset them.
+	 a tool, "JS_GPSBlockListRelocator.html" which will offset them to a different map16 number.
 	-Facing directions are now corrected when traveling through pipes rather than just when the player
 	 exits horizontal pipe caps, so that the player doesn't appear going backwards in glass pipes.
 	-The uberasm tool code is no longer a library code to be called from a gamemode 14 ASM file, because
 	 UAT2.0 now supports multiple separate ASM files for the same N where N is the level/gamemode/
 	 overworld number to apply its effects on.
-	-Added a level wraparound feature for warp-drag mode: If the player pipe traveling heads into the edge
-	 of a level, will send him to the opposite edge of the level. If V/H scrolling disabled, then
-	 wraparound will adjust to be the screen's width.
+	-Added a per-level wraparound feature for warp-drag mode: If the player pipe traveling heads into the
+	 edge of a level, will send him to the opposite edge of the level. If V/H scrolling disabled, then
+	 wraparound will adjust to be the screen's width. It also comes with an extra byte setting to also
+	 invert along the edge.
 	-Added a uberasm tool level file that adds wraparound effect for screen scrolling pipes when the
 	 traveling player hits the edge of the level.
 	-Several removed freerams:
