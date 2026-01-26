@@ -634,8 +634,11 @@ be aware that some sprites still do interact with the player:
 		caused by horizontal small pipe caps, small turn corners (and the special turn corner), you can simply just move the head interaction down by 1 pixel. I wouldn't recommend 
 		moving the foot part of the collision points upwards and have the player's Y position moved downward (+1 from default Y position) else the player will be slightly be lower
 		into the ground.
-	</li><br><br>
-
+	</li>
+	<li>
+		The same also applies to big Mario riding yoshi for regular-sized horizontal pipes:<br>
+		<table><tr><td><img src="Readme_files/BigMarioYoshiCollisionPoints.png"></td></tr></table>
+	</li>
 	<li>
 		<s>If Mario stands on a key sprite (sprite number <kbd>$80</kbd>), and enters a horizontal pipe cap the same time he picks the key up, he will carry the key as normal (albeit
 		his pose is acting like he isn't carrying anything), but upon exiting the pipe, Mario may (depends on the timing of picking up the key and entering) forcibly drop the key
