@@ -280,7 +280,7 @@ meaning you don't have to worry about the path being in the way of designing lev
 			to 0, reinstall Fixes.asm, <b>and then</b> install the WJNB fix patch. And whatever you do, DON'T install the WJNB patch with Fixes.asm being installed with <kbd>!Setting_SSP_Hijack_00EA18</kbd> set to 1, or a potential freespace may have been leaked.</li>
 	
 			<li>Not much to say, simply install <kbd>Fixes.asm</kbd> via asar. This patch fixes various bugs relating with the pipes and sprites to not interact with the player during a pipe travel. Make sure you do not move the file, else you have to edit the
-			<kbd>incsrc "&ltpath to the defines file&gt;"</kbd> to get it to work.</li><br>
+			<kbd>incsrc "&lt<a href="https://en.wikipedia.org/wiki/Path_(computing)">relative path to the defines file</a>&gt;"</kbd> to get it to work.</li><br>
 		</ol><br>
 		<li>Pixi (in <kbd>Pixi</kbd> folder). This mainly deals with making custom sprites be compatible with the SSPs. Mainly the fact that custom sprites may interact with the player in ways they shouldn't, and they should be rendered invisible
 		with the player (by skipping the graphics code/routine) when dragged into the pipe.</li><br>
@@ -661,10 +661,11 @@ be aware that some sprites still do interact with the player:
 		If you want blocks to be passable while the player is in his pipe state (such as a pipe that goes into a solid object for scenery), I provided you this code (see below)
 		Make sure all offsets must be passable during pipe travel.
 <div class="CodeBlock"><pre>
-
 incsrc "../SSPDef/Defines.asm"
 ;^I assume you would have this placed in the main directory of the blocks folder and not in any subfolders.
-; If in subfolders, then prepend "../" to the path (example: ../../SSPDef/Defines.asm)
+; If in subfolders, then prepend N number of "../" (goes up to a parent directory, each time) to the path
+; based on how deep from where the .exe is at (example: ../../SSPDef/Defines.asm on pass_if_in_pipe.asm, first
+; parent directory goes to GPS's blocks folder, then the second would be at GPS's .exe)
 
 db $42 ; or db $37
 JMP MarioBelow : JMP MarioAbove : JMP MarioSide
