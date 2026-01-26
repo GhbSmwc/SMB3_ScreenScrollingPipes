@@ -8,10 +8,13 @@ incsrc "../SSPDef/Defines.asm"
 ;;Each warp to a specific point is each index ID.
 ;;
 ;;Output:
-;;-Carry = Set if no warp index found. This is so that for
-;; 2-way warps, prevents the centering code from centering the
-;; player every frame and traps him inside a pipe when reaching
-;; warp destination.
+; - Carry = Set if no warp index found. Useful for:
+; -- Prevents an issue with 2-way warps, resulting the
+;    centering code from centering the player every frame
+;    and traps him inside a pipe when reaching warp
+;    destination.
+; -- Use for debugging when you accidentally forget to set
+;    the warps properly.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	PHB							;>Preserve bank
 	PHK							;\Adjust bank for any $xxxx,y
@@ -27,6 +30,8 @@ incsrc "../SSPDef/Defines.asm"
 				?.CorrectDirectionCheck
 					LDA !Freeram_SSP_PipeDir
 					AND.b #%00001111
+					CMP #$09				;\If in warp/drag mode set by door, don't convert it to a direction
+					BEQ ?.AlreadyConvertedDirection		;/
 					CMP #$05
 					BCC ?.AlreadyConvertedDirection
 					SEC
@@ -44,14 +49,14 @@ incsrc "../SSPDef/Defines.asm"
 				;Is Xposition matched?
 					REP #$20
 					LDA $9A
-					LSR #4			;>Convert pixel coordinates to 16x16 block coordinate
+					LSR #4			;>Convert pixel coordinates to 16x16 block coordinate (rounded down)
 					CMP ?StartPositionX,x
 					SEP #$20
 					BNE ?.Next
 				;What about Y?
 					REP #$20
 					LDA $98
-					LSR #4			;>Convert pixel coordinates to 16x16 block coordinate
+					LSR #4			;>Convert pixel coordinates to 16x16 block coordinate (rounded down)
 					CMP ?StartPositionY,x
 					SEP #$20
 					BNE ?.Next
@@ -129,10 +134,11 @@ incsrc "../SSPDef/Defines.asm"
 	;These determine which warp the player will take:
 		;Direction to enter warp mode (traveling in other directions into
 		;the warp will do nothing). Only use values $01-$04:
-		;-$01 = Up
-		;-$02 = Right
-		;-$03 = Down
-		;-$04 = Left
+		; - $01 = Up
+		; - $02 = Right
+		; - $03 = Down
+		; - $04 = Left
+		; - $09 = Warp drag (entering a warp/drag door)
 			?CorrectDirection
 				;Keep all your numbers in between the label [?CorrectDirection] and [?.End]. This is needed to determine
 				;during assembly on how may indexes, which determines what number the index will start at to count down.
@@ -143,6 +149,8 @@ incsrc "../SSPDef/Defines.asm"
 					db $03			;>Index 4
 					db $04			;>Index 5
 					db $03			;>Index 6
+					db $09			;>Index 7
+					db $09			;>Index 8
 					?.End			;>Keep this here!
 		;Level the start wrap points are in.
 			?LevelNumberTable
@@ -153,6 +161,8 @@ incsrc "../SSPDef/Defines.asm"
 				dw $0105		;>Index 8 (Index 4 * 2)
 				dw $0105		;>Index 10 (Index 5 * 2)
 				dw $0105		;>Index 12 (Index 6 * 2)
+				dw $0105		;>Index 14 (Index 7 * 2)
+				dw $0105		;>Index 16 (Index 8 * 2)
 		
 		;These is the current block position (block coordinates, in units of 16x16, not pixels)
 		;where Mario comes from.
@@ -164,6 +174,8 @@ incsrc "../SSPDef/Defines.asm"
 				dw $00AF		;>Index 8 (Index 4 * 2)
 				dw $00C2		;>Index 10 (Index 5 * 2)
 				dw $00D4		;>Index 12 (Index 6 * 2)
+				dw $011A		;>Index 14 (Index 7 * 2)
+				dw $00F9		;>Index 16 (Index 8 * 2)
 			?StartPositionY
 				dw $0022		;>Index 0 (Index 0 * 2)
 				dw $0022		;>Index 2 (Index 1 * 2)
@@ -172,6 +184,8 @@ incsrc "../SSPDef/Defines.asm"
 				dw $0008		;>Index 8 (Index 4 * 2)
 				dw $0014		;>Index 10 (Index 5 * 2)
 				dw $0022		;>Index 12 (Index 6 * 2)
+				dw $0009		;>Index 14 (Index 7 * 2)
+				dw $0021		;>Index 16 (Index 8 * 2)
 	;These are the destination positions, in pixels (why not block positions, then LSR #4?,
 	;well, because it is possible that the player must be centered horizontally between 2 blocks
 	;rather than 16x16 grid-aligned as in the case with traveling through normal-sized vertical
@@ -192,10 +206,10 @@ incsrc "../SSPDef/Defines.asm"
 	;When riding on yoshi, it is the position of Yoshi's saddle part, not the player's feet.
 	;Therefore, to get the correct position in a pipe:
 	;
-	;-For Small horizontal pipes, it is the tile of the stem part, enough said, same goes with vertical small pipe.
-	;-For regular sized horizontal pipes, it is the bottom half of the stem.
-	;-For regular sized vertical pipes, it is the bottom-left tile of the 2x2 16x16 block space the player is at least
-	; touching, assuming you are using the [(BlockPos*$10)+HalfBlock] formula.
+	; - For Small horizontal pipes, it is the tile of the stem part, enough said, same goes with vertical small pipe.
+	; - For regular sized horizontal pipes, it is the bottom half of the stem.
+	; - For regular sized vertical pipes, it is the bottom-left tile of the 2x2 16x16 block space the player is at least
+	;   touching, assuming you are using the [(BlockPos*$10)+HalfBlock] formula.
 		?EndPositionX
 			dw ($009A*$10)+$08	;>Index 0 (Index 0 * 2)
 			dw ($0012*$10)+$08	;>Index 2 (Index 1 * 2)
@@ -204,6 +218,8 @@ incsrc "../SSPDef/Defines.asm"
 			dw ($00B9*$10)+$08	;>Index 8 (Index 4 * 2)
 			dw ($00D4*$10)+$08	;>Index 10 (Index 5 * 2)
 			dw ($00C2*$10)+$00	;>Index 12 (Index 6 * 2)
+			dw ($00F9*$10)+$00	;>Index 14 (Index 7 * 2)
+			dw ($011A*$10)+$00	;>Index 16 (Index 8 * 2)
 		?EndPositionY
 			dw ($0022*$10)+!Setting_SSP_YPositionOffset	;>Index 0 (Index 0 * 2)
 			dw ($0022*$10)+!Setting_SSP_YPositionOffset	;>Index 2 (Index 1 * 2)
@@ -212,14 +228,16 @@ incsrc "../SSPDef/Defines.asm"
 			dw ($001E*$10)+!Setting_SSP_YPositionOffset	;>Index 8 (Index 4 * 2)
 			dw ($0022*$10)+!Setting_SSP_YPositionOffset	;>Index 10 (Index 5 * 2)
 			dw ($0014*$10)+!Setting_SSP_YPositionOffset	;>Index 12 (Index 6 * 2)
+			dw ($0021*$10)					;>Index 14 (Index 7 * 2)
+			dw ($0009*$10)					;>Index 16 (Index 8 * 2)
 	;This is the prep direction to set to that the player will start moving in that direction
 	;upon reaching his destination.
 	;Only use these values
-	;-$00 = Revert to normal mode (“exit” the pipe with no animation nor sound)
-	;-$10 = up
-	;-$20 = right
-	;-$30 = down
-	;-$40 = left
+	; - $00 = Revert to normal mode (use when exiting screen scrolling warp/drag doors)
+	; - $10 = up
+	; - $20 = right
+	; - $30 = down
+	; - $40 = left
 		?DestinationDirection
 			db $10			;>Index 0
 			db $40			;>Index 1
@@ -228,3 +246,5 @@ incsrc "../SSPDef/Defines.asm"
 			db $10			;>Index 4
 			db $10			;>Index 5
 			db $20			;>Index 6
+			db $00			;>Index 7
+			db $00			;>Index 8
