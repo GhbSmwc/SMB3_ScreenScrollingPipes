@@ -198,9 +198,13 @@ incsrc "../SSPDef/Defines.asm"
 	;	-HalfBlock = $00 (16x16 aligned) or $08 (half-block aligned, with vertical normal-sized pipes, you
 	;	 normally do this for X position though).
 	;
-	;Y position is similar, except must be:
+	;Y position is similar, except must be for pipes:
 	;
 	;	dw (BlockYPos*$10)+!Setting_SSP_YPositionOffset
+	;
+	;Y position for doors:
+	;
+	;	dw (BlockYPos*$10)
 	;
 	;These positions are “feet” position of the player, rather than the head position.
 	;When riding on yoshi, it is the position of Yoshi's saddle part, not the player's feet.
