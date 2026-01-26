@@ -163,9 +163,10 @@ How you assemble them in the level is pretty much the same you would do with <a 
 Most of designing a level using these is the same as the basics, so no further explanation is needed here.
 <h1><a href="#TOC_WarpModeBack" id="TOC_WarpMode">^</a>Warp mode</h1>
 This feature involves blocks that would cause the player to be &ldquo;dragged&rdquo; towards a given position across the level. They are a pipe stem part the player touches in order to trigger this mode. For normal-sized
-pipe caps, they are only the left half of the vertical stem and only the bottom of the horizontal stem. This is because it is unnecessary to have both halves since the player's hitbox is wide enough to touch both sides (similar
-to the turn corners and horizontal pipe caps), and also, the cramped space of 256 blocks per page. This means you place them like this:<br>
+pipe caps, they are only the left half of the vertical stem, only the bottom of the horizontal stem, and for doors, the bottom for regular-sized doors and the block itself for small-only player. This is because it is
+unnecessary to have both halves since the player's hitbox is wide enough to touch both sides (similar to the turn corners and horizontal pipe caps), and also, the cramped space of 256 blocks per page. This means you place them like this:<br>
 <img src="WarpModeTilePosition.png"><br>
+
 <h2>Setting up warp destinations</h2>
 The warp destinations are located in <kbd>GPS_Stuff/BlockRoutines/SSPDragMarioMode.asm</kbd>. At the bottom, you'll find tables of various information, with each warp is 1 entry (meaning if 2-way, would count as two warps).
 Follow these instructions:
