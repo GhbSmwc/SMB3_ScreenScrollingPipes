@@ -171,8 +171,8 @@ unnecessary to have both halves since the player's hitbox is wide enough to touc
 The warp destinations are located in <kbd>GPS_Stuff/BlockRoutines/SSPDragMarioMode.asm</kbd>. At the bottom, you'll find tables of various information, with each warp is 1 entry (meaning if 2-way, would count as two warps).
 Follow these instructions:
 <ol>
-	<li>Set two pipes in the level, can be either 1-way or 2-way.</li>
-	<li>Place your <kbd>DragPlayer.asm</kbd> onto the left/bottom half of the vertical/horizontal pipe stem the player will be entering in Lunar Magic. If 2-way, do it on both.</li>
+	<li>Set two pipes or doors in the level, can be either 1-way or 2-way. For demonstration, we'll be using pipes.</li>
+	<li>Place your <kbd>DragPlayer.asm</kbd> onto the left/bottom half of the vertical/horizontal pipe stem the player will be entering in Lunar Magic. If 2-way, do it on both. If using doors instead, then it's <kbd>DoorWarpDrag_&lt;TopBottomOrSmall&gt;.asm</kbd>.</li>
 	<li>Now, open <kbd>SSPDragMarioMode.asm</kbd>, and scroll to where the tables are at. I put descriptions on them so it be easy to understand, I don't have to further explain here soo...
 	<li>What about the X and Y positions? Well, In LM, the status bar on the bottom left shows the block coordinate (in hex if version 3.03 released on 2019-04-01), hover the mouse over
 	<kbd>DragPlayer.asm</kbd> and get their coordinates. Then enter those numbers into the table.</li>
@@ -252,7 +252,27 @@ And the tables should be like this:<br>
 One thing to note is that you may make a mistake and have the player go in directions in an unintended way (and softlock), and you
 cannot see him because the SSP system is designed to make the player invisible to hide the illusion the player was dragged rather
 than warped. To assist on fixing or discovering what or how that happens, go to <kbd>SSPDef/Defines.asm</kbd>, and set <kbd>!Setting_SSP_PipeDebug</kbd>
-to <kbd>1</kbd> and reinsert. Don't forget to set this back to <kbd>0</kbd> once you finish your hack.
+to <kbd>1</kbd> and reinsert. Don't forget to set this back to <kbd>0</kbd> once you finish your hack.<br><br>
+
+Notes:
+<ul>
+	<li>
+		The subroutine <kbd>SSPDragMarioMode.asm</kbd> outputs a carry flag that's set if a warp/drag entry is not listed when triggered. The provided blocks using them does check this, and If you have placed the warp/drag mode blocks in the level
+		that isn't listed and the player triggers them:
+		<ul>
+			<li>For pipe parts, they will do nothing. And one of the reason is so that for 2-way travel, you can have the warp destination be on one of those warp points without triggering the second warp point and softlock going back and fourth.</li>
+			<li>For doors, it will center the player and attempt to send the player, but then aborts afterwards and plays an &ldquo;incorrect&rdquo; sound effect, as an indicator (to the hack creator) that a warp destination isn't set.</li>
+		</ul>
+	</li>
+	<li>
+		Caution must be taken that having a very long list of warp destinations can cause a lag spike (for one frame, if it finds a matching warp entry, or a door with no listed entry) or constant lag for pipes (executes every frame while in
+		contact by the player). One solution is to break the list into separate items (have similar copies), with  smaller list to avoid iterating a large number of entries. The subroutine starts at the last item, and compares each item towards
+		the first, thus first N items would take longer.
+	</li>
+</ul>
+Another feature was added is wraparound. This is not a custom block, rather an uberasm tool level code (see <kbd>UberasmTool_Stuff/level/SSP_WarpDragLevelWrap.asm</kbd>) that triggers when the player's position is on the edge of the level during a SSP travel state.
+all you have to do is insert it (should be obvious with the folder names) on levels you want the effects, set the extra bytes to configure if you want an invert in addition to wrapping in its list file, and have pipes that would send the player to the edge of the
+level.
 
 <h1><a href="#TOC_SwitchedPrepDirectionBack" id="TOC_SwitchedPrepDirection">^</a>Switchable prep turn directions</h1>
 I also made pipe parts that switches the player's direction prior hitting a turn-special depending on a given RAM (by default, it is the on/off switch).
