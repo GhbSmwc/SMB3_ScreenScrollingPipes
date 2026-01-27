@@ -112,7 +112,7 @@ endif
 		;
 		;This RAM determines to hide the player (#$01) during a pipe stem travel or not (#$00).
 		;Used to distinguish between screen scrolling door travel (which supposed to hide the
-		;player), or a pipe stem (shouldn't hide the player for things like glass pipes).
+		;player), or a pipe stem (shouldn't hide the player for things like glass/clear pipes).
 		
 	if !sa1 == 0
 		!Freeram_BlockedStatBkp	= $7E0079
@@ -219,7 +219,7 @@ endif
 		;       keeps incrementing while on the ground every frame).
 	!Setting_SSP_HideDuringPipeStemTravel = 0
 		;^Turn the player, yoshi that the player is riding, and carried sprite invisible during pipe travel:
-		; - 0 = no (will only hide if drag-player mode or traveling through doors). Use this option if you wanted glass pipes.
+		; - 0 = no (will only hide if drag-player mode or traveling through doors). Use this option if you wanted glass/clear pipes.
 		;       NOTE: Make sure you remove these from your blocks list and it being used in the test level (the blue connector pipe connectors in screen boundaries
 		;       $08, $0A, and $0B) since they are no longer needed:
 		;        - "SSP_Tiles/set_visibility_on.asm"
