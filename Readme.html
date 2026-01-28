@@ -366,12 +366,16 @@ fix patch because of a quirk with SMW's horizontal speed handling that if you ar
 		</ul>
 	</li>
 	<li>
-		My game crashed! What happened?
+		My game crashed or the pipes not working after installing another patch! What happened?
 		<ul>
 			<li>
-				Most likely are patch hijack conflict with this ASM resource's <kbd>Fixes.asm</kbd> (that is, 2 or more patches' range of written data are overlapping, causing invalid opcodes to occur there and crash once executed).
-				SMWC have a &ldquo;Hijack Map&rdquo; and also you can see where is the code overwritten by viewing the <kbd>org &lt;Address&gt;</kbd> and the following code to overwrite it. If you need such other patches, best bet is
-				to combine them and have its freespace code handle both actions (will require ASM knowledge).
+				A crash is most likely are patch hijack conflict with this ASM resource's <kbd>Fixes.asm</kbd> (that is, 2 or more patches' range of written data are overlapping, causing invalid opcodes to occur there and crash once executed).
+				SMWC have a &ldquo;<a href="https://www.smwcentral.net/?p=memorymap&game=smw&region=hijack">Hijack Map</a>&rdquo; and also you can see where is the code overwritten by viewing the <kbd>org &lt;Address&gt;</kbd> and the following
+				code that overwrites it. If you need such other patches, best bet is to combine them and have its freespace code handle both actions (will require ASM knowledge).
+			</li>
+			<li>
+				If it didn't crash but didn't do anything, most likely is that a third-party patch reverts or skips over stuff that <kbd>Fixes.asm</kbd> was intended to fix. You must edit either this patch, the third-party patch, or combine to
+				account	of the pipe effects. In this case, I recommend using debugging tools (such as <a href="https://github.com/SourMesen/Mesen2">Messen 2.0</a> and placing breakpoints at the patches' <kbd>org $xxxxxx</kbd> hijacks address)
 			</li>
 			<li>You have found a bug I haven't discovered.</li>
 		</ul>
