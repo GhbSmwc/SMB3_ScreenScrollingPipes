@@ -280,7 +280,7 @@ meaning you don't have to worry about the path being in the way of designing lev
 			to 0, reinstall Fixes.asm, <b>and then</b> install the WJNB fix patch. And whatever you do, DON'T install the WJNB patch with Fixes.asm being installed with <kbd>!Setting_SSP_Hijack_00EA18</kbd> set to 1, or a potential freespace may have been leaked.</li>
 	
 			<li>Not much to say, simply install <kbd>Fixes.asm</kbd> via asar. This patch fixes various bugs relating with the pipes and sprites to not interact with the player during a pipe travel. Make sure you do not move the file, else you have to edit the
-			<kbd>incsrc "&lt<a href="https://en.wikipedia.org/wiki/Path_(computing)">relative path to the defines file</a>&gt;"</kbd> to get it to work.</li><br>
+			<!-- <kbd>incsrc "&lt<a href="https://en.wikipedia.org/wiki/Path_(computing)">relative path to the defines file</a>&gt;"</kbd> to get it to work.</li><br> -->
 		</ol><br>
 		<li>Pixi (in <kbd>Pixi</kbd> folder). This mainly deals with making custom sprites be compatible with the SSPs. Mainly the fact that custom sprites may interact with the player in ways they shouldn't, and they should be rendered invisible
 		with the player (by skipping the graphics code/routine) when dragged into the pipe.</li><br>
@@ -328,29 +328,54 @@ fix patch because of a quirk with SMW's horizontal speed handling that if you ar
 <p>See the list of blocks in the <a href="Readme_files/BlocksUsageInLevel2.html" target="_blank">block placement section</a></p>
 <h2><a href="#TOC_FAQ" id="FAQ">^</a>FAQ</h2>
 <ul>
-
-<li>How do I set the freeram and settings?
-<ul><li>Open <kbd>SSPDef/Defines.asm</kbd>. If you make changes to it, you MUST update all other copies of it in GPS, pixi and uberasm
-tool so they use updated information, then reinsert all of them to apply the changes.</li></ul></li><br>
-
-<li>When Mario enters a pipe, Mario passes through them as if they turned into air tiles!
-<ul><li>You've forgot to insert the uberasm tool code <kbd>GM14_ScreenScrollingPipes.asm</kbd> as gamemode 14, which is needed as blocks have certain limitations.</li></ul><br>
-</li>
-
-<li>Horizontal pipe caps can't entered even if I used ones that are labeled &ldquo;enterable&rdquo;!
-<ul><li>You forget to install a patch included in this package, go into the folders: <kbd>/Patches/Fixes.asm</kbd>. This fixes a ton of bugs and
-other issues needed so that the pipes are ensure no major issues will happen.</li></ul><br>
-</li>
-
-<li>I've found a bug! Will you fix it?
-<ul><li>Yes, but only if I'm active on smw central. However, in the case that I'm inactive, you are free to re-upload my works, just make sure you
-give credit.</li></ul></li><br>
-
-<li>How do I modify the speeds, and other customizations?
-<ul><li>Open <kbd>SSPDef/Defines.asm</kbd>, there should be things like what RAM you want to use, if you wanted the pipes to not freeze time, etc.
-Just make sure you read the descriptions, espically when you are changing the pipe cap speeds (how mario exit the pipes rely on a timer of when
-the player will be out of &ldquo;pipe mode&rdquo;). Make sure you read <a href="#SpeedClipping">this</a> because fast speeds can cause the player to phase through turn
-corners and exit caps without interacting them, causing the player to continue in his pipe state and direction when he shouldn't.</li></ul></li>
+	<li>
+		How do I set the freeram and settings?
+		<ul>
+			<li>
+				Open <kbd>SSPDef/Defines.asm</kbd>. If you make changes to it, you MUST update all other copies of it in GPS, pixi and uberasm
+				tool so they use updated information, then reinsert all of them to apply the changes.
+			</li>
+		</ul>
+	</li>
+	<li>
+		When Mario enters a pipe, Mario passes through them as if they turned into air tiles!
+		<ul>
+			<li>
+				You've forgot to insert the uberasm tool code <kbd>GM14_ScreenScrollingPipes.asm</kbd> as gamemode 14, which is needed as blocks have certain limitations.
+			</li>
+		</ul>
+	</li>
+	<li>
+		I've found a bug! Will you fix it?
+		<ul>
+			<li>
+				Yes, but only if I'm active on smw central. However, in the case that I'm inactive, you are free to re-upload my works, just make sure you
+				give credit.
+			</li>
+		</ul>
+	</li>
+	<li>
+		How do I modify the speeds, and other customizations?
+		<ul>
+			<li>
+				Open <kbd>SSPDef/Defines.asm</kbd>, there should be things like what RAM you want to use, if you wanted the pipes to not freeze time, etc.
+				Just make sure you read the descriptions, espically when you are changing the pipe cap speeds (how mario exit the pipes rely on a timer of when
+				the player will be out of &ldquo;pipe mode&rdquo;). Make sure you read <a href="#SpeedClipping">this</a> because fast speeds can cause the player to phase through turn
+				corners and exit caps without interacting them, causing the player to continue in his pipe state and direction when he shouldn't.
+			</li>
+		</ul>
+	</li>
+	<li>
+		My game crashed! What happened?
+		<ul>
+			<li>
+				Most likely are patch hijack conflict with this ASM resource's <kbd>Fixes.asm</kbd> (that is, 2 or more patches' range of written data are overlapping, causing invalid opcodes to occur there and crash once executed).
+				SMWC have a &ldquo;Hijack Map&rdquo; and also you can see where is the code overwritten by viewing the <kbd>org &lt;Address&gt;</kbd> and the following code to overwrite it. If you need such other patches, best bet is
+				to combine them and have its freespace code handle both actions (will require ASM knowledge).
+			</li>
+			<li>You have found a bug I haven't discovered.</li>
+		</ul>
+	</li>
 </ul>
 
 <h2><a href="#TOC_Notes" id="Notes">^</a>Notes</h2>
