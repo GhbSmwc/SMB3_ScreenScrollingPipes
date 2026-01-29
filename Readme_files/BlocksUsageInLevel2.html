@@ -168,14 +168,13 @@ unnecessary to have both halves since the player's hitbox is wide enough to touc
 <img src="WarpModeTilePosition.png"><br>
 
 <h2>Setting up warp destinations</h2>
-The warp destinations are located in <kbd>GPS_Stuff/BlockRoutines/SSPDragMarioMode.asm</kbd>. At the bottom, you'll find tables of various information, with each warp is 1 entry (meaning if 2-way, would count as two warps).
+The warp destinations are located in <kbd>GPS_Stuff/BlockRoutines/SSPDragMarioMode.asm</kbd>. At the bottom, you'll find multiple tables of various information, with each warp is 1 entry (meaning if 2-way, would count as two warps).
 Follow these instructions:
 <ol>
 	<li>Set two pipes or doors in the level, can be either 1-way or 2-way. For demonstration, we'll be using pipes.</li>
 	<li>Place your <kbd>DragPlayer.asm</kbd> onto the left/bottom half of the vertical/horizontal pipe stem the player will be entering in Lunar Magic. If 2-way, do it on both. If using doors instead, then it's <kbd>DoorWarpDrag_&lt;TopBottomOrSmall&gt;.asm</kbd>.</li>
-	<li>Now, open <kbd>SSPDragMarioMode.asm</kbd>, and scroll to where the tables are at. I put descriptions on them so it be easy to understand, I don't have to further explain here soo...
-	<li>What about the X and Y positions? Well, In LM, the status bar on the bottom left shows the block coordinate (in hex if version 3.03 released on 2019-04-01), hover the mouse over
-	<kbd>DragPlayer.asm</kbd> and get their coordinates. Then enter those numbers into the table.</li>
+	<li>Now, open <kbd>SSPDragMarioMode.asm</kbd>, and scroll to where the tables are at. I put comment descriptions on them (please also read the comment just before label <kbd>?CorrectDirection</kbd>) so it be easy to understand, I don't have to further explain here soo...
+	<li>What about the X and Y positions? Well, In LM, the status bar on the bottom left shows the block coordinate (in hex if version 3.03 released on 2019-04-01), hover the mouse over <kbd>DragPlayer.asm</kbd> and get their coordinates. Then enter those numbers into the table.</li>
 </ol>
 Here is an example, tested in level $105:<br>
 <img src="DragMarioSetup.png"><br>
@@ -261,7 +260,7 @@ Notes:
 		that isn't listed and the player triggers them:
 		<ul>
 			<li>For pipe parts, they will do nothing. And one of the reason is so that for 2-way travel, you can have the warp destination be on one of those warp points without triggering the second warp point and softlock going back and fourth.</li>
-			<li>For doors, it will center the player and attempt to send the player, but then aborts afterwards and plays an &ldquo;incorrect&rdquo; sound effect, as an indicator (to the hack creator) that a warp destination isn't set.</li>
+			<li>For doors, it will center the player and attempt to send the player, but then aborts (immediately) afterwards and plays an &ldquo;incorrect&rdquo; sound effect, as an indicator (to the hack creator) that a warp destination isn't set.</li>
 		</ul>
 	</li>
 	<li>

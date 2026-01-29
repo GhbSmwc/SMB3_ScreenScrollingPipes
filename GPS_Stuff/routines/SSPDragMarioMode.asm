@@ -86,8 +86,8 @@ incsrc "../SSPDef/Defines.asm"
 		PLY				;>Restore block behaver
 		PLB
 		RTL
-;These are tables containing the warps (each warp is 1 entry, therefore 2-way takes 1 entry from point A to B
-;and another from point B back to point A).
+;These are tables containing the warps (each warp is 1 entry, at the Nth item in each table). Note that
+;2-way warps are 2 separate warps: 1 entry from point A to B and another from point B back to point A.
 ;
 ;When I mean “entry”, I mean the number of items, regardless of the value is 8 or 16-bit.
 ;
