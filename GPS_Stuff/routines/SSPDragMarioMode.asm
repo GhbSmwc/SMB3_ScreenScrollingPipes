@@ -186,19 +186,18 @@ incsrc "../SSPDef/Defines.asm"
 				dw $0022		;>Index 12 (Index 6 * 2)
 				dw $0009		;>Index 14 (Index 7 * 2)
 				dw $0021		;>Index 16 (Index 8 * 2)
-	;These are the destination positions, in pixels (why not block positions, then LSR #4?,
-	;well, because it is possible that the player must be centered horizontally between 2 blocks
+	;These are the destination positions, in units of pixels (why not in block units? well,
+	;because it is possible that the player must be centered horizontally between 2 blocks
 	;rather than 16x16 grid-aligned as in the case with traveling through normal-sized vertical
 	;pipes).
 	;
-	;You can easily convert them into pixel coordinate via this formula:
+	;You can easily convert them into pixel coordinate via this formula for the X position:
 	;	dw (BlockXPos*$10)+HalfBlock
 	;	
-	;	-BlockPos = the X position, in units of 16x16 (the coordinates of the block seen in Lunar Magic).
-	;	-HalfBlock = $00 (16x16 aligned) or $08 (half-block aligned, with vertical normal-sized pipes, you
-	;	 normally do this for X position though).
+	;	-BlockXPos = the X position, in units of 16x16 (the coordinates of the block seen in Lunar Magic).
+	;	-HalfBlock = $00 (16x16 aligned) or $08 (half-block aligned, with vertical normal-sized pipes).
 	;
-	;Y position is similar, except must be for pipes:
+	;Y position is somewhat similar, except must be for pipes:
 	;
 	;	dw (BlockYPos*$10)+!Setting_SSP_YPositionOffset
 	;
