@@ -423,3 +423,4 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	-Added an optional feature for warp/drag mode to make the player move faster if the destination is far
 	 away enough.
 	-Renamed various defines that start with "!SSP" with "!Setting_SSP" for consistency.
+	-Sound effects can now be configured.

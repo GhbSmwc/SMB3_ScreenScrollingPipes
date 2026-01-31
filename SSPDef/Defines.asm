@@ -256,6 +256,17 @@ endif
 		; - $0000 = No, stay the same speed
 		; - $0001+ = Yes, move faster when further than this amount.
 		; Note: Distance check uses a taxicab distance, forming a regular polygon diamond, that when outside of, will move faster.
+	;Sound effects. Set their sound effects to $00 to disable (will not write to the sound channel address).
+	;See this: https://www.smwcentral.net/?p=viewthread&t=6665&page=1 for their port (RAM $1DF9~$1DFC) and sound effect numbers.
+	;NOTE: For RAM address port, you must have "|!addr" appended to allow hybrid LoROM and SA-1 support.
+		!Setting_SSP_SFX_EnterPipe_SoundNumb = $04
+		!Setting_SSP_SFX_EnterPipe_Port = $1DF9|!addr
+		!Setting_SSP_SFX_ExitPipe_SoundNumb = $04
+		!Setting_SSP_SFX_ExitPipe_Port = $1DF9|!addr
+		!Setting_SSP_SFX_EnterDoor_SoundNumb = $0F
+		!Setting_SSP_SFX_EnterDoor_Port = $1DFC|!addr
+		!Setting_SSP_SFX_ExitDoor_SoundNumb = $09
+		!Setting_SSP_SFX_ExitDoor_Port = $1DFC|!addr
 	;Settings for "SSP_WarpDragLevelWrap.asm"
 		!Setting_SSP_WarpDragLevelWrap_TopTriggerYPosition = -$0030
 			;^Y position of the top edge of the level (screen if V-scroll disabled) the player would warp. Note that this does not offset up by 1 tile if riding yoshi

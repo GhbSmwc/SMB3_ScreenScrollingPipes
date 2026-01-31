@@ -37,8 +37,10 @@ incsrc "../SSPDef/Defines.asm"
 		LDA.b #!Setting_SSP_YPositionFractionSetTo	;|
 		STA $13DC|!addr					;|
 	endif							;/
-	LDA #$0F						;\SFX
-	STA $1DFC|!addr						;/
+	if !Setting_SSP_SFX_EnterDoor_SoundNumb
+		LDA.b #!Setting_SSP_SFX_EnterDoor_SoundNumb
+		STA !Setting_SSP_SFX_EnterDoor_Port
+	endif
 	LDA !Freeram_SSP_PipeDir				;\Set direction
 	AND.b #%11110000					;|
 	ORA $00							;|

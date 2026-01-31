@@ -50,8 +50,10 @@ incsrc "../SSPDef/Defines.asm"
 		LDA.b #!Setting_SSP_YPositionFractionSetTo	;|
 		STA $13DC|!addr					;|
 	endif							;/
-	LDA #$04						;\pipe sound
-	STA $1DF9|!addr						;/
+	if !Setting_SSP_SFX_ExitPipe_SoundNumb
+		LDA.b #!Setting_SSP_SFX_ExitPipe_SoundNumb
+		STA !Setting_SSP_SFX_ExitPipe_Port
+	endif
 	STZ $7B							;\Prevent centering, and then displaced by xy speeds.
 	STZ $7D							;/
 	%SSPCancelYoshiActions()

@@ -57,7 +57,7 @@ exit:
 	STA $02
 	LDA #$03
 	STA $03
-	%SSPExitUpwardsPipe()
+	%SSPExitUpwardsFacingPipe()
 	RTL
 passable:
 	LDY #$00		;\mario passes through the block

@@ -31,7 +31,7 @@ exit:
 	STA $02
 	LDA #$03
 	STA $03
-	%SSPExitUpwardsPipe()
+	%SSPExitUpwardsFacingPipe()
 return:
 	RTL
 passable:

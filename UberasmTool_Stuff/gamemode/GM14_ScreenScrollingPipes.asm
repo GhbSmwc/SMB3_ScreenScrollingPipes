@@ -269,8 +269,10 @@ SSPMaincode:
 						LDA !Freeram_SSP_PipeDir			;\If the high nybble was 0 and got written to his pipe status, cancel all pipe states.
 						AND.b #%00001111				;|
 						BNE ..EnterExitTransition			;|
-						LDA #$09					;|\Exiting door when door is a warp/drag mode
-						STA $1DFC|!addr					;|/
+						if !Setting_SSP_SFX_ExitDoor_SoundNumb
+							LDA.b #!Setting_SSP_SFX_ExitDoor_SoundNumb
+							STA !Setting_SSP_SFX_ExitDoor_Port
+						endif
 						JMP ..ResetStatus				;/
 				....DragMarioXYSpeed
 					;This aiming code has to run every frame as mario goes towards his warp destination

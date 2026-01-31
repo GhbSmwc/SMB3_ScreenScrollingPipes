@@ -19,8 +19,10 @@ incsrc "../SSPDef/Defines.asm"
 		LDA.b #!Setting_SSP_PipeTimer_Enter_Upwards_OffYoshi
 	endif
 	STA !Freeram_SSP_PipeTmr
-	LDA #$04			;\pipe sound
-	STA $1DF9|!addr			;/
+	if !Setting_SSP_SFX_EnterPipe_SoundNumb
+		LDA.b #!Setting_SSP_SFX_EnterPipe_SoundNumb
+		STA !Setting_SSP_SFX_EnterPipe_Port
+	endif
 	STZ $7B				;\Prevent centering, and then displaced by xy speeds.
 	STZ $7D				;/
 	LDA !Freeram_SSP_PipeDir	;\Set his direction (Will only force the low nibble (bits 0-3) to have the value 7)

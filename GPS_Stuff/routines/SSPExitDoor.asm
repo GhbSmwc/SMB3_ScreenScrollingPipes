@@ -74,8 +74,10 @@ incsrc "../SSPDef/Defines.asm"
 			LDA.b #!Setting_SSP_YPositionFractionSetTo	;|
 			STA $13DC|!addr					;|
 		endif							;/
-		LDA #$09						;\SFX
-		STA $1DFC|!addr						;/
+		if !Setting_SSP_SFX_ExitDoor_SoundNumb
+			LDA.b #!Setting_SSP_SFX_ExitDoor_SoundNumb
+			STA !Setting_SSP_SFX_ExitDoor_Port
+		endif
 		LDA #$01						;\Exiting timer
 		STA !Freeram_SSP_PipeTmr				;/
 		LDA #$03						;\Exiting state

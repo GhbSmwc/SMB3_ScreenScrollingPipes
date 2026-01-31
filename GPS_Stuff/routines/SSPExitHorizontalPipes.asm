@@ -39,8 +39,10 @@ incsrc "../SSPDef/Defines.asm"
 		AND.b #%11110000		;|>Force low nibble clear
 		ORA ?.ExitingDirections,x	;|>Force low nibble set
 		STA !Freeram_SSP_PipeDir	;/
-		LDA #$04			;\pipe sound
-		STA $1DF9|!addr			;/
+		if !Setting_SSP_SFX_ExitPipe_SoundNumb
+			LDA.b #!Setting_SSP_SFX_ExitPipe_SoundNumb
+			STA !Setting_SSP_SFX_ExitPipe_Port
+		endif
 		?.SetExitingTimers
 			LDA $01
 			CMP #$03
