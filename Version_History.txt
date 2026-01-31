@@ -358,7 +358,9 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	--Fixed a problem where sprite interaction with the player during pipe travel still happens (lose yoshi)
 	  when the player is riding yoshi.
 	--Fixed a problem where if player is off yoshi, and enters a pipe and turns invisible, so too will
-	  yoshi. Credit to AmperSam (https://www.smwcentral.net/?p=profile&id=41223)
+	  yoshi. Credit to AmperSam (https://www.smwcentral.net/?p=profile&id=41223). Note that this isn't a
+	  true fix since yoshi checks if RAM $78 is #$FF would hide him. Problem is that the yoshi routine
+	  that checks the RAM is hijacked by SA-1.
 	--Fixed a minor visual quirk where if the player crouch-slide into the top of a pipe and enters it,
 	  the player will retain his crouching state throughout the pipe travel.
 	--Fixed an issue with Warp/Drag mode in SA-1 breaking on accurate emulators (when applied to SA-1 game,
@@ -367,6 +369,9 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	--Fixed a slight error where dying the same frame the player enters a pipe with !Setting_SSP_FreezeTime
 	  set to 1 would cause an abrupt fade out on the dying animation.
 	--Fixed a bug where yoshi turning around animation persists when traveling through vertical pipes.
+	--Made horizontal pipes also set X position and vertical pipes set Y position in addition to centering
+	  the player so that the player goes from entering to stem state at a consistent position (sprites,
+	  wind generators or anything that would position the player slightly off can affect this).
 	-Added an optional fix for camera panning to allow the camera to pan in the direction the player is
 	 facing when enabling freezing during pipe travel (previously, the camera would pan in front of
 	 player's facing when the freeze setting is off, but does not do so when on).
