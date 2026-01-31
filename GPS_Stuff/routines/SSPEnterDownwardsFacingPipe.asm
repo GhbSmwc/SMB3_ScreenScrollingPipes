@@ -84,10 +84,10 @@ incsrc "../SSPDef/Defines.asm"
 	;or any form of custom hitboxes.
 		?.CenterVerticallyPowerupOffYoshi
 		;Offset from the block's Y position (units of pixels, not 16x16) to set the player's Y position.
-			dw $0000 ;>$19 = #$00 (*2 = #$00)
-			dw $0008 ;>$19 = #$01 (*2 = #$02)
-			dw $0008 ;>$19 = #$02 (*2 = #$04)
-			dw $0008 ;>$19 = #$03 (*2 = #$06)
+			dw $FFFF ;>$19 = #$00 (*2 = #$00) ;>There must be 1 pixel up to prevent triggering upwards pipes placed so that there's 1 block tall space between the pipe caps as small mario.
+			dw $0007 ;>$19 = #$01 (*2 = #$02)
+			dw $0007 ;>$19 = #$02 (*2 = #$04)
+			dw $0007 ;>$19 = #$03 (*2 = #$06)
 		?.CenterVerticallyPowerupOnYoshi
 		;Same as above but on yoshi
 			dw $FFFC ;>$19 = #$00 (*2 = #$00)
