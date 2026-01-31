@@ -166,6 +166,7 @@ endif
 		
 	!Setting_SSP_FreezeTime	= 0
 		;^0 = FuSoYa's pipe to not freeze stuff, 1 = freeze stuff ($71 = #$0B and $9D = Any_nonzero_value).
+		;Note that dust particles can wrap when scrolled offscreen when frozen.
 		
 	!Setting_SSP_FuSoYaSpd		= 1
 		;^0 = SMW styled speed (pipe caps recreated from SMW's exit-enabled pipes, but with fast stem speed by default), 1 = FuSoYa's SSP speed.
@@ -244,7 +245,7 @@ endif
 		;   in Mario's facing direction, RAM $76 and $13FF). This is evident when entering vanilla horizontal pipes.
 		; - If you have !Setting_SSP_FreezeTime set to 0, then the auto-adjust will apply regardless of this setting.
 	!Setting_SSP_SetFacingDuringWarpDrag = 1
-		;^When in warp/drag mode, set player facing direction:
+		;^When in warp/drag mode, set player facing direction to where his destination was set:
 		; - 0 = no
 		; - 1 = yes (moving straight up or down will not set facing direction)
 	!Setting_SSP_DoorsProximity = 1
