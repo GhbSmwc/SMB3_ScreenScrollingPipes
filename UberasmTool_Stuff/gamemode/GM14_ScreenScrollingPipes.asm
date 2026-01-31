@@ -218,6 +218,7 @@ SSPMaincode:
 					BRA ....StopPotentialIssues
 			
 			...DragWarpMode
+				JSR CorrectFacing
 				....SetSeveralStatesForDragMode
 					LDA #$00			;\Prevent a minor glitch that causes carried sprites in pipe failing to turn invisible
 					STA !Freeram_SSP_PipeTmr	;/if the player enters a cap and immediately hits DragPlayer.asm before the timer hits 0.
@@ -658,35 +659,58 @@ CheckPlayerBottomCollisionPointIsInDestinationHitBox:
 CorrectFacing:
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%00001111
-	TAX
-	LDA.l .PipeDirectionToFacing-1,x
-	BMI .Done				;>For vertical movements, don't set direction.
-	STA $76					;>Set player facing direction
-	EOR #$01				;\RAM $157C's directions are opposite of RAM $76.
-	STA $00					;/
-	LDA $187A|!addr				;\Don't flip yoshi if yoshi is not ridden during pipe travel
-	BEQ .Done				;/
-	.YoshiFacing
-		;Yes, this loops ALL 12 or 22 slots, even when yoshi is found. This is a failsafe
-		;when there is a double-/multiple yoshis (from a glitch or placed directly in LM), it wouldn't
-		;pick only the yoshi at the highest slot
-		LDX.b #!sprite_slots-1
-		..Loop
-			if !Setting_SSP_UsingCustomSprites != 0
-				LDA !7FAB10,x	;\If custom sprite, next slot
-				AND #$08	;|
-				BNE ..Next	;/
-			endif
-			LDA !9E,x	;\If other than yoshi, next slot
-			CMP #$35	;|
-			BNE ..Next	;/
-			...IsYoshi
-				LDA $00
-				STA !157C,x
-				STZ !15AC,x	;>Cancel turning around animation.
-		..Next
-			DEX
-			BPL ..Loop
+	CMP #$09
+	if !Setting_SSP_SetFacingDuringWarpDrag == 0
+		BEQ .Done
+	else
+		BEQ .FacingBasedOnDragDirection
+	endif
+	.FacingBasedOnPipeMovement
+		TAX
+		LDA.l .PipeDirectionToFacing-1,x
+		BMI .Done				;>For vertical movements, don't set direction.
+	if !Setting_SSP_SetFacingDuringWarpDrag
+		BRA .SetFacing
+		.FacingBasedOnDragDirection
+			LDX #$00
+			REP #$20
+			LDA $94
+			CMP !Freeram_SSP_DragWarpPipeDestinationXPos
+			SEP #$20
+			BEQ .Done
+			BPL ..FaceLeft			;>Mario to the left of destination = face right (towards destination)
+			..FaceRight
+				INX
+			..FaceLeft
+			TXA
+	endif
+	.SetFacing
+		STA $76					;>Set player facing direction
+		EOR #$01				;\RAM $157C's directions are opposite of RAM $76.
+		STA $00					;/>Store sprite facing direction to $00
+		LDA $187A|!addr				;\Don't flip yoshi if yoshi is not ridden during pipe travel
+		BEQ .Done				;/
+		..YoshiFacing
+			;Yes, this loops ALL 12 or 22 slots, even when yoshi is found. This is a failsafe
+			;when there is a double-/multiple yoshis (from a glitch or placed directly in LM), it wouldn't
+			;pick only the yoshi at the highest slot
+			LDX.b #!sprite_slots-1
+			...Loop
+				if !Setting_SSP_UsingCustomSprites != 0
+					LDA !7FAB10,x	;\If custom sprite, next slot
+					AND #$08	;|
+					BNE ...Next	;/
+				endif
+				LDA !9E,x	;\If other than yoshi, next slot
+				CMP #$35	;|
+				BNE ...Next	;/
+				....IsYoshi
+					LDA $00
+					STA !157C,x
+					STZ !15AC,x	;>Cancel turning around animation.
+			...Next
+				DEX
+				BPL ...Loop
 	.Done
 		RTS
 	.PipeDirectionToFacing

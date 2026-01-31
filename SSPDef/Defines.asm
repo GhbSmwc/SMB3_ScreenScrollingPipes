@@ -241,8 +241,12 @@ endif
 		; - 1 = yes.
 		; Notes:
 		; - That panning system in vanilla SMW, when Mario status (RAM $71) != #$00, the auto-adjust system does not run, (camera will still follow the player, but not pan
-		;   in front of him). This is evident when entering vanilla horizontal pipes.
+		;   in Mario's facing direction, RAM $76 and $13FF). This is evident when entering vanilla horizontal pipes.
 		; - If you have !Setting_SSP_FreezeTime set to 0, then the auto-adjust will apply regardless of this setting.
+	!Setting_SSP_SetFacingDuringWarpDrag = 1
+		;^When in warp/drag mode, set player facing direction:
+		; - 0 = no
+		; - 1 = yes (moving straight up or down will not set facing direction)
 	!Setting_SSP_DoorsProximity = 1
 		;^0 = Allow entering doors at the full width
 		; 1 = Allow entering doors only when player is centered enough (Player's X position must be within -4 to +3 relative to the door (0 = exactly centered)).
