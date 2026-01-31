@@ -52,6 +52,7 @@ incsrc "../SSPDef/Defines.asm"
 		?..VerticalCenterOffYoshi					;|
 			REP #$20						;|
 			LDA $98							;|
+			AND #$FFF0						;|
 			CLC							;|
 			ADC.l ?.CenterVerticallyPowerupOffYoshi,x		;|
 			STA $96							;|
@@ -60,6 +61,7 @@ incsrc "../SSPDef/Defines.asm"
 		?..VerticalCenterOnYoshi					;|
 			REP #$20						;|
 			LDA $98							;|
+			AND #$FFF0						;|
 			CLC							;|
 			ADC.l ?.CenterVerticallyPowerupOnYoshi,x		;|
 			STA $96							;|
@@ -82,16 +84,16 @@ incsrc "../SSPDef/Defines.asm"
 	;or any form of custom hitboxes.
 		?.CenterVerticallyPowerupOffYoshi
 		;Offset from the block's Y position (units of pixels, not 16x16) to set the player's Y position.
-			dw $FFF0 ;>$19 = #$00 (*2 = #$00)
-			dw $FFF8 ;>$19 = #$01 (*2 = #$02)
-			dw $FFF8 ;>$19 = #$02 (*2 = #$04)
-			dw $FFF8 ;>$19 = #$03 (*2 = #$06)
+			dw $0000 ;>$19 = #$00 (*2 = #$00)
+			dw $0008 ;>$19 = #$01 (*2 = #$02)
+			dw $0008 ;>$19 = #$02 (*2 = #$04)
+			dw $0008 ;>$19 = #$03 (*2 = #$06)
 		?.CenterVerticallyPowerupOnYoshi
 		;Same as above but on yoshi
-			dw $FFEC ;>$19 = #$00 (*2 = #$00)
-			dw $FFF0 ;>$19 = #$01 (*2 = #$02)
-			dw $FFF0 ;>$19 = #$02 (*2 = #$04)
-			dw $FFF0 ;>$19 = #$03 (*2 = #$06)
+			dw $FFFC ;>$19 = #$00 (*2 = #$00)
+			dw $FFFF ;>$19 = #$01 (*2 = #$02) ;\These have to be 1 pixel up to prevent triggering upwards-facing pipes placed so that there's 2 blocks tall space between the pipe caps
+			dw $FFFF ;>$19 = #$02 (*2 = #$04) ;|when riding yoshi as big mario when entering a downwards-facing pipe.
+			dw $FFFF ;>$19 = #$03 (*2 = #$06) ;/
 if !Setting_SSP_YoshiAllowed != 0
 	?.YoshiTimersEnter
 	db !Setting_SSP_PipeTimer_Enter_Upwards_OffYoshi,!Setting_SSP_PipeTimer_Enter_Upwards_OnYoshi,!Setting_SSP_PipeTimer_Enter_Upwards_OnYoshi	;>Timers: 1st one = on foot, 2nd and 3rd one = on yoshi
