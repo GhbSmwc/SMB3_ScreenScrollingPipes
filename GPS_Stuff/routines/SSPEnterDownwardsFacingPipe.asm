@@ -43,7 +43,7 @@ incsrc "../SSPDef/Defines.asm"
 		LDA.b #!Setting_SSP_XPositionFractionSetTo	;|
 		STA $13DA|!addr					;|
 	endif							;/
-	?.HandleVerticalPositioning						;\Position vertically
+	?.HandleVerticalPositioning						;\Position vertically (so that the player turns invisible at a consistent spot once the timer runs out, even when pushed by sprite)
 		LDA $19								;|
 		ASL								;|
 		TAX								;|
