@@ -23,9 +23,12 @@ incsrc "../SSPDef/Defines.asm"
 	SEP #$20
 	%Get_Player_YPosition_LowerHalf()
 	REP #$20
-	CMP $00
-	SEP #$20
+	SEC					;\$00~$01: Player Y position relative to the block (pixels)
+	SBC $00					;|
+	STA $00					;/
 	BPL ?.Return				;If mario is not far enough into the cap, return
+	CMP #$FFF8				;\If too far up (especially if there's a 1 block gap between 2 vertical pipe caps)
+	BMI ?.Return				;/don't trigger the exit.
 	
 	LDA $03
 	STA !Freeram_SSP_EntrExtFlg
@@ -82,6 +85,7 @@ incsrc "../SSPDef/Defines.asm"
 	
 	?.AlreadyExiting
 	?.Return
+	SEP #$20
 	RTL
 	if !Setting_SSP_YoshiAllowed != 0
 		?.YoshiTimersExit:
