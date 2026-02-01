@@ -152,8 +152,8 @@ insertion tool; <i>Gopher Popcorn Stew</i> (GPS). Although <a href="https://www.
 		Leftwards facing pipe caps (including small pipes) have the block being passable and setting
 		the player's entering pipe state are being separate and don't always do both together for 1 frame, leading to minor oddities like this:<br>
 		<img src="Readme_files/FuSoYaPipe_HorizPipeEjectedFromEnteringRightwards.gif"><br>
-		By tapping right for 1 frame, the block merely becomes passable, but doesn't set Mario's pipe state until further embedded into the pipe cap, therefore
-		Mario gets ejected out as if he is clipping into a solid block.
+		By tapping right for a few frames, the block merely becomes passable, but doesn't set Mario's pipe state until further embedded into the pipe cap, therefore
+		Mario gets ejected out because the block now becomes solid upon letting go right.
 	</li>
 
 	<li>
@@ -167,19 +167,13 @@ insertion tool; <i>Gopher Popcorn Stew</i> (GPS). Although <a href="https://www.
 	<li>
 		This package do not use exit tiles placed in front of pipe caps (air tiles or water tiles placed in front of pipe caps),
 		instead it relies on a RAM frame timer to determine if the player is fully out of the pipes; Therefore you can put any tiles
-		(obviously you shouldn't put solid tiles there) without worry.
+		(obviously you shouldn't put solid tiles there) or nearby pipe caps facing in a different direction without worry.
 	</li>
 
 	<li>
 		Turn pipe corners for small pipes. FuSoYa did feature small pipes that can only be entered by
 		small Mario, but have forgotten the turn pipe corners, thus straight pipes with gaps for turns
 		are needed on FuSoYa's SSPs.
-	</li>
-
-	<li>
-		As of version 3.2.2, turn pipe corners now have a smoother change of direction instead of
-		snapping the player's coordinates when approaching them. It wait tills Mario's position is at or
-		past the point he needs to change direction (it will center the player correctly).
 	</li>
 
 	<li>
@@ -197,20 +191,14 @@ insertion tool; <i>Gopher Popcorn Stew</i> (GPS). Although <a href="https://www.
 <h2><a href="#TOC_Insertion" id="Insertion">^</a>Insertion</h2>
 <h3>What you need:</h3>
 <ul>
-<li><a href="https://www.smwcentral.net/?p=section&a=details&id=39036">Uberasm Tool</a> (v2.0+ required)</li>
-<li><a href="https://www.smwcentral.net/?p=section&a=details&id=19047">Gopher Popcorn Stew (GPS)</a></li>
-<li>Lunar Magic's map16 page 4 (and/or 5, if you're only going to use the &ldquo;main parts&rdquo;) not used, unless you can <a href="#MoveToDifferentM16Page">move it to another page</a>. A tool is provided here (see under &ldquo;Tools provided&rdquo;) that automates relocating</li>
-<li><a href="https://www.smwcentral.net/?p=section&a=details&id=41329">Lunar Magic v3.0+</a>. The provided levels need to have a version of LM that supports custom level dimensions.</li>
-<li><a href="https://www.smwcentral.net/?p=section&a=details&id=18741">No More Sprite Tile Limits patch</a>. Certain sprites on screen randomly disappear when in pipes. Ignore this if you have SA-1 installed.</li>
-<li>
-	<a href="https://www.smwcentral.net/?p=section&a=list&s=smwpatches&u=0&g=1&f%5Bname%5D=scroll">Screen scrolling patches</a> that allows faster vertical scrolling with the player if you are planning to have any form of
-	fast vertical speed. If the player moves down more than 4 pixels per frame long enough, the player may catch the death barrier and triggers a death sequence. Going upwards, the screen caps the player to 3 pixels per
-	frame once the player reaches the top barrier (at <kbd>PlayerYPosScrn = #$FF80</kbd>, or -128 (set at <kbd>$00F597</kbd>)). Patches including but not limited to:
-	<ul>
-		<li><a href="https://www.smwcentral.net/?p=section&a=details&id=19676">Blind Devil's Reprogrammed Vertical Scroll</a></li>
-		<li><a href="https://www.smwcentral.net/?p=section&a=details&id=26861">My center scroll patch</a>, with <kbd>!Setting_CenterScroll_ScrollType</kbd> set to 1 and using &ldquo;Vertical Scroll at Will&rdquo; setting.</li>
-	</ul>
-</li>
+	<li><a href="https://www.smwcentral.net/?p=section&a=details&id=39036">Uberasm Tool</a> (v2.0+ required)</li>
+	<li><a href="https://www.smwcentral.net/?p=section&a=details&id=19047">Gopher Popcorn Stew (GPS)</a></li>
+	<li>
+		Lunar Magic's map16 page 4 (and/or 5, if you're only going to use the &ldquo;main parts&rdquo;) not used, unless you can <a href="#MoveToDifferentM16Page">move it to another page</a>. A tool is provided here (see under &ldquo;Tools provided&rdquo;)
+		that automates relocating their map16 numbers to a different spot.
+	</li>
+	<li><a href="https://www.smwcentral.net/?p=section&a=details&id=41329">Lunar Magic v3.0+</a>. The provided levels need to have a version of LM that supports custom level dimensions.</li>
+	<li><a href="https://www.smwcentral.net/?p=section&a=details&id=18741">No More Sprite Tile Limits patch</a>. Certain sprites on screen randomly disappear when in pipes. Ignore this if you have SA-1 installed.</li>
 </ul>
 <h2>Recommended</h2>
 <ul>
@@ -225,6 +213,25 @@ insertion tool; <i>Gopher Popcorn Stew</i> (GPS). Although <a href="https://www.
 	<li>
 		<a href="https://www.smwcentral.net/?p=section&a=details&id=16550">P-balloon fix</a>. One of the major bugs is that the player's facing direction is locked during a p-balloon (last set prior to grabbing the balloon), and
 		that the horizontal pipes (both vanilla exit-enabled and my screen-scrolling) only allow entry when facing towards them.
+	</li>
+	<li>
+		<a href="https://www.smwcentral.net/?p=section&a=list&s=smwpatches&u=0&g=1&f%5Bname%5D=scroll">Screen scrolling patches</a> that allows faster vertical scrolling with the player if you are planning to have any form of
+		fast vertical speed. 
+		<ul>
+			<li>
+				When going upwards, the screen scrolls at a maximum rate of 3 pixels per frame. Once the player's Y position relative to the screen's reaches <kbd>#$FF80</kbd> (<kbd>-128</kbd>, set at <kbd>$00F597</kbd>), the player's Y speed gets capped
+				to the screen's top barrier (this doesn't break much of anything).
+			</li>
+			<li>
+				When going downwards, the screen scrolls at a maximum rate of 4 pixels per frame. Once the player's Y position relative to the screen border reaches <kbd>#$0100</kbd> (<kbd>256</kbd>, 2 blocks below the bottom of the screen), the player
+				either dies to a bottomless pit or ends a winged yoshi level (code at <kbd>$00F5A8</kbd> checks the high byte of <kbd>$80~$81</kbd> is nonzero).
+			</li>
+		</ul>
+		Patches fixing this speed limitation including but not limited to:
+		<ul>
+			<li><a href="https://www.smwcentral.net/?p=section&a=details&id=19676">Blind Devil's Reprogrammed Vertical Scroll</a></li>
+			<li><a href="https://www.smwcentral.net/?p=section&a=details&id=26861">My center scroll patch</a>, with <kbd>!Setting_CenterScroll_ScrollType</kbd> set to 1 and using &ldquo;Vertical Scroll at Will&rdquo; setting.</li>
+		</ul>
 	</li>
 </ul>
 <h2>Tools provided</h2>
@@ -242,8 +249,8 @@ insertion tool; <i>Gopher Popcorn Stew</i> (GPS). Although <a href="https://www.
 		<li>Simply copy the graphic files and paste them in their respective folder. The file naming should
 		be obvious.</li><br>
 	
-		<li>Open the level file <kbd>demonstration.mwl</kbd> (level $0105). (MenuBar &gt; File &gt; Open Level from
-		file...). Note that <kbd>demonstration_WrapTest.mwl</kbd> (level $0106) is for testing a level wrap mechanic for <kbd>UberasmTool_Stuff/level/SSP_WarpDragLevelWrap.asm</kbd>.</li><br>
+		<li>Open the level file <kbd>demonstration.mwl</kbd> (level <kbd>$0105</kbd>). (MenuBar &gt; File &gt; Open Level from
+		file...). Note that <kbd>demonstration_WrapTest.mwl</kbd> (level <kbd>$0106</kbd>) is for testing a level wrap mechanic for <kbd>UberasmTool_Stuff/level/SSP_WarpDragLevelWrap.asm</kbd>.</li><br>
 	
 		<li>Open your map16 editor, and import <kbd>tilemap.map16</kbd> (Question block with a red left
 		arrow on it; <img src="Readme_files/LM_ImportMap16FromFile.png">). After the blocks are imported, hit save.<sup>[<a href="#BlockListRelocatorInfo">Map 16 location note</a>]</sup></li>
@@ -252,15 +259,16 @@ insertion tool; <i>Gopher Popcorn Stew</i> (GPS). Although <a href="https://www.
 	<ol>
 		<li>Define note</li>
 		<ol>
-			<li>Make necessary changes to <kbd>SSPDef/Defines.asm</kbd> (including making sure the freeram it uses not conflict with other unrelated ASM resources). And make sure you read the comments. Of course, if you already inserted the ASM
-			codes and wish to edit and re-insert, make sure you have the copies of it up to date with correct information and reinsert to update. You must update every time you make changes.</li>
+			<li>Make necessary changes to <kbd>SSPDef/Defines.asm</kbd> (including making sure the freeram it uses not conflict with other unrelated ASM resources). And make sure you read the comments.
+			Of course, if you already inserted the ASM codes and wish to edit and re-insert, make sure you have the copies of it up to date with correct information and reinsert to update. You must
+			update all tools involved every time you make future changes.</li>
 		</ol>
 		<li>Uberasm Tool (inside <kbd>UberasmTool_Stuff</kbd> folder)</li>
 		<ol>
 			<li>Copy the folder (the folder itself) <kbd>SSPDef</kbd> and paste it in the same directory as uberasm tool.exe
 			is in, not in any of the subfolder of uberasm tool.</li><br>
 	
-			<li>Stuff within <kbd>UberasmTool_Stuff</kbd> should be obvious with convenient file names. Thanks to UAT2.0, you can have multiple ASM files for the same level/gamemode/oveworld (separated via commas).</li><br>
+			<li>Stuff within <kbd>UberasmTool_Stuff</kbd> should be obvious with convenient file names. Thanks to UAT2.0, you can have multiple ASM files for the same level/gamemode/oveworld numbers (separated via commas).</li><br>
 	
 			<li>
 				On Uberasm tool's <kbd>list.txt</kbd>, under gamemode, just put this:
@@ -319,9 +327,8 @@ $00EA22</pre></div>
 			the WJNB because <kbd>Fixes.asm</kbd> will auto-detect that and will not modify WJNB's hijack in any way. But if you installed <kbd>Fixes.asm</kbd> first, and wanted to install the WJNB fix patch afterwards, open Defines.asm, and set <kbd>!Setting_SSP_Hijack_00EA18</kbd>
 			to 0, reinstall <kbd>Fixes.asm</kbd>, <b>and then</b> install the WJNB fix patch. And whatever you do, DON'T install the WJNB patch with Fixes.asm being installed with <kbd>!Setting_SSP_Hijack_00EA18</kbd> set to 1, or a potential freespace may have been leaked (WJNB patch will overwrite <kbd>Fixes.asm</kbd>'s hijack, which may cause a crash, and its no longer pointing to this patch's freespace).</li>
 	
-			<li>Not much to say, simply install <kbd>Fixes.asm</kbd> via asar. This patch fixes various bugs relating with the pipes and sprites to not interact with the player during a pipe travel. Make sure you do not move the file, else you have to edit the
-			<!-- <kbd>incsrc "&lt<a href="https://en.wikipedia.org/wiki/Path_(computing)">relative path to the defines file</a>&gt;"</kbd> to get it to work.</li><br> -->
-		</ol><br>
+			<li>Not much to say, simply install <kbd>Fixes.asm</kbd> via asar. This patch fixes various bugs relating with the pipes and sprites to not interact with the player during a pipe travel. Make sure you do not move the patch file, else you'll get an error.</li><br>
+		</ol>
 		<li>Pixi (in <kbd>Pixi</kbd> folder). This mainly deals with making custom sprites be compatible with the SSPs. Mainly the fact that custom sprites may interact with the player in ways they shouldn't, and they should be rendered invisible
 		with the player (by skipping the graphics code/routine) when carried into the pipe.</li><br>
 		<ol>
@@ -360,7 +367,7 @@ the player should emerge from.</p>
 <h3><a href="#TOC_CapCannons" id="CapCannons">^</a>Cap cannons</h3>
 <p>Along with the variations of cap cannons added (including the ability to have each cap individually allow or forbid things like carrying and riding yoshi), I also featured pipe caps
 that when exit out of, flings the player a short distance with momentium. This is especially useful for kaizo hacks involving platform tricks. Note that I recommend installing the <a href="https://www.smwcentral.net/?p=section&a=details&id=24862">Player X speed</a>
-fix patch because of a quirk with SMW's horizontal speed handling that if you are going faster than max, and you hold left or right in the direction he's going, Mario will decelerate rather than to keep his speed.</p>
+fix patch because of a quirk with SMW's horizontal speed handling that if you are going faster than max, and you hold left or right in the direction he's going, Mario will decelerate rather than to keep his speed in midair.</p>
 
 <p>See the list of blocks in the <a href="Readme_files/BlocksUsageInLevel2.html" target="_blank">block placement section</a></p>
 <h2><a href="#TOC_FAQ" id="FAQ">^</a>FAQ</h2>
@@ -436,18 +443,20 @@ SSPPriority:
 	.Infront
 		LDA !15F6,x
 		ORA.b #%00xx0001 ;&gt;Replace the Xs with a binary number that is the sprite's original priority:
-			;00 = Appear behind everything except Layer 3 tiles with priority setting 0
-			;01 = Appear behind everything except Layer 3 tiles (unless they have priority setting
-			;     1 and the "force above everything" bit is set)
-			;10 = Appear in front of Layer 3 tiles (unless they have priority setting 1 and the
-			;     "force above everything" bit is set) and Layer 1 and 2 tiles with priority setting 0;
-			;     appear behind Layer 1 and 2 tiles with priority setting 0 (this is SMW's normal setting
-			;     for most sprites)
-			;11 = Appear in front of everything, except Layer 3 tiles with priority setting 1 if the
-			;     "force above everything" bit is set
+			;00 = Priority 0: Appear behind everything except Layer 3 tiles with priority setting 0.
+			;01 = Priority 1: Appear behind everything except Layer 3 tiles (unless they have
+			;     priority setting 1 and the "force above everything" bit is set).
+			;10 = Priority 2: Appear in front of Layer 3 tiles (unless they have priority setting 1
+			;     and the "force above everything" bit is set) and Layer 1 and 2 tiles with priority
+			;     setting 0; appear behind Layer 1 and 2 tiles with priority setting 0 (this is
+			;     SMW's normal setting for most sprites).
+			;11 = Priority 3: Appear in front of everything, except Layer 3 tiles with priority
+			;     setting 1 if the "force above everything" bit is set.
 	.Skip
 		STA !15F6,x</pre></div><br>
-		Same also applies if the carried sprite is a stunned sprite that can unstun themselves during a pipe travel, with <kbd class="NoLineBreak">!Setting_SSP_FreezeTime == 0</kbd>, then you would set the timer to some value every frame
+		For an image summarizing this, see <a href="https://www.smwcentral.net/?p=viewthread&t=13448">this</a> under &ldquo;Subscreen Diagram&rdquo; by KilloZapit and JackTheSpades.<br><br>
+		
+		The same also applies if the carried sprite is a stunned sprite that can unstun themselves during a pipe travel, with <kbd class="NoLineBreak">!Setting_SSP_FreezeTime == 0</kbd>, then you would set the timer to some value every frame
 		(such as the value of <kbd>!Setting_SSP_Minimal_StuntimerSprites</kbd>) to prevent it.
 		<ul>
 			<li>
