@@ -99,74 +99,99 @@ The primary purpose of this release was because FuSoYa's SMB3 screen scrolling p
 insertion tool; <i>Gopher Popcorn Stew</i> (GPS). Although <a href="https://www.smwcentral.net/?p=section&a=details&id=19984">it was updated to work with GPS</a> on 05/30/2019 (dead link, see <a href="https://smwc.me/1652805">here</a> for removal log), glitches remain due to being a mere port to the new block inserter tool:
 
 <ul>
-<li>The player will be teleported to the last pipe exited if the player hits the bottom of any horizontal
-pipe caps (including small ones), translucent block, or on/off block (on the latest version). If
-the player haven't enter the pipes at all, will be teleported to the top-left corner of the level.</li><br>
+	<li>
+		The player will be teleported to the last pipe exited if the player hits the bottom of any horizontal
+		pipe caps (including small ones), translucent block, or on/off block (on the latest version). If
+		the player haven't enter the pipes at all, will be teleported to the top-left corner of the level.
+	</li>
 
-<li>If the player's pipe movement travel ends with going left, then vertical (going up or down), and then exit,
-the player's X position will be slightly to the left from the center of the pipe.</li><br>
+	<li>
+		If the player's pipe movement travel ends with going left, then vertical (going up or down), and then exit,
+		the player's X position will be slightly to the left from the center of the pipe.
+	</li>
 
-<li>If the player is carrying a sprite, and drops the sprite as he exits an upwards facing pipe cap, the sprite
-will be clipped into the cap part of the pipe:<br>
-<img src="Readme_files/FuSoYaPipe_SpriteClipTopCapBug.gif">
-</li><br>
+	<li>
+		If the player is carrying a sprite, and drops the sprite as he exits an upwards facing pipe cap, the sprite
+		will be clipped into the cap part of the pipe:<br>
+		<img src="Readme_files/FuSoYaPipe_SpriteClipTopCapBug.gif">
+	</li>
 
-<li>Prior to the release of this package, old screen scrolling pipes (FuSoYa isn't the only one, MikeyK made his)
-require an exit tile (air or water) in front of their caps, thus making the placements of blocks around it more
-inconvenient (requires an extra space of tiles)). FuSoYa, is even worse, given that each direction uses their own exit tile rather than shared, you couldn't place the pipes like this without glitches:<br>
-<img src="Readme_files/FuSoYaBulkyExitTiles.png"><br>
-You wouldn't want these in your hack:<br>
-<img src="Readme_files/FuSoYaTopCapGlitch.gif"><img src="Readme_files/FuSoYaTopCapGlitch1.gif"></li><br>
+	<li>
+		Prior to the release of this package, old screen scrolling pipes (FuSoYa isn't the only one, MikeyK made his)
+		require an exit tile (air or water) in front of their caps, thus making the placements of blocks around it more
+		inconvenient (requires an extra space of tiles)). FuSoYa, is even worse, given that each direction uses their own exit tile rather than shared, you couldn't place the pipes like this without glitches:<br>
+		<img src="Readme_files/FuSoYaBulkyExitTiles.png"><br>
+		You wouldn't want these in your hack:<br>
+		<img src="Readme_files/FuSoYaTopCapGlitch.gif"><img src="Readme_files/FuSoYaTopCapGlitch1.gif">
+	</li>
 
-<li>If you try to enter the top of a small vertical pipe cap and slip off the right edge, Mario can &ldquo;escape&rdquo;
-the exit tile placed on top of it, causing mario to be in his pipe state without entering the pipe:<br>
-<img src="Readme_files/FuSoYaPipe_TopVertMiniPipeCapBug.gif"><br>
-This is due to the exit tile's hitbox not reaching rightwards far enough.</li><br>
+	<li>
+		If you try to enter the top of a small vertical pipe cap and slip off the right edge, Mario can &ldquo;escape&rdquo;
+		the exit tile placed on top of it, causing mario to be in his pipe state without entering the pipe:<br>
+		<img src="Readme_files/FuSoYaPipe_TopVertMiniPipeCapBug.gif"><br>
+		This is due to the exit tile's hitbox not reaching rightwards far enough.
+	</li>
 
-<li>The range that is allowed to enter a small vertical pipe cap is not what you expect. Mario's relative X position
-(<kbd>MarioRelativeXPos = MarioXPos - PipeCapXPos</kbd>) must be values ranging from <kbd>-1</kbd> to <kbd>+6</kbd>
-(both numbers inclusive) to be able to enter, therefore, it would look like this:<br>
-<img src="Readme_files/FuSoYaPipe_SmallVerticalPipeXPosAllowed.png"><br>
-Here is how inconsistent to enter them:<br>
-<img src="Readme_files/FuSoYaPipe_SmallVerticalPipeXPosTolorance.gif"></li><br>
+	<li>
+		The range that is allowed to enter a small vertical pipe cap is not what you expect. Mario's relative X position
+		(<kbd>MarioRelativeXPos = MarioXPos - PipeCapXPos</kbd>) must be values ranging from <kbd>-1</kbd> to <kbd>+6</kbd>
+		(both numbers inclusive) to be able to enter, therefore, it would look like this:<br>
+		<img src="Readme_files/FuSoYaPipe_SmallVerticalPipeXPosAllowed.png"><br>
+		Here is how inconsistent to enter them:<br>
+		<img src="Readme_files/FuSoYaPipe_SmallVerticalPipeXPosTolorance.gif">
+	</li>
 
-<li>Mario will interact with any blocks placed directly below the horizontal pipes (so a muncher can kill the player
-inside the pipe). Note that in this package, for small horizontal pipes, the player will interact with blocks placed
-above the pipe, <a href="#SmallMarioCannotInteractAboveAndBelowHorizPipes">see here</a> to fix that.</li><br>
+	<li>
+		Mario will interact with any blocks placed directly below the horizontal pipes (so a muncher can kill the player
+		inside the pipe). Note that in this package, for small horizontal pipes, or regular-sized horizontal pipes as
+		Big/Cape/Fire mario the player will interact with blocks placed above the pipe,
+		<a href="#SmallMarioCannotInteractAboveAndBelowHorizPipes">see here</a> to fix that.
+	</li>
 
-<li>Leftwards facing pipe caps (including small pipes) have the block being passable (&ldquo;suck&rdquo; mario in) and setting
-the player's entering pipe state are being separate and don't always do both together for 1 frame, leading to minor oddities like this:<br>
-<img src="Readme_files/FuSoYaPipe_HorizPipeEjectedFromEnteringRightwards.gif"><br>
-By tapping right for 1 frame, it tries to suck Mario in, but doesn't set Mario's pipe state until further embedded into the pipe cap, therefore
-Mario gets ejected out as if he is clipping into a solid block.</li><br>
+	<li>
+		Leftwards facing pipe caps (including small pipes) have the block being passable and setting
+		the player's entering pipe state are being separate and don't always do both together for 1 frame, leading to minor oddities like this:<br>
+		<img src="Readme_files/FuSoYaPipe_HorizPipeEjectedFromEnteringRightwards.gif"><br>
+		By tapping right for 1 frame, the block merely becomes passable, but doesn't set Mario's pipe state until further embedded into the pipe cap, therefore
+		Mario gets ejected out as if he is clipping into a solid block.
+	</li>
 
-<li>When exiting a small pipe at the top, Mario gets pushed to the left by 1 unit (pixel), this is due to mario switching back to &ldquo;out-of-pipe&rdquo;
-state before he fully emerges from the pipe, so he slightly clips into the block.</li>
+	<li>
+		When exiting a small pipe at the top, Mario gets pushed to the left by 1 unit (pixel), this is due to mario switching back to &ldquo;out-of-pipe&rdquo;
+		state before he fully emerges from the pipe, so he slightly clips into the block.
+	</li>
 </ul>
-
-
 
 <h3><a href="#TOC_FeaturesNotSeenBefore" id="FeaturesNotSeenBefore">^</a>Features not seen before:</h3>
 <ul>
-<li>This package do not use exit tiles placed in front of pipe caps (air tiles or water tiles placed in front of pipe caps),
-instead it relies on a RAM frame timer to determine if the player is fully out of the pipes; Therefore you can put any tiles
-(obviously you shouldn't put solid tiles there) without worry.</li><br>
+	<li>
+		This package do not use exit tiles placed in front of pipe caps (air tiles or water tiles placed in front of pipe caps),
+		instead it relies on a RAM frame timer to determine if the player is fully out of the pipes; Therefore you can put any tiles
+		(obviously you shouldn't put solid tiles there) without worry.
+	</li>
 
-<li>Turn pipe corners for small pipes. FuSoYa did feature small pipes that can only be entered by
-small Mario, but have forgotten the turn pipe corners, thus straight pipes with gaps for turns
-are needed on FuSoYa's SSPs.</li><br>
+	<li>
+		Turn pipe corners for small pipes. FuSoYa did feature small pipes that can only be entered by
+		small Mario, but have forgotten the turn pipe corners, thus straight pipes with gaps for turns
+		are needed on FuSoYa's SSPs.
+	</li>
 
-<li>As of version 3.2.2, turn pipe corners now have a smoother change of direction instead of
-snapping the player's coordinates when approaching them. It wait tills Mario's position is at or
-past the point he needs to change direction (it will center the player correctly).</li><br>
+	<li>
+		As of version 3.2.2, turn pipe corners now have a smoother change of direction instead of
+		snapping the player's coordinates when approaching them. It wait tills Mario's position is at or
+		past the point he needs to change direction (it will center the player correctly).
+	</li>
 
-<li>Customizable speed. Because why not? (be careful not to set to speeds that are too fast though).</li><br>
+	<li>
+		Customizable speed. Because why not? (be careful not to set to speeds that are too fast though).
+	</li>
 
-<li>As of version 4.0.0, a brand new feature was added: Screen Scrolling *warp* pipes. Inspired by
-WhiteYoshiEgg's <i><a href="https://www.smwcentral.net/?p=section&a=details&id=20835">Carryable Pipe</a></i>,
-this gimmick lets you have non-physically-connected pipes in your level without any required blocks in between,
-meaning you don't have to worry about the path being in the way of designing levels in between those two points.</li>
-
+	<li>
+		As of version 4.0.0, a brand new feature was added: Screen Scrolling *warp* pipes. Inspired by
+		WhiteYoshiEgg's <i><a href="https://www.smwcentral.net/?p=section&a=details&id=20835">Carryable Pipe</a></i>,
+		this gimmick lets you have non-physically-connected pipes in your level without any required blocks in between,
+		meaning you don't have to worry about the path being in the way of designing levels in between those two points.
+	</li>
 </ul>
 
 <h2><a href="#TOC_Insertion" id="Insertion">^</a>Insertion</h2>
@@ -242,7 +267,7 @@ meaning you don't have to worry about the path being in the way of designing lev
 				<div class="CodeBlock" style="width: 295px; height: 18px;"><pre>14	GM14_ScreenScrollingPipes.asm</pre></div>
 				And to test a level wrap mechanic, add this (under &ldquo;<kbd>level:</kbd>&rdquo;):
 				<div class="CodeBlock" style="width: 327px; height: 16px;"><pre>106	SSP_WarpDragLevelWrap.asm : %00000011</pre></div>
-				Where the extra byte format is, in binary, <kbd>%000000VH</kbd>, that <kbd>H</kbd> and <kbd>V</kbd> is a bit flag to apply an <i>invert</i>, when set (<kbd>1</kbd>) along the longitudinal edge (for <kbd>H</kbd>, it's the left and
+				Where the extra byte format is, in binary, <kbd>%000000VH</kbd>, that <kbd>H</kbd> and <kbd>V</kbd> is a bit flag to apply an <i>invert</i>, when set (<kbd>1</kbd>), along the longitudinal edge (for <kbd>H</kbd>, it's the left and
 				right edge of the level that would invert the Y position, and for <kbd>V</kbd>, it's the top and bottom that would invert the X position). The provided test level <kbd>demonstration_WrapTest.mwl</kbd> will work regardless of the
 				invert wrap settings.
 			</li><br>
@@ -263,21 +288,36 @@ meaning you don't have to worry about the path being in the way of designing lev
 		<ol>
 			<li>Copy the <i>folder</i> of <kbd>SSP_Tiles</kbd>, and paste that in GPS's <kbd>blocks</kbd> folder. After doing that, then
 			paste another copy of <kbd>SSPDef</kbd> in the main directory of GPS (where the exe program is at, not in the subfolder/subdirectory).
-			Also paste the asm file(s) in <kbd>BlockRoutines</kbd> in GPS's routines folder.</li><br>
+			The routine ASM files to paste should be obvious like UAT.</li><br>
 	
-			<li>Copy the text from one of the two files in <kbd>blocks_list</kbd> folder and paste it in GPS's list file. Now run GPS to insert the blocks.*
-			Both the tile lists and the map16 blocks provided must match.</li><br>
+			<li>If you are planning to have the pipes at map16 pages 4~5, then copy the text listing the blocks from <kbd>GPS_Stuff/blocks_list/pipe_tiles_list_pages_4-5.txt</kbd>, and paste it in GPS's list file. Otherwise use the <span id="MoveToDifferentM16Page"><a href="Readme_files/JS_GPSBlockListRelocator.html" id="BlockListRelocatorInfo">block list relocator tool</a></span>,
+			load the aformentioned provided list file, and move them to a different map16 number, then copy that to GPS's list file.</li><br>
 		</ol>
 	
 		<li>Patches (in <kbd>Patches</kbd> folder)</li>
 		<ol>
-			<li>Before you install <kbd>Fixes.asm</kbd>, I want to warn you that patch also includes a hijack at <kbd>$00EA18</kbd> (this is normally the code that pushes the player leftwards
+			<li>Before you install <kbd>Fixes.asm</kbd>, I want to warn you that patch also includes a hijack at <kbd>$00EA18</kbd> to <kbd>$00EA1B</kbd> (this is normally the code that pushes the player leftwards
 			if he is embedded inside a block, such as Big Mario inside a 1-tile tall space, his head clips inside the ceiling block) to prevent this small bug: If small mario tries to enter
 			the downwards-facing small pipe cap by hitting the bottom corners, he'll enter 1 pixel to the left than where he supposed to be positioned:<br>
 			<img src="Readme_files/PushedLeftFromCenterSmallPipeDownwardsCap.gif"><br>
-			Unfortunately, the “<a href="https://www.smwcentral.net/?p=section&a=details&id=19932">WJNB fix patch</a>” also hijacks that spot (a range from <kbd>$00EA16</kbd> to <kbd>$00EA21</kbd>). It is okay to patch Fixes.asm AFTER patching
-			the WJNB because Fixes.asm will auto-detect that and will not modify WJNB's hijack in any way. But if you installed Fixes.asm first, and wanted to install the WJNB fix patch afterwards, open Defines.asm, and set <kbd>!Setting_SSP_Hijack_00EA18</kbd>
-			to 0, reinstall Fixes.asm, <b>and then</b> install the WJNB fix patch. And whatever you do, DON'T install the WJNB patch with Fixes.asm being installed with <kbd>!Setting_SSP_Hijack_00EA18</kbd> set to 1, or a potential freespace may have been leaked.</li>
+			Unfortunately, the “<a href="https://www.smwcentral.net/?p=section&a=details&id=19932">WJNB fix patch</a>” also hijacks that spot (a range from <kbd>$00EA16</kbd> to <kbd>$00EA21</kbd>):
+<div class="CodeBlock" style="height: 212px; width: 338px;"><pre>$00EA15
+$00EA16 ;\walljumpnoteblockglitchfix.asm hijack
+$00EA17 ;|
+$00EA18 ;|   ;\Fixes.asm hijack
+$00EA19 ;|   ;|
+$00EA1A ;|   ;|
+$00EA1B ;|   ;/
+$00EA1C ;|
+$00EA1D ;|
+$00EA1E ;|
+$00EA1F ;|
+$00EA20 ;|
+$00EA21 ;/
+$00EA22</pre></div>
+			It is okay to patch <kbd>Fixes.asm</kbd> AFTER patching
+			the WJNB because <kbd>Fixes.asm</kbd> will auto-detect that and will not modify WJNB's hijack in any way. But if you installed <kbd>Fixes.asm</kbd> first, and wanted to install the WJNB fix patch afterwards, open Defines.asm, and set <kbd>!Setting_SSP_Hijack_00EA18</kbd>
+			to 0, reinstall <kbd>Fixes.asm</kbd>, <b>and then</b> install the WJNB fix patch. And whatever you do, DON'T install the WJNB patch with Fixes.asm being installed with <kbd>!Setting_SSP_Hijack_00EA18</kbd> set to 1, or a potential freespace may have been leaked (WJNB patch will overwrite <kbd>Fixes.asm</kbd>'s hijack, which may cause a crash, and its no longer pointing to this patch's freespace).</li>
 	
 			<li>Not much to say, simply install <kbd>Fixes.asm</kbd> via asar. This patch fixes various bugs relating with the pipes and sprites to not interact with the player during a pipe travel. Make sure you do not move the file, else you have to edit the
 			<!-- <kbd>incsrc "&lt<a href="https://en.wikipedia.org/wiki/Path_(computing)">relative path to the defines file</a>&gt;"</kbd> to get it to work.</li><br> -->
@@ -294,9 +334,6 @@ meaning you don't have to worry about the path being in the way of designing lev
 		<li>See <a name="UseBlocksInLevel2" href="Readme_files/BlocksUsageInLevel2.html">this info</a> on how to place blocks in the level.</li>
 	</ol>
 </ol>
-
-
-<span id="MoveToDifferentM16Page">*If you need to move the pipes or your other blocks to a different map16 page, use <a href="Readme_files/JS_GPSBlockListRelocator.html" id="BlockListRelocatorInfo">this tool</a> to move to a different page number.</span>
 
 <h2><a href="#TOC_ExtraFeatures" id="ExtraFeatures">^</a>Extra features</h2>
 <h3><a href="#TOC_ScreenScrollingWarpPipes" id="ScreenScrollingWarpPipes">^</a>Screen Scrolling *warp* pipes (warp/drag mode)</h3>
@@ -385,8 +422,8 @@ fix patch because of a quirk with SMW's horizontal speed handling that if you ar
 <h2><a href="#TOC_Notes" id="Notes">^</a>Notes</h2>
 <ul>
 	<li>
-		If you carry any <b>custom</b> sprites through these pipes, they will not go behind the layer;
-		appearing superimpose of the pipe as mario is being behind the layer. Unless you can
+		If you carry any <b>custom</b> sprites through these pipes, they may not go behind the layer
+		(depending on its code at handling carried status); appearing superimpose of the pipe as Mario is being behind the layer. Unless you can
 		make it change the yxppccct using this code to be used in a custom sprite's code:
 <div class="CodeBlock" style="width: 857px; height: 318px;"><pre>
 SSPPriority:
@@ -576,13 +613,15 @@ be aware that some sprites still do interact with the player:
 	<li>While inside the pipe:<br>
 
 		<ul>
-			<li>The player is behind the layer (<kbd>$7E13F9</kbd> is <kbd>#$02</kbd>). When his entering timer hits 0 (<kbd>!Freeram_SSP_PipeTmr</kbd>), the player (and carried sprite) turns invisible</li><br>
+			<li>The player is behind the layer (<kbd>$7E13F9</kbd> is <kbd>#$02</kbd>). When his entering timer hits 0 (<kbd>!Freeram_SSP_PipeTmr</kbd>), the
+			player (and carried sprite) turns invisible (with <kbd>!Setting_SSP_HideDuringPipeStemTravel</kbd> set to <kbd>1</kbd> or a RAM set by
+			<kbd>!Freeram_SSP_InvisbleFlag</kbd> holds a nonzero value)</li><br>
 
 			<li>
 				RAM address <kbd>$7E0071</kbd> is set to <kbd>#$0B</kbd> when freezing is enabled (have <kbd>!Setting_SSP_FreezeTime</kbd> set to 1)
 				(due to the fact that if you set $9D to a non-zero value without setting $7E0071 to <kbd>#$0B</kbd> on an uberasm code, the freezing
-				gets nullified and some stuff will ignore the freeze effect thanks to address <kbd>$00CDE8</kbd> clearing the freeze flag every frame).
-			</li>
+				gets nullified and some stuff will ignore the freeze effect thanks to a code at address <kbd>$00CDE8</kbd> clearing the freeze flag every frame).
+			</li><br>
 			Thus, if a sprite doesn't check those or coded in a way that interacts with the player <i>reguardless</i> of his state (including
 			doing things during $9D or $71 being set), it can mess up his pipe travel and causes glitches. Things like wind generator, or wind generated
 			by a sprite can push mario out of a pipe path and cause a softlock as he misses an exit or a change-direction-corner. To avoid this
@@ -665,7 +704,7 @@ be aware that some sprites still do interact with the player:
 		into the ground.
 	</li>
 	<li>
-		The same also applies to big Mario riding yoshi for regular-sized horizontal pipes:<br>
+		The same also applies to Big/Fire/Cape Mario riding yoshi for regular-sized horizontal pipes:<br>
 		<table><tr><td><img src="Readme_files/BigMarioYoshiCollisionPoints.png"></td></tr></table>
 	</li>
 	<li>
@@ -733,11 +772,6 @@ RTL
 
 print "<description>"
 </pre></div>
-	</li><br>
-
-	<li>
-		Although, you may not use the SSPs on certain levels at your own discretion, and that you could only have the SSP uberasm tool code run at specific levels, be warned that the <kbd>Fixes.asm</kbd>
-		patch will apply to all levels, meaning that the freeram addresses the SSPs use are still used even if the uberasm tool code isn't running, which can cause glitches when being set to nonzero values.
 	</li><br>
 
 	<li>
