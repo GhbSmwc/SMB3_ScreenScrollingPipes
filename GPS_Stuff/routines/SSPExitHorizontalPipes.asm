@@ -57,6 +57,10 @@ incsrc "../SSPDef/Defines.asm"
 		STZ $7B				;\Prevent centering, and then displaced by xy speeds.
 		STZ $7D				;/
 		STX $76				;/Face in the correct direction
+		if !Setting_SSP_HideDuringPipeStemTravel == 0
+			LDA #$00					;\Make player visible by default
+			STA !Freeram_SSP_InvisbleFlag			;/
+		endif
 		REP #$20						;\Center horizontally
 		LDA $9A							;|
 		AND #$FFF0						;|

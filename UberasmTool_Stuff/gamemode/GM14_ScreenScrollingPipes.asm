@@ -97,7 +97,7 @@ SSPMaincode:
 			AND.b #%00001111		;|
 			CMP #$09			;|
 			BCS ...Hide			;/
-			LDA !Freeram_SSP_EntrExtFlg	;\hide player if timer hits zero when entering.
+			LDA !Freeram_SSP_EntrExtFlg	;\hide player if timer hits zero when entering, or during entering/exiting.
 			CMP #$01			;|
 			BEQ ...NoHide			;|
 			LDA !Freeram_SSP_PipeTmr	;|\If timer == 0, make player invisible.
@@ -268,12 +268,16 @@ SSPMaincode:
 						STZ $7D						;/this here is done setting XY position.
 						LDA !Freeram_SSP_PipeDir			;\If the high nybble was 0 and got written to his pipe status, cancel all pipe states.
 						AND.b #%00001111				;|
-						BNE ..EnterExitTransition			;|
+						BNE ..EnterExitTransition			;/
+						if !Setting_SSP_HideDuringPipeStemTravel == 0
+							LDA #$00					;\Make player visible by default
+							STA !Freeram_SSP_InvisbleFlag			;/
+						endif
 						if !Setting_SSP_SFX_ExitDoor_SoundNumb
 							LDA.b #!Setting_SSP_SFX_ExitDoor_SoundNumb
 							STA !Setting_SSP_SFX_ExitDoor_Port
 						endif
-						JMP ..ResetStatus				;/
+						JMP ..ResetStatus
 				....DragMarioXYSpeed
 					;This aiming code has to run every frame as mario goes towards his warp destination
 					;as although it doesn't glitch out due to an overflow, an extreme distance

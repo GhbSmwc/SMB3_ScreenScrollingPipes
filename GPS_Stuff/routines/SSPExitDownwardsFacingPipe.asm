@@ -19,7 +19,9 @@ incsrc "../SSPDef/Defines.asm"
 	PLB
 	LDA !Freeram_SSP_EntrExtFlg
 	CMP $03
-	BEQ ?.AlreadyExiting
+	BNE ?.NotAlreadyExiting
+	JMP ?.AlreadyExiting			;>Branch out of bounds.
+	?.NotAlreadyExiting
 	REP #$20
 	LDA $98
 	AND #$FFF0
@@ -34,7 +36,10 @@ incsrc "../SSPDef/Defines.asm"
 	CMP #$0008				;\If too far down (especially if there's a 1 block gap between 2 vertical pipe caps, or 2 with big Mario riding yoshi facing each other)
 	BPL ?.Return				;/don't trigger an exit (prevents triggering the wrong pipe exit cap)..
 	SEP #$20
-	
+	if !Setting_SSP_HideDuringPipeStemTravel == 0
+		LDA #$00					;\Make player visible by default
+		STA !Freeram_SSP_InvisbleFlag			;/
+	endif
 	LDA $03
 	STA !Freeram_SSP_EntrExtFlg
 	LDX $02							;\Center Horizontally
