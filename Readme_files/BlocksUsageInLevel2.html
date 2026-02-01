@@ -144,8 +144,9 @@ This is the summary of the map16 blocks on what they do:<br>
 		setups like this (1A&harr;1B, 2A&harr;2B, 3A&harr;3B): <table><tr><td><img src="VerticalExitCapsRequirePlayerCenteredHorizontally.png"></td></tr></table><br>
 		
 		However, there are exceptions: <kbd>DragPlayer.asm</kbd>, <kbd>set_visibility_off.asm</kbd>, and <kbd>set_visibility_on.asm</kbd> will work if the player is traveling
-		vertically if he's centered within 2 blocks or a single block (checks if X position relative to the block is <kbd>0~8</kbd>), unlike the vertical pipe caps, where Mario must be 2-block centered for regular-sized caps:<br>
-		<img src="CenterCheckExceptions.png">
+		vertically if he's centered within 2 blocks <b>or</b> a single block (checks if X position relative to the block is <kbd>0~8</kbd>), unlike the vertical pipe caps, where Mario must be 2-block centered for regular-sized caps:<br>
+		<img src="CenterCheckExceptions.png"><br>
+		Reason being is that there would be a lot more blocks for a 1 or 2-block centering requirement variations.
 	</li>
 </ul>
 
