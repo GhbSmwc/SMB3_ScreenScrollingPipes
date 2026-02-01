@@ -394,6 +394,9 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	-Vertical regular-sized pipe caps and turn corners will now check if the player is centered enough to
 	 trigger them. This allows setups like seen here:
 	 "Readme_files/VerticalExitCapsRequirePlayerCenteredHorizontally.png"
+	--Did a similar thing with the warp/drag mode block as well as the new "set_visibility_off.asm" and
+	  "set_visibility_on.asm", however it accepts both single-block centered and 2-block centered (half
+	  block to the right).
 	-Added an option !Setting_SSP_HideDuringPipeStemTravel, which can be set to 0 so that the player and
 	 carried sprite does not turn invisible inside pipes, ideal for glass pipes.
 	-Map16 files for LM's map16 and tile list for GPS for "v2" versions now have page 4 and page 5 merged

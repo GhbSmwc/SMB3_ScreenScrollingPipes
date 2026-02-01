@@ -70,85 +70,86 @@ This is the summary of the map16 blocks on what they do:<br>
 <h1><a href="#TOC_BlockPlacementsBack" id="TOC_BlockPlacements">^</a>Block pipe placements</h1>
 <ul>
 
-<li>Custom block pipe parts:
-	<table><tr><td><img src="PipeParts.png"></td></tr></table>
-	<table><tr><td><img src="PipeParts1.png"></td></tr></table>
+	<li>Custom block pipe parts:
+		<table><tr><td><img src="PipeParts.png"></td></tr></table>
+		<table><tr><td><img src="PipeParts1.png"></td></tr></table>
 
-</li><br>
-
-<li>Pipe directions:<br>
-
-	<table><tr><td><img src="Map16_pipeDirections2.png"><br></td></tr></table>
-	Keep in mind that the pipe stems and turn corners (they yellow 32x32 and 16x16 for small pipes) <b>aren't 1-way themselves</b>, the only blocks
-	that makes them 1-way are the pipe caps being &ldquo;exit only&rdquo;.
-	<table><tr><td><img src="Map16_Page_5_info.png"></td></tr></table>
-</li><br>
-
-<li>Things you should avoid placing and what you can do:</li>
-<ul>
-	<li>I don't recommend using the pipes on layer 2, as the position can glitch around.</li><br>
-	<li>
-		While using the pipes on layer 1 in a layer 2 level, be careful not to place solid blocks above the space in front of the small pipe caps, as
-		they would teleport/clip the player through the floor:
-		<table><tr><td><img src="DontPlaceLikeThis.png"></td></tr></table>
-	</li><br>
-	<li>
-		3-way (T-shaped) intersections using turn pipe corners are possible. If the player enters the (normal) turn corners from the
-		&ldquo;outer&rdquo; edges that are not directly connected, the player will maintain his current direction:<br>
-		<table><tr><td><img src="3WayIntersectionWithNormalCorners.png"></td></tr></table>
-	</li><br>
-
-	<li>
-		With the new update with special turn corner parts:
-		<ul>
-			<li>
-				You can have different connections based on where the player enters them on the same turn corner
-				(A&rarr;B, B&rarr;C, C&rarr;D, D&rarr;A):<br>
-				<table><tr><td><img src="SpecialTurnCornersDemonstration.png"></td></tr></table>
-			</li>
-			<li>
-				How about A&harr;B, C&harr;D? (note that I use &harr; and not &rarr; to indicate a 2-way between points). Now you can have 2 &ldquo;opposite&rdquo; corners
-				on the same area.
-				<table><tr><td><img src="SpecialTurnCornersDemonstration1.png"></td></tr></table><br>
-				
-				Just remember that if the player hits any <kbd>turn_special_prep_&lt;direction&gt;.asm</kbd>, they will set the <i>prep-direction</i> that
-				Mario will turn to that direction when he hits a special turn corner (<kbd>turn_special_L.asm</kbd>, <kbd>turn_special_R.asm</kbd>, and <kbd>turn_special_small.asm</kbd>).
-				This allows &ldquo;roundabout&rdquo; and &ldquo;U-turn&rdquo;-type intersections and much more.<br><br>
-			</li>
-		</ul>
 	</li>
 
-	<li>
-		You may be wondering, why did I have both types of corners if I can just have special turn corners? Well, here is my answer: Regular turn corners
-		don't require any prep-turns. With this, you can have two regular turn corners touching each other without the need to have a turn setup in between,
-		allowing compact pipe placements. Special turn corners, on the other hand, always have to have a setup direction if the next special turn corner needs
-		a different direction. Things to note about the corners:<br><br>
+	<li>Pipe directions:<br>
 
-		<ul>
-			<li>
-				ALL turn corners, regular and special, themselves do not change the prep-direction, instead, it will keep its direction until
-				<kbd>turn_special_prep_&lt;direction&gt;.asm</kbd> have been triggered again, thus you can do something like this where the second
-				and later in the sequence special turn corners no longer need a prep-turn:
-				<table><tr><td><img src="MaintainedTurnCorners.png"></td></tr></table>
-				Note the red circles means that no turn-preps.<br><br>
-
-				And even when you wanted parallel pipes that switch places without having them to re-straighten them out (this is a 2-way pipe demonstration, if 1-way, you
-				only need 1 connector in between the parallel pipes), you can do this in a more compact way:
-
-				<table><tr><td><img src="ParallelPipeSwap.png"></td></tr></table>
-			</li>
-		</ul>
+		<table><tr><td><img src="Map16_pipeDirections2.png"><br></td></tr></table>
+		Keep in mind that the pipe stems and turn corners (they yellow 32x32 and 16x16 for small pipes) <b>aren't 1-way themselves</b>, the only blocks
+		that makes them 1-way are the pipe caps being &ldquo;exit only&rdquo;.
+		<table><tr><td><img src="Map16_Page_5_info.png"></td></tr></table>
 	</li>
-	<li>
-		The regular-sized pipe caps and turn corners do check if the player currently traveling is centered enough to trigger them, thus you can have
-		setups like this (1A&harr;1B, 2A&harr;2B, 3A&harr;3B): <table><tr><td><img src="VerticalExitCapsRequirePlayerCenteredHorizontally.png"></td></tr></table><br>
-		
-		However, there are exceptions: <kbd>DragPlayer.asm</kbd>, <kbd>set_visibility_off.asm</kbd>, and <kbd>set_visibility_on.asm</kbd> will work if the player is traveling
-		vertically if he's centered within 2 blocks <b>or</b> a single block (checks if X position relative to the block is <kbd>0~8</kbd>), unlike the vertical pipe caps, where Mario must be 2-block centered for regular-sized caps:<br>
-		<img src="CenterCheckExceptions.png"><br>
-		Reason being is that there would be a lot more blocks for a 1 or 2-block centering requirement variations.
-	</li>
-</ul>
+
+	<li>Things you should avoid placing and what you can do:</li>
+	<ul>
+		<li>I don't recommend using the pipes on layer 2, as the position can glitch around.</li><br>
+		<li>
+			While using the pipes on layer 1 in a layer 2 level, be careful not to place solid blocks above the space in front of the small pipe caps, as
+			they would teleport/clip the player through the floor:
+			<table><tr><td><img src="DontPlaceLikeThis.png"></td></tr></table>
+		</li><br>
+		<li>
+			3-way (T-shaped) intersections using turn pipe corners are possible. If the player enters the (normal) turn corners from the
+			&ldquo;outer&rdquo; edges that are not directly connected, the player will maintain his current direction:<br>
+			<table><tr><td><img src="3WayIntersectionWithNormalCorners.png"></td></tr></table>
+		</li><br>
+	
+		<li>
+			With the new update with special turn corner parts:
+			<ul>
+				<li>
+					You can have different connections based on where the player enters them on the same turn corner
+					(A&rarr;B, B&rarr;C, C&rarr;D, D&rarr;A):<br>
+					<table><tr><td><img src="SpecialTurnCornersDemonstration.png"></td></tr></table>
+				</li>
+				<li>
+					How about A&harr;B, C&harr;D? (note that I use &harr; and not &rarr; to indicate a 2-way between points). Now you can have 2 &ldquo;opposite&rdquo; corners
+					on the same area.
+					<table><tr><td><img src="SpecialTurnCornersDemonstration1.png"></td></tr></table><br>
+					
+					Just remember that if the player hits any <kbd>turn_special_prep_&lt;direction&gt;.asm</kbd>, they will set the <i>prep-direction</i> that
+					Mario will turn to that direction when he hits a special turn corner (<kbd>turn_special_L.asm</kbd>, <kbd>turn_special_R.asm</kbd>, and <kbd>turn_special_small.asm</kbd>).
+					This allows &ldquo;roundabout&rdquo; and &ldquo;U-turn&rdquo;-type intersections and much more.<br><br>
+				</li>
+			</ul>
+		</li>
+	
+		<li>
+			You may be wondering, why did I have both types of corners if I can just have special turn corners? Well, here is my answer: Regular turn corners
+			don't require any prep-turns. With this, you can have two regular turn corners touching each other without the need to have a turn setup in between,
+			allowing compact pipe placements. Special turn corners, on the other hand, always have to have a setup direction if the next special turn corner needs
+			a different direction. Things to note about the corners:<br><br>
+	
+			<ul>
+				<li>
+					ALL turn corners, regular and special, themselves do not change the prep-direction, instead, it will keep its direction until
+					<kbd>turn_special_prep_&lt;direction&gt;.asm</kbd> have been triggered again, thus you can do something like this where the second
+					and later in the sequence special turn corners no longer need a prep-turn:
+					<table><tr><td><img src="MaintainedTurnCorners.png"></td></tr></table>
+					Note the red circles means that no turn-preps.<br><br>
+	
+					And even when you wanted parallel pipes that switch places without having them to re-straighten them out (this is a 2-way pipe demonstration, if 1-way, you
+					only need 1 connector in between the parallel pipes), you can do this in a more compact way:
+	
+					<table><tr><td><img src="ParallelPipeSwap.png"></td></tr></table>
+				</li>
+			</ul>
+		</li>
+		<li>
+			The regular-sized pipe caps and turn corners do check if the player currently traveling is centered enough to trigger them, thus you can have
+			setups like this (1A&harr;1B, 2A&harr;2B, 3A&harr;3B): <table><tr><td><img src="VerticalExitCapsRequirePlayerCenteredHorizontally.png"></td></tr></table><br>
+			
+			However, there are exceptions: <kbd>DragPlayer.asm</kbd>, <kbd>set_visibility_off.asm</kbd>, and <kbd>set_visibility_on.asm</kbd> will work if the player is traveling
+			vertically if he's centered within 2 blocks; to the right half of it <b>or</b> within a single block (thus and actually checks if X position relative to the block is
+			<kbd>0~8</kbd> from its position), unlike the vertical pipe caps, where Mario must be 2-block centered for regular-sized caps:<br>
+			<table><tr><td><img src="CenterCheckExceptions.png"></td></tr></table><br>
+			Reason being is that there would be a lot more blocks for a 1 or 2-block centering requirement variations.
+		</li>
+	</ul>
 
 </ul>
 <h1><a href="#TOC_BackgroundPipeTilesBack" id="TOC_BackgroundPipeTiles">^</a>Background pipe tiles</h1>
