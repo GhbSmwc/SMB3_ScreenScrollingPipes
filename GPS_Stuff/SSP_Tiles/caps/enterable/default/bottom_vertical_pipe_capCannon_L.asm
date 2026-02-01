@@ -91,6 +91,7 @@ BodyInside:
 exit:
 	JSR passable
 	%Get_Player_XPosition_RelativeToBlock()
+	CMP #$01
 	BMI return				;>If mario is too far from center, don't exit
 	STZ $02
 	LDA #$04

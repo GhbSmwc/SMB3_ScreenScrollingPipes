@@ -91,7 +91,8 @@ MarioBelow:
 exit:
 	JSR passable
 	%Get_Player_XPosition_RelativeToBlock()
-	BMI return				;>If mario is to the left far from center, don't exit
+	CMP #$01
+	BMI return				;>If mario is too far from center, don't exit
 	STZ $02
 	LDA #$03
 	STA $03

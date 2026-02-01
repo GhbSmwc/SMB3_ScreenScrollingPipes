@@ -45,6 +45,10 @@ incsrc "../SSPDef/Defines.asm"
 		SEP #$20
 		RTL
 	?.Up
+		%Get_Player_XPosition_RelativeToBlock()		;\Vertically-traveling Mario must be either be block-centered (small pipe) or 8 pixels to the right (regular-sized pipe) of the block to trigger.
+		BMI ?.Done					;|
+		CMP #$09					;|
+		BPL ?.Done					;/
 		REP #$20
 		LDA $01
 		CMP $03
@@ -56,6 +60,10 @@ incsrc "../SSPDef/Defines.asm"
 		BPL ?.SetVisibility
 		BRA ?.Done
 	?.Down
+		%Get_Player_XPosition_RelativeToBlock()		;\Vertically-traveling Mario must be either be block-centered (small pipe) or 8 pixels to the right (regular-sized pipe) of the block to trigger.
+		BMI ?.Done					;|
+		CMP #$09					;|
+		BPL ?.Done					;/
 		REP #$20
 		LDA $01
 		CMP $03

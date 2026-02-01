@@ -141,9 +141,11 @@ This is the summary of the map16 blocks on what they do:<br>
 	</li>
 	<li>
 		The regular-sized pipe caps and turn corners do check if the player currently traveling is centered enough to trigger them, thus you can have
-		setups like this (A1&harr;A2, B1&harr;B2, C1&harr;C2): <table><tr><td><img src="VerticalExitCapsRequirePlayerCenteredHorizontally.png"></td></tr></table><br>
+		setups like this (1A&harr;1B, 2A&harr;2B, 3A&harr;3B): <table><tr><td><img src="VerticalExitCapsRequirePlayerCenteredHorizontally.png"></td></tr></table><br>
 		
-		Note that this doesn't apply to <kbd>DragPlayer.asm</kbd>, <kbd>set_visibility_off.asm</kbd>, and <kbd>set_visibility_on.asm</kbd>, as it would add more blocks to the map16 editor for more variations.
+		However, there are exceptions: <kbd>DragPlayer.asm</kbd>, <kbd>set_visibility_off.asm</kbd>, and <kbd>set_visibility_on.asm</kbd> will work if the player is traveling
+		vertically if he's centered within 2 blocks or a single block (checks if X position relative to the block is <kbd>0~8</kbd>), unlike the vertical pipe caps, where Mario must be 2-block centered for regular-sized caps:<br>
+		<img src="CenterCheckExceptions.png">
 	</li>
 </ul>
 
