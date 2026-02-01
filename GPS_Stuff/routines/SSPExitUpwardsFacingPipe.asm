@@ -29,6 +29,7 @@ incsrc "../SSPDef/Defines.asm"
 	BPL ?.Return				;If mario is not far enough into the cap, return
 	CMP #$FFF8				;\If too far up (especially if there's a 1 block gap between 2 vertical pipe caps or 2 blocks with big mario riding yoshi facing each other)
 	BMI ?.Return				;/don't trigger the exit (prevents triggering the wrong pipe exit cap).
+	SEP #$20
 	
 	LDA $03
 	STA !Freeram_SSP_EntrExtFlg
