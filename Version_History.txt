@@ -422,6 +422,7 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	  checking if Mario is on the ground. Thus, freeram !Freeram_BlockedStatBkp will optionally not be used
 	  (!Setting_SSP_CopyRAM77 set to 0 by default to not use a freeram).
 	--Removing !Freeram_SSP_CarrySpr would still works with carried sprites. Thus this is redundant.
+	-Added screen scrolling doors (both the 4-directional and the warp/drag version).
 	-Added optional Freeram: !Freeram_SSP_InvisbleFlag, due to having both visible and invisible states for
 	 doors and glass pipe support (will be used if !Setting_SSP_HideDuringPipeStemTravel == 0).
 	-Added walking animation for horizontal pipe caps (note that it runs the vanilla code that handles
