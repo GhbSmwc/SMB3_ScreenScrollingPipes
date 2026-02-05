@@ -65,5 +65,5 @@ passable:
 	STA $1693|!addr		;/
 	RTS
 if !Setting_SSP_Description != 0
-	print "Top cap of 2-way pipe for small mario."
+	print "Top cap of 2-way pipe for small mario (carrying items not allowed)."
 endif

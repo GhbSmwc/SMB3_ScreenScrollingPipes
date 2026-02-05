@@ -91,5 +91,5 @@ passable:
 	STA $1693|!addr		;/
 	RTS
 if !Setting_SSP_Description != 0
-	print "Bottom-right cap piece of horizontal 2-way pipe."
+	print "Bottom-right cap piece of horizontal 2-way pipe (can enter midair)."
 endif

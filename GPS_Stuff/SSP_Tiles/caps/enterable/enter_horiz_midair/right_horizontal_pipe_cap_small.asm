@@ -79,5 +79,5 @@ passable:
 solid_out:
 	RTS
 if !Setting_SSP_Description != 0
-	print "Right cap piece of horizontal pipe for small mario."
+	print "Right cap piece of horizontal pipe for small mario (can enter midair)."
 endif

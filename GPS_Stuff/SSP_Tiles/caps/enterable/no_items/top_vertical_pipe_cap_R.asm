@@ -106,5 +106,5 @@ passable:
 	STA $1693|!addr		;/
 	RTS
 if !Setting_SSP_Description != 0
-	print "Top-right cap piece of vertical 2-way pipe."
+	print "Top-right cap piece of vertical 2-way pipe (carrying items not allowed)."
 endif

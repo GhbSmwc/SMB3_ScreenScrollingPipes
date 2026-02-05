@@ -99,5 +99,5 @@ passable:
 	RTS
 
 if !Setting_SSP_Description != 0
-	print "Bottom-left cap piece of horizontal 2-way pipe."
+	print "Bottom-left cap piece of horizontal 2-way pipe (carrying items not allowed)."
 endif
