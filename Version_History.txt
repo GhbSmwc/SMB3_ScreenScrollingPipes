@@ -433,3 +433,5 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	 away enough.
 	-Renamed various defines that start with "!SSP" with "!Setting_SSP" for consistency.
 	-Sound effects can now be configured.
+02/05/2026
+	-Fixed several differently-behaved pipe caps that allow entering midair or forbidding carrying items.
