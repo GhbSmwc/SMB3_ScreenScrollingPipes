@@ -251,11 +251,12 @@ endif
 	!Setting_SSP_DoorsProximity = 1
 		;^0 = Allow entering doors at the full width
 		; 1 = Allow entering doors only when player is centered enough (Player's X position must be within -4 to +3 relative to the door (0 = exactly centered)).
+		;     This is the same way SMW checks if the player is centered enough.
 	!Setting_SSP_DistanceSpeedUp = $0080
 		;Speed up during warp/drag mode if the destination from Mario is too far away:
 		; - $0000 = No, stay the same speed
 		; - $0001+ = Yes, move faster when further than this amount.
-		; Note: Distance check uses a taxicab distance, forming a regular polygon diamond, that when outside of, will move faster.
+		; Note: Distance check uses a taxicab distance, forming a regular polygon diamond whose corners point in cardinal directions, that when outside of, will move faster.
 	;Sound effects. Set their sound effects to $00 to disable (will not write to the sound channel address).
 	;See this: https://www.smwcentral.net/?p=viewthread&t=6665&page=1 for their port (RAM $1DF9~$1DFC) and sound effect numbers.
 	;NOTE: For RAM address port, you must have "|!addr" appended to allow hybrid LoROM and SA-1 support.
@@ -290,7 +291,7 @@ endif
 		!Setting_SSP_Speed_HorizontalPipeCap	= $08 ;\cap speed (if changed, you must change the timers below this section)
 		!Setting_SSP_Speed_VerticalPipeCap	= $10 ;/
 		!Setting_SSP_Speed_Drag_FastClose	= $40 ;>Speed mario travels when using warp mode. Remember, high speeds and the player could overshoot and softlock oscillating around his target position!
-		!Setting_SSP_Speed_Drag_FastFar		= $7F ;>Same as above but if !Setting_SSP_DistanceSpeedUp != 0 and Mario is outside the radus of that
+		!Setting_SSP_Speed_Drag_FastFar		= $7F ;>Same as above but if !Setting_SSP_DistanceSpeedUp != 0 and Mario is outside the "radius" of that
 	else
 		;FuSoYa styled speed.
 		!Setting_SSP_Speed_Horizontal		= $40 ;\Duplicate of above, but for fusoya style speeds.
@@ -298,7 +299,7 @@ endif
 		!Setting_SSP_Speed_HorizontalPipeCap	= $40 ;|
 		!Setting_SSP_Speed_VerticalPipeCap	= $40 ;/
 		!Setting_SSP_Speed_Drag_FastClose	= $40 ;>Speed mario travels when using warp mode. Remember, high speeds and the player could overshoot and softlock oscillating around his target position!
-		!Setting_SSP_Speed_Drag_FastFar		= $7F ;>Same as above but if !Setting_SSP_DistanceSpeedUp != 0 and Mario is outside the radus of that
+		!Setting_SSP_Speed_Drag_FastFar		= $7F ;>Same as above but if !Setting_SSP_DistanceSpeedUp != 0 and Mario is outside the "radius" of that
 	endif
 	;Cannon launcher speeds (special pipe caps that fire the player out of the caps with momentum):
 		!Setting_SSP_Cannon_HorizontalSpd	= $40		;>Use only $01-$7F, this covers both left and right speeds
