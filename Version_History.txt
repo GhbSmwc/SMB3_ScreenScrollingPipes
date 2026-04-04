@@ -380,11 +380,12 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	  pixel variance of the player's XY position upon exiting pipe caps.
 	--Made an extremely minor change on "Fixes.asm" to include clearing the player's Y position subpixel
 	  when standing on layer 1 & 2 platforms.
-	 -Moved several block codes to subroutines:
+	-Moved several block codes to subroutines:
 	--Vertical centering code (accounting for whether or not riding yoshi or powerup states) now moved
 	  to subroutines.
 	--Majority of the code handling exiting vertical pipe caps and turn corners now moved to block
 	  subroutines, saving significant space.
+	--Same with horizontal pipe caps.
 	-!Freeram_SSP_EntrExtFlg updated to now have values for entering, stem traveling, exiting normally,
 	 and cannon exiting. Also the defines now reflect on this.
 	-Renamed several routine files to have a "SSP" at the beginning of the name using freeram of screen
@@ -413,10 +414,8 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	 overworld number to apply its effects on.
 	-Added a per-level wraparound feature for warp-drag mode: If the player pipe traveling heads into the
 	 edge of a level, will send him to the opposite edge of the level. If V/H scrolling disabled, then
-	 wraparound will adjust to be the screen's width. It also comes with an extra byte setting to also
-	 invert along the edge.
-	-Added a uberasm tool level file that adds wraparound effect for screen scrolling pipes when the
-	 traveling player hits the edge of the level.
+	 wraparound will adjust to be the screen's width and height. It also comes with an extra byte setting
+	 to also invert along the edge.
 	-Several removed freerams:
 	--Late discovery that somebody (MarioFanGamer) found that RAM $8F is a reliable copy of $72 for
 	  checking if Mario is on the ground. Thus, freeram !Freeram_BlockedStatBkp will optionally not be used
