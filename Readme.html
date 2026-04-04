@@ -79,6 +79,7 @@ screen-fading to the next level, the player will move through the pipes (along w
 		<ol>
 			<li><a href="#ScreenScrollingWarpPipes" id="TOC_ScreenScrollingWarpPipes">Screen Scrolling *warp* pipes (warp/drag mode)</a></li>
 			<li><a href="#CapCannons" id="TOC_CapCannons">Pipe cap cannons</a></li>
+			<li><a href="#ScreenScrollingDoors" id="TOC_ScreenScrollingDoors">Screen-scrolling doors</a></li>
 		</ol>
 	</li>
 	<li>
@@ -330,7 +331,7 @@ $00EA22</pre></div>
 			<li>Not much to say, simply install <kbd>Fixes.asm</kbd> via asar. This patch fixes various bugs relating with the pipes and sprites to not interact with the player during a pipe travel. Make sure you do not move the patch file, else you'll get an error.</li><br>
 		</ol>
 		<li>Pixi (in <kbd>Pixi</kbd> folder). This mainly deals with making custom sprites be compatible with the SSPs. Mainly the fact that custom sprites may interact with the player in ways they shouldn't, and they should be rendered invisible
-		with the player (by skipping the graphics code/routine) when carried into the pipe.</li><br>
+		or behind the layer with the player (by skipping the graphics code/routine) when carried into the pipe.</li><br>
 		<ol>
 			<li>The first thing you want to do is similar to Uberasm tool and GPS-- Paste a copy of <kbd>SSPDef</kbd> in the same directory as <kbd>pixi.exe</kbd> is located.</li><br>
 			<li>Paste all ASM files in this package's <kbd>Pixi/routines</kbd> in pixi's <kbd>routines</kbd> folder.</li><br>
@@ -368,6 +369,9 @@ the player should emerge from.</p>
 <p>Along with the variations of cap cannons added (including the ability to have each cap individually allow or forbid things like carrying and riding yoshi), I also featured pipe caps
 that when exit out of, flings the player a short distance with momentium. This is especially useful for kaizo hacks involving platform tricks. Note that I recommend installing the <a href="https://www.smwcentral.net/?p=section&a=details&id=24862">Player X speed</a>
 fix patch because of a quirk with SMW's horizontal speed handling that if you are going faster than max, and you hold left or right in the direction he's going, Mario will decelerate rather than to keep his speed in midair.</p>
+
+<h3><a href="#TOC_ScreenScrollingDoors" id="ScreenScrollingDoors">^</a>Screen-Scrolling Doors</h3>
+<p>As introduced in version 4.0.4, there are now doors that functions the same way. Plus you can mix-and-match with pipes.</p>
 
 <p>See the list of blocks in the <a href="Readme_files/BlocksUsageInLevel2.html" target="_blank">block placement section</a></p>
 <h2><a href="#TOC_FAQ" id="FAQ">^</a>FAQ</h2>
@@ -538,7 +542,6 @@ print "A simple test block that behaves differently depending on if the player i
 				<kbd>set_visibility_off.asm</kbd> to hide the player just before the gap and <kbd>set_visibility_on.asm</kbd> to force the player to be visible after traversing the gap.
 			</li>
 		</ul>
-	<li>If you enter a pipe, while yoshi exist, yoshi will also turn invisible (with some 8x8 pieces still visible), I couldn't fix that.</li><br>
 	<li>The routine file is also SA-1 hybrid, no need to worry about yoshi issues about it. However, you must use RAM address in banks $40/$41 should you need to use 3-byte addressing ($4XXXXX)</li><br>
 	<li>
 		If Mario gets on a p-balloon, Mario will keep facing the same direction prior
@@ -784,7 +787,7 @@ print "<description>"
 	</li><br>
 
 	<li>
-		Regular-szied screen Scrolling doors (ones that are 2-blocks tall) would have the upper tile also be a custom block due to how yoshi collision works.
+		Regular-sized screen Scrolling doors (ones that are 2-blocks tall) would have the upper tile also be a custom block due to how yoshi collision works.
 	</li>
 	<li>
 		Due to how RAM <kbd>$78</kbd> (the RAM containing the hide player bits settings) works, bit 4 controls both hiding the player's cape tile <b>and</b> if all 8 bits are set (a value of <kbd>#$FF</kbd>),
