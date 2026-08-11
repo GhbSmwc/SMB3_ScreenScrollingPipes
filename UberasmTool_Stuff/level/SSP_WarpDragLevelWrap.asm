@@ -355,7 +355,6 @@ InvertYPosition:
 		ADC $09
 		CLC
 		ADC YoshiYOffsetInvert,x
-		wdm
 		if !Setting_SSP_YPositionOffset != 0
 			CLC
 			ADC.w #(!Setting_SSP_YPositionOffset*2)
