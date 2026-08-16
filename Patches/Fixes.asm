@@ -144,6 +144,13 @@ endmacro
 	org $00C5CE				;\fix hdma issues (like message box) when setting
 		autoclean JSL FixHDMA		;/$7E0071 to #$0B ($00cde8 constantly sets $9D to $00 when $71 is $00.).
 		NOP #4
+		
+	FixBranchTo_00C5D1:
+		org $00C5C9
+			BEQ .CODE_00C5D6
+		
+		org $00C5D6
+			.CODE_00C5D6
 	
 	org $01ED44				;\fix getting on yoshi automatically when entering
 		autoclean JML GetOnYoshiExcept	;/horizontal pipes while ovelapping yoshi's saddle.
