@@ -434,5 +434,5 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	-Sound effects can now be configured.
 02/05/2026
 	-Fixed several differently-behaved pipe caps that allow entering midair or forbidding carrying items.
-08/16/2026 Hotfix of a sneaky branch that jump to middle of hijack
+08/16/2026 v 4.0.5 Hotfix of a sneaky branch that jump to middle of hijack
 	-Fixed a crash that could happen due to a branch at $00C5C9.
