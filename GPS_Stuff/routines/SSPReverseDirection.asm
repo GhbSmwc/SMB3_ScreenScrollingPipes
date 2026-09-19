@@ -13,7 +13,7 @@ incsrc "../SSPDef/Defines.asm"
 	TAX				;>Index it
 	LDA !Freeram_SSP_PipeDir
 	AND.b #%11110000		;>Clear out the low nybble.
-	ORA ?SSPFlipTable,x
+	ORA.l ?SSPFlipTable,x
 	
 	?Return:
 	RTL

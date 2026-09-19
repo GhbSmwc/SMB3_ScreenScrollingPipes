@@ -94,7 +94,7 @@ incsrc "../SSPDef/Defines.asm"
 		LDA $98
 		AND #$FFF0
 		CLC
-		ADC ?.DoorPartOffsets,x
+		ADC.l ?.DoorPartOffsets,x
 		if !Setting_SSP_YPositionOffset != 0
 			CLC
 			ADC.w #!Setting_SSP_YPositionOffset

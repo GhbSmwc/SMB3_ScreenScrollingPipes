@@ -22,8 +22,8 @@ incsrc "../SSPDef/Defines.asm"
 	PHY							;>Preserve block behaver
 	REP #$10
 	;Start at the highest valid index:
-		LDX.w #((?CorrectDirection_End-?CorrectDirection)-1*2)		;>For 16-bit table array
-		LDY.w #(?CorrectDirection_End-?CorrectDirection)-1		;>For 8-bit table array
+		LDX.w #(((?CorrectDirection_End-?CorrectDirection)-1)*2)	;>For 16-bit table array
+		LDY.w #(?CorrectDirection_End-?CorrectDirection)-1			;>For 8-bit table array
 	?Loop
 		;Which warp to use:
 			;Check if the player is going in the correct direction into the warp:
