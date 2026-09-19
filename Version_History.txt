@@ -436,3 +436,11 @@ version history (oldest to newest, note: a "." represents a sub-version, not a f
 	-Fixed several differently-behaved pipe caps that allow entering midair or forbidding carrying items.
 08/16/2026 v 4.0.5 Hotfix of a sneaky branch that jump to middle of hijack
 	-Fixed a crash that could happen due to a branch at $00C5C9.
+09/19/2026 v 4.0.6 Fixes
+	-Bug fixes:
+	--Fixed depreciation issue with "routines/sspdragmariomode.asm". Credit to "MrDeePay" for pointing it
+	  out.
+	--Fixed an issue with several GPS routines files potentially accessing data at the wrong bank, mainly
+	  because they're using 16-bit addressing without using "PHB : PHK : PLB : <CodeHere> : PLB" or using
+	  24-bit address (<opcode>.l Table,x), the files in question are: "SSPExitDoor.asm" and
+	  "SSPReverseDirection.asm".
